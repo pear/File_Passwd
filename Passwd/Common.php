@@ -153,8 +153,8 @@ class File_Passwd_Common {
     * @return mixed resource of type file handle or PEAR_Error
     * @param  string    $mode   the mode to open the file with
     */
-    function &_open($mode){
-        $file   = realpath($this->_file);
+    function &_open($mode, $file = null){
+        $file   = realpath( is_null($file) ? $this->_file : $file );
         $dir    = dirname($file);
         if (!is_dir($dir) && !System::mkDir('-p -m 0755 ' . $dir)) {
             return PEAR::raiseError(
@@ -338,5 +338,44 @@ class File_Passwd_Common {
         return $this->_users[$user];
     }
 
+    /**
+    * Base method for File_Passwd::staticAuth()
+    * 
+    * Returns a PEAR_Error if:
+    *   o file doesn't exist
+    *   o file couldn't be opened in read mode
+    *   o file couldn't be locked exclusively
+    *   o file couldn't be unlocked (only if auth fails)
+    *   o file couldn't be closed (only if auth fails)
+    * 
+    * @throws   PEAR_Error
+    * @access   protected
+    * @return   mixed       line of passwd file containing <var>$id</var>,
+    *                       false if <var>$id</var> wasn't found or PEAR_Error
+    * @param    string      $file   path to passwd file
+    * @param    string      $id     user_id to search for
+    */
+    function _auth($file, $id){
+        $file = realpath($file);
+        if (!is_file($file)) {
+            return PEAR::raiseError("File '$file' couldn't be found.", 0);
+        }
+    	$fh = &File_Passwd_Common::_open('r', $file);
+        if (PEAR::isError($fh)) {
+            return $fh;
+        }
+        while($line = fgets($fh)){
+        	if (strstr($line, $id)) {
+        	    File_Passwd_Common::_close($fh);
+                return trim($line);
+        	}
+        }
+        $e = File_Passwd_Common::_close($fh);
+        if (PEAR::isError($e)) {
+            return $e;
+        }
+        return false;
+    }
+    
 }
 ?>

@@ -80,6 +80,35 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
         $this->__construct($file);
     }
 
+    /**
+    * Fast authentication of a certain user
+    * 
+    * Returns a PEAR_Error if:
+    *   o file doesn't exist
+    *   o file couldn't be opened in read mode
+    *   o file couldn't be locked exclusively
+    *   o file couldn't be unlocked (only if auth fails)
+    *   o file couldn't be closed (only if auth fails)
+    *
+    * @static   call this method statically for a reasonable fast authentication
+    * 
+    * @throws   PEAR_Error
+    * @access   public
+    * @return   mixed   true if authenticated, false if not or PEAR_Error
+    * @param    string  $file   path to passwd file
+    * @param    string  $user   user to authenticate
+    * @param    string  $pass   plaintext password
+    * @param    string  $realm  the realm the user is in
+    */
+    function staticAuth($file, $user, $pass, $realm){
+        $line = File_Passwd_Common::_auth($file, $user.':'.$realm);
+        if (!$line || PEAR::isError($line)) {
+            return $line;
+        }
+        @list(,,$real)= explode(':', $line);
+        return (md5("$user:$realm:$pass") === $real);
+    }
+    
     /** 
     * Apply changes and rewrite AuthDigestFile
     *

@@ -234,6 +234,11 @@ class File_Passwd_UnixTest extends PHPUnit_TestCase{
         $this->assertTrue('$1$45678901$8Dc8D8vusJXlDQUC7akws/' === $this->pwd->_genPass('12', '$1$456789012'));
     }
     
+    function teststaticAuth(){
+        $this->assertTrue(true === File_Passwd::staticAuth('Unix', 'passwd.unix.txt', 'mike', 123, 'des'));
+        $this->assertTrue(false === File_Passwd::staticAuth('Unix', 'passwd.unix.txt', 'mike', 'abc', 'des'));
+        $this->assertFalse((File_Passwd::staticAuth('Unix', 'passwd.unix.txt', 'nonexist', 'asd', 'des')));
+    }
 }
 
 ?>

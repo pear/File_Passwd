@@ -122,6 +122,50 @@ class File_Passwd_Smb extends File_Passwd_Common {
     }     
     
     /**
+    * Fast authentication of a certain user
+    * 
+    * Returns a PEAR_Error if:
+    *   o file doesn't exist
+    *   o file couldn't be opened in read mode
+    *   o file couldn't be locked exclusively
+    *   o file couldn't be unlocked (only if auth fails)
+    *   o file couldn't be closed (only if auth fails)
+    *   o invalid encryption method <var>$nt_or_lm</var> was provided
+    *
+    * @static   call this method statically for a reasonable fast authentication
+    * @access   public
+    * @return   mixed   true if authenticated, false if not or PEAR_Error
+    * @param    string  $file       path to passwd file
+    * @param    string  $user       user to authenticate
+    * @param    string  $pass       plaintext password
+    * @param    string  $nt_or_lm   encryption mode to use (NT or LM hash)
+    */
+    function staticAuth($file, $user, $pass, $nt_or_lm){
+        $line = File_Passwd_Common::_auth($file, $user);
+        if (!$line || PEAR::isError($line)) {
+            return $line;
+        }
+        @list(,$nt,$lm)  = explode(':', $line);
+        $chap           = &new Crypt_MSCHAPv1;
+        switch(strToLower($nt_or_lm)){
+        	case 'nt': 
+                $real = $nt; 
+                $crypted = $chap->ntPasswordHash($pass); 
+                break;
+        	case 'lm': 
+                $real = $lm;
+                $crypted = $chap->lmPasswordHash($pass); 
+                break;
+        	default:
+                return PEAR::raiseError(
+                    sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $nt_or_lm),
+                    FILE_PASSWD_E_INVALID_ENC_MODE
+                );
+        }
+        return ($crypted === $real);
+    }
+    
+    /**
     * Parse smbpasswd file
     *
     * Returns a PEAR_Error if passwd file has invalid format.

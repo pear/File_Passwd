@@ -145,6 +145,36 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
         $this->setFile($file);
     }
 
+    /**
+    * Fast authentication of a certain user
+    * 
+    * NOTE: Only DES encryption supported.
+    * 
+    * Returns a PEAR_Error if:
+    *   o file doesn't exist
+    *   o file couldn't be opened in read mode
+    *   o file couldn't be locked exclusively
+    *   o file couldn't be unlocked (only if auth fails)
+    *   o file couldn't be closed (only if auth fails)
+    *
+    * @static   call this method statically for a reasonable fast authentication
+    * 
+    * @throws   PEAR_Error
+    * @access   public
+    * @return   mixed   true if authenticated, false if not or PEAR_Error
+    * @param    string  $file   path to passwd file
+    * @param    string  $user   user to authenticate
+    * @param    string  $pass   plaintext password
+    */
+    function staticAuth($file, $user, $pass){
+        $line = File_Passwd_Common::_auth($file, $user);
+        if (!$line || PEAR::isError($line)) {
+            return $line;
+        }
+        list(,$real)= explode(':', $line);
+        return (crypt($pass, substr($real, 0,2)) === $real);
+    }
+    
     /** 
     * Apply changes and rewrite AuthUserFile
     *
@@ -365,26 +395,27 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     /**
     * Generate password with htpasswd executable
     * 
-    * @access private
-    * @return string    the crypted password
-    * @param string     the plaintext password
+    * @access   private
+    * @return   string  the crypted password
+    * @param    string  $pass   the plaintext password
     */
     function _genPass($pass){
         /**
         * If safe_mode is enabled this is the only chance
         * to get a htpasswd style password.
         */
-        if (strToLower($this->_mode) == 'des') {
+        if ($this->_mode == 'des') {
             return crypt($pass, substr(md5(rand()), 0,2));
         }
         /**
         * Else execute htpasswd on the shell.
         */
         $htpw = $this->_path_to_htp.' -nb'.$this->_modes[$this->_mode];
+        $pass = addSlashes($pass);
         return preg_replace(
             '/.*myDefaultUserForHtPasswd:(\S*).*/s', 
             '\\1',
-            trim(`$htpw myDefaultUserForHtPasswd "{addSlashes($pass)}"`)
+            trim(`$htpw myDefaultUserForHtPasswd "$pass"`)
         );
     }
     

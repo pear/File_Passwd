@@ -122,6 +122,11 @@ class File_Passwd_CvsTest extends PHPUnit_TestCase{
         $this->assertEquals('12IbR.gJ8wcpc', $this->pwd->_genPass(123, '12IbR.gJ8wcpc'));
     }
     
+    function teststaticAuth(){
+        $this->assertTrue(true === File_Passwd::staticAuth('cvs', 'passwd.cvs.txt', 'mike', 123));
+        $this->assertTrue(false === File_Passwd::staticAuth('cvs', 'passwd.cvs.txt', 'mike', 'abc'));
+        $this->assertFalse((File_Passwd::staticAuth('cvs', 'passwd.cvs.txt', 'nonexist', 'asd')));
+    }
 }
 
 ?>

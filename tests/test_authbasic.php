@@ -174,6 +174,10 @@ class File_Passwd_AuthbasicTest extends PHPUnit_TestCase{
         $this->assertEquals($GLOBALS['user'], $this->pwd->_users);
     }
     
+    function teststaticAuth(){
+        $this->assertTrue(true === File_Passwd::staticAuth('authbasic', 'passwd.authbasic.txt', 'mike', 123));
+        $this->assertTrue(false === File_Passwd::staticAuth('authbasic', 'passwd.authbasic.txt', 'mike', 'abc'));
+        $this->assertFalse((File_Passwd::staticAuth('authbasic', 'passwd.authbasic.txt', 'nonexist', 'asd')));
+    }
 }
-
 ?>

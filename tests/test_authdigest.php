@@ -138,6 +138,11 @@ class File_Passwd_AuthdigestTest extends PHPUnit_TestCase{
         $this->assertEquals($GLOBALS['user'], $this->pwd->_users);
     }
     
+    function teststaticAuth(){
+        $this->assertTrue(true === File_Passwd::staticAuth('authdigest', 'passwd.authdigest.txt', 'mike', 123, 'realm1'));
+        $this->assertTrue(false === File_Passwd::staticAuth('authdigest', 'passwd.authdigest.txt', 'mike', 'abc', 'realm1'));
+        $this->assertFalse((File_Passwd::staticAuth('authdigest', 'passwd.authdigest.txt', 'nonexist', 'asd', 'norealm')));
+    }
 }
 
 ?>

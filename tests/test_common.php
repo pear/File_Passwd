@@ -122,6 +122,10 @@ class File_Passwd_CommonTest extends PHPUnit_TestCase{
         $this->assertEquals(array('nothing'), $this->pwd->listUser('mike'));
     }
     
+    function test_auth(){
+        $this->assertTrue('1stLine' === File_Passwd_Common::_auth('common.txt', '1stLine'));
+        $this->assertFalse(File_Passwd_Common::_auth('common.txt', 'nonexist'));
+    }
 }
 
 ?>

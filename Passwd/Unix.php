@@ -121,6 +121,38 @@ class File_Passwd_Unix extends File_Passwd_Common {
     }
     
     /**
+    * Fast authentication of a certain user
+    * 
+    * Returns a PEAR_Error if:
+    *   o file doesn't exist
+    *   o file couldn't be opened in read mode
+    *   o file couldn't be locked exclusively
+    *   o file couldn't be unlocked (only if auth fails)
+    *   o file couldn't be closed (only if auth fails)
+    *   o invalid encryption mode <var>$mode</var> was provided
+    *
+    * @static   call this method statically for a reasonable fast authentication
+    * @access   public
+    * @return   mixed   true if authenticated, false if not or PEAR_Error
+    * @param    string  $file   path to passwd file
+    * @param    string  $user   user to authenticate
+    * @param    string  $pass   plaintext password
+    * @param    string  $mode   encryption mode to use (des or md5)
+    */
+    function staticAuth($file, $user, $pass, $mode){
+        $line = File_Passwd_Common::_auth($file, $user);
+        if (!$line || PEAR::isError($line)) {
+            return $line;
+        }
+        list(,$real)= explode(':', $line);
+        $crypted    = File_Passwd_Unix::_genPass($pass, $real, $mode);
+        if (PEAR::isError($crypted)) {
+            return $crypted;
+        }
+        return ($crypted === $real);
+    }
+    
+    /**
     * Apply changes an rewrite passwd file
     *
     * Returns a PEAR_Error if:
@@ -541,13 +573,18 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * Returns a PEAR_Error if actual encryption mode is not supported.
     * 
     * @throws PEAR_Error
-    * @access public
+    * @access private
     * @return mixed     the crypted password or PEAR_Error
     * @param  string    $pass   the plaintext password
     * @param  string    $salt   the crypted password from which to gain the salt
+    * @param  string    $mode   the encryption mode to use; don't set, because
+    *                           it's usually taken from File_Passwd_Unix::_mode
     */
-    function _genPass($pass, $salt = null){
-        switch($this->_mode){
+    function _genPass($pass, $salt = null, $mode = null){
+        if (is_null($mode)) {
+            $mode = $this->_mode;
+        }
+        switch(strToLower($mode)){
             case 'des': 
                 $salt = substr((is_null($salt) ? md5(rand()) : $salt), 0,2);
                 return crypt($pass, $salt);
@@ -560,7 +597,7 @@ class File_Passwd_Unix extends File_Passwd_Common {
                 break;
             default:
                 return PEAR::raiseError(
-                    sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $this->_mode),
+                    sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
                     FILE_PASSWD_E_INVALID_ENC_MODE
                 );
         }

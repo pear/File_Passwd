@@ -374,6 +374,19 @@ class File_Passwd {
     }
 
     /**
+    * Get API version
+    *
+    * @author   Michael Wallner <mike@php.net>
+    * 
+    * @static
+    * @access   public
+    * @return   string          API version
+    */
+    function apiVersion(){
+    	return '@API_VERSION@';
+    }
+    
+    /**
     * Factory for new extensions
     * 
     * o Unix        for standard Unix passwd files
@@ -384,24 +397,95 @@ class File_Passwd {
     * 
     * Returns a PEAR_Error if the desired class/file couldn't be loaded.
     * 
-    * @static use &File_Passwd::factory() for instantiating you passwd object
-    * @throws PEAR_Error
-    * @access public
-    * @author Michael Wallner <mike@php.net>
-    * @return object    File_Passwd_$class - desired Passwd object or PEAR_Error
-    * @param  string    $class the desired subclass of File_Passwd
+    * @author   Michael Wallner <mike@php.net>
+    * 
+    * @static   use &File_Passwd::factory() for instantiating you passwd object
+    * 
+    * @throws   PEAR_Error
+    * @access   public
+    * @return   object    File_Passwd_$class - desired Passwd object
+    * @param    string    $class the desired subclass of File_Passwd
     */
     function &factory($class){
         $class = ucFirst(strToLower($class));
-        if (!@include_once("Passwd/$class.php")) {
-            return PEAR::raiseError("Couldn't load file Passwd/$class.php");
+        if (!@include_once("File/Passwd/$class.php")) {
+            return PEAR::raiseError("Couldn't load file Passwd/$class.php", 0);
         }
         $class = 'File_Passwd_'.$class;
         if (!class_exists($class)) {
-            return PEAR::raiseError("Couldn't load class $class.");
+            return PEAR::raiseError("Couldn't load class $class.", 0);
         }
         $instance = &new $class();
         return $instance;
     }
+    
+    /**
+    * Fast authentication of a certain user
+    * 
+    * Returns a PEAR_Error if:
+    *   o file doesn't exist
+    *   o file couldn't be opened in read mode
+    *   o file couldn't be locked exclusively
+    *   o file couldn't be unlocked (only if auth fails)
+    *   o file couldn't be closed (only if auth fails)
+    *   o invalid <var>$type</var> was provided
+    *   o invalid <var>$opt</var> was provided
+    * 
+    * Depending on <var>$type</var>, <var>$opt</var> should be:
+    *   o Smb:          encryption method (NT or LM)
+    *   o Unix:         encryption method (des or md5)
+    *   o Authdigest:   the realm the user is in
+    *   o Authbasic:    n/a (empty) (*)
+    *   o Cvs:          n/a (empty)
+    * 
+    *   (*) The File_Passwd_Authbasic facility can verify
+    *       only DES enrypted passwords when called statically.
+    *
+    * @author   Michael Wallner <mike@php.net>
+    * 
+    * @static   call this method statically for a reasonable fast authentication
+    * 
+    * @throws   PEAR_Error
+    * @access   public
+    * @return   return      mixed   true if authenticated, 
+    *                               false if not or PEAR_error
+    * @param    string      $type   Unix, Cvs, Smb, Authbasic or Authdigest
+    * @param    string      $file   path to passwd file
+    * @param    string      $user   the user to authenticate
+    * @param    string      $pass   the plaintext password
+    * @param    string      $opt    o Smb:          NT or LM
+    *                               o Unix:         des or md5
+    *                               o Authdigest    realm the user is in
+    */
+    function staticAuth($type, $file, $user, $pass, $opt = ''){
+        $type = ucFirst(strToLower($type));
+        if (!@include_once("File/Passwd/$type.php")) {
+            return PEAR::raiseError("Coudn't load file Passwd/$type.php", 0);
+        }
+        switch($type){
+        	case 'Unix': 
+        		return File_Passwd_Unix::staticAuth($file, $user, $pass, $opt);
+        		break;
+        	case 'Cvs': 
+        		return File_Passwd_Cvs::staticAuth($file, $user, $pass);
+        		break;
+            case 'Smb':
+                return File_Passwd_Smb::StaticAuth($file, $user, $pass, $opt);
+                break;
+            case 'Authbasic':
+                return File_Passwd_Authbasic::staticAuth($file, $user, $pass);
+                break;
+            case 'Authdigest':
+                return File_Passwd_Authdigest::staticAuth(
+                    $file,
+                    $user,
+                    $pass,
+                    $opt
+                );
+                break;
+        }
+        return false;
+    }
+    
 }
 ?>
