@@ -34,7 +34,7 @@ require_once('Crypt/CHAP.php');
 * $f->setFile('./smbpasswd');
 * $f->load();
 * $f->addUser('sepp3', 'MyPw', array('userid' => 12));
-* $f->changePAsswd('sepp', 'MyPw');
+* $f->changePasswd('sepp', 'MyPw');
 * $f->delUser('karli');
 * foreach($f->listUser() as $user => $data) {
 *   echo $user . ':' . implode(':', $data) ."\n";
