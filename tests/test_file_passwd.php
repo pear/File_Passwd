@@ -41,7 +41,7 @@ class File_PasswdTest extends PHPUnit_TestCase{
      * @access public
      */
     function testapiVersion(){
-        $this->assertEquals('1.0', File_Passwd::apiVersion());
+        $this->assertEquals('1.0.0', File_Passwd::apiVersion());
     }
     
     /**

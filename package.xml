@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.25 $ -->
+<!-- $Revision: 1.26 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
@@ -16,9 +16,9 @@ Provides methods to manipulate standard Unix, SMB server, AuthUser (.htpasswd), 
     </maintainer>
   </maintainers>
   <release>
-    <version>1.0b3</version>
-    <date>2004-xx-xx</date>
-    <state>beta</state>
+    <version>1.0.0</version>
+    <date>2004-03-16</date>
+    <state>stable</state>
     <notes>
 * Removed File_Passwd_Common::__clone()
     </notes>
@@ -58,6 +58,5 @@ Provides methods to manipulate standard Unix, SMB server, AuthUser (.htpasswd), 
   </release>
   <deps>
     <dep type="pkg" rel="ge" version="0.8.6" optional="yes">Crypt_CHAP</dep>
-    <dep type="php" rel="ge" version="4.3.0" optional="yes" />
   </deps>
 </package>

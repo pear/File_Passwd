@@ -127,7 +127,7 @@ class File_Passwd
     */
     function apiVersion()
     {
-    	return '1.0';
+    	return '1.0.0';
     }
 
     /**
