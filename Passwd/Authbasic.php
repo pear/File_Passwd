@@ -1,5 +1,4 @@
 <?php
-//
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -13,12 +12,21 @@
 // | obtain it through the world-wide-web, please send a note to          |
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
-// | Author: Michael Wallner <mike@iworks.at>                             |
+// | Author: Michael Wallner <mike@php.net>                               |
 // +----------------------------------------------------------------------+
 //
 // $Id$
-//
 
+/**
+* Manipulate AuthUserFiles as used for HTTP Basic Authentication.
+*
+* @author   Michael Wallner <mike@php.net>
+* @package  File_Passwd
+*/
+
+/**
+* Requires File::Passwd::Common
+*/
 require_once('File/Passwd/Common.php');
 
 /**
@@ -65,7 +73,7 @@ require_once('File/Passwd/Common.php');
 * of the Apache's htpasswd encryption.
 * </i>
 * 
-* @author   Michael Wallner <mike@iworks.at>
+* @author   Michael Wallner <mike@php.net>
 * @package  File_Passwd
 * @version  $Revision$
 * @access   public
@@ -127,7 +135,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
         if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
             unset($this->_modes['des']);
             if (ini_get('safe_mode')) {
-                die('Sorry, you\'re on Win32 and safe_mode is enabled.')
+                die('Sorry, you\'re on Win32 and safe_mode is enabled.');
             }
         }
         if (ini_get('safe_mode')) {
@@ -177,10 +185,16 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     */
     function addUser($user, $pass) {
         if ($this->userExists($user)) {
-            return PEAR::raiseError('user already exists');
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_EXISTS_ALREADY_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_ALREADY
+            );
         }
-        if (!preg_match('/^[a-z]+[a-z0-9\-_]*$/i', $user)) {
-            return PEAR::raiseError("User '$user' contains illegal characters.");
+        if (!preg_match($this->_pcre, $user)) {
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
+                FILE_PASSWD_E_INVALID_CHARS
+            );
         }
         $this->_users[$user] = $this->_genPass($pass);
         return true;
@@ -230,7 +244,10 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     */
     function verifyPasswd($user, $pass) {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError('user \'' . $user . '\' does not exist');
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_NOT
+            );
         }
         switch ($this->_mode) {
             case 'sha' :
@@ -241,10 +258,13 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
                 return ($real == $this->_users[$user]);
                 break;
             case 'md5':
-                return PEAR::raiseError('md5 passwords cannot be verified');
+                return PEAR::raiseError('md5 passwords cannot be verified', 0);
                 break;
             default :
-                return PEAR::raiseError('invalid mode: \''.$this->_mode.'\'');
+                return PEAR::raiseError(
+                    sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $this->_mode),
+                    FILE_PASSWD_INVALID_ENC_MODE
+                );
         }
     }
 
@@ -275,7 +295,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     */
     function setExePath($path_to_htp) {
         if (!is_file($path_to_htp) && ($path_to_htp != 'htpasswd')) {
-            return PEAR::raiseError('Invalid path to htpasswd excecutable.');
+            return PEAR::raiseError('Invalid path to htpasswd excecutable.', 0);
         }
         $this->_path_to_htp = $path_to_htp;
         return true;
@@ -333,7 +353,10 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     function setMode($mode) {
         $mode = strToLower($mode);
         if (!isset($this->_modes[$mode])) {
-            return PEAR::raiseError('mode \''.$mode.'\' not supported');
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $this->_mode),
+                FILE_PASSWD_INVALID_ENC_MODE
+            );
         }
         $this->_mode = $mode;
         return true;
@@ -379,7 +402,10 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
         foreach ($this->_contents as $line) {
             $user = explode(':', $line);
             if (count($user) != 2) {
-                return PEAR::raiseError('AuthUserFile has invalid format.');
+                return PEAR::raiseError(
+                    FILE_PASSWD_E_INVALID_FORMAT_STR,
+                    FILE_PASSWD_E_INVALID_FORMAT
+                );
             }
             $this->_users[$user[0]] = trim($user[1]);
         }

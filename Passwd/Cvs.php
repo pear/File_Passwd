@@ -1,5 +1,4 @@
 <?php
-//
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -13,12 +12,21 @@
 // | obtain it through the world-wide-web, please send a note to          |
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
-// | Author: Michael Wallner <mike@iworks.at>                             |
+// | Author: Michael Wallner <mike@php.net>                               |
 // +----------------------------------------------------------------------+
 //
 // $Id$
-//
 
+/**
+* Manipulate CVS pserver passwd files.
+* 
+* @author   Michael Wallner <mike@php.net>
+* @package  File_Passwd
+*/
+
+/**
+* Requires File::Passwd::Common
+*/
 require_once('File/Passwd/Common.php');
 
 /**
@@ -48,7 +56,7 @@ require_once('File/Passwd/Common.php');
 *                   + system => system_user
 * </pre>
 * 
-* @author   Michael Wallner <mike@iworks.at>
+* @author   Michael Wallner <mike@php.net>
 * @package  File_Passwd
 * @version  $Revision$
 * @access   public
@@ -100,7 +108,10 @@ class File_Passwd_Cvs extends File_Passwd_Common {
         foreach ($this->_contents as $line) {
             $user = explode(':', $entry);
             if (count($user) < 2) {
-                return PEAR::raiseError('CVS passwd file has invalid format.');
+                return PEAR::raiseError(
+                    FILE_PASSWD_E_INVALID_FORMAT_STR,
+                    FILE_PASSWD_E_INVALID_FORMAT
+                );
             }
             list($user, $pass, $system) = $user;
             $this->_users[$user]['passwd'] = $pass;
@@ -129,15 +140,26 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     */
     function addUser($user, $pass, $system_user = ''){
         if ($this->userExists($user)) {
-            return PEAR::raiseError("User '$user' already exists.");
-        }
-        if (!preg_match('/[a-z]+[a-z0-9_-]*/i', $user)) {
-            return PEAR::raiseError("User '$user' contains illegal characters.");
-        }
-        setType($syste_user, 'string');
-        if (!preg_match('/[a-z]+[a-z0-9_-]*/i', $system_user)) {
             return PEAR::raiseError(
-                "System user '$system_user' contains illegal characters."
+                sprintf(FILE_PASSWD_E_EXISTS_ALREADY_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_ALREADY
+            );
+        }
+        if (!preg_match($this->_pcre, $user)) {
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
+                FILE_PASSWD_E_INVALID_CHARS
+            );
+        }
+        setType($system_user, 'string');
+        if (!preg_match($this->_pcre, $system_user)) {
+            return PEAR::raiseError(
+                sprintf(
+                    FILE_PASSWD_E_INVALID_CHARS_STR, 
+                    'System user ', 
+                    $system_user
+                ),
+                FILE_PASSWD_E_INVALID_CHARS
             );
         }
         $this->_users[$user]['passwd'] = $this->_genPass($pass);
@@ -158,7 +180,10 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     */
     function verifyPasswd($user, $pass){
         if (!$this->userExist($user)) {
-            return PEAR::raiseError("USer '$user' doesn't exist.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_NOT
+            );
         }
         $real = $this->_users[$user]['passwd'];
         return ($real === $this->_genPass($pass, $real));
@@ -175,7 +200,10 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     */
     function changePasswd($user, $pass){
         if (!$this->userExists($user)) {
-            return PEAR::raiseError("User '$user' doesn't exist.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_NOT
+            );
         }
         $this->_users[$user]['passwd'] = $this->_genPass($pass);
         return true;
@@ -194,11 +222,19 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     */
     function changeSysUser($user, $system){
         if (!$this->userExists($user)) {
-            return PEAR::raiseError("User '$user' doesn't exist.");
-        }
-        if (!preg_match('/[a-z]+{a-z0-9_-]*/i', $system)) {
             return PEAR::raiseError(
-                "System user '$system' contains illegal characters."
+                sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_NOT
+            );
+        }
+        if (!preg_match($this->_pcre, $system)) {
+            return PEAR::raiseError(
+                sprintf(
+                    FILE_PASSWD_E_INVALID_CHARS_STR, 
+                    'System user ', 
+                    $system_user
+                ),
+                FILE_PASSWD_E_INVALID_CHARS
             );
         }
         $this->_users[$user]['system'] = $system;

@@ -1,5 +1,4 @@
 <?php
-//
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -13,20 +12,27 @@
 // | obtain it through the world-wide-web, please send a note to          |
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
-// | Author: Michael Wallner <mike@iworks.at>                             |
+// | Author: Michael Wallner <mike@php.net>                               |
 // +----------------------------------------------------------------------+
 //
 // $Id$
-//
 
+/**
+* Manipulate standard Unix passwd files.
+* 
+* @author   Michael Wallner <mike@php.net>
+* @package  File_Passwd
+*/
+
+/**
+* Requires File::Passwd::Common
+*/
 require_once('File/Passwd/Common.php');
 
 /**
 * Manipulate standard Unix passwd files.
-*
 * 
 * <kbd><u>Usage Example:</u></kbd>
-* 
 * <code>
 *   $passwd = &File_Passwd::factory('Unix');
 *   $passwd->setFile('/my/passwd/file');
@@ -37,7 +43,6 @@ require_once('File/Passwd/Common.php');
 * 
 * 
 * <kbd><u>Output of listUser()</u></kbd>
-* 
 * # using the 'name map':
 * <pre>
 *      array
@@ -49,7 +54,6 @@ require_once('File/Passwd/Common.php');
 *                   + home  => home directory
 *                   + shell => standard shell
 * </pre>
-* 
 * # without 'name map':
 * <pre>
 *      array
@@ -59,8 +63,7 @@ require_once('File/Passwd/Common.php');
 *                   + 2  => ...
 * </pre>
 * 
-* 
-* @author   Michael Wallner <mike@iworks.at>
+* @author   Michael Wallner <mike@php.net>
 * @package  File_Passwd
 * @version  $Revision$
 * @access   public
@@ -160,7 +163,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
             $parts = explode(':', $line);
             if (count($parts) < 2) {
                 return PEAR::raiseError(
-                    'Passwd file has invalid format!'
+                    FILE_PASSWD_E_INVALID_FORMAT_STR,
+                    FILE_PASSWD_E_INVALID_FORMAT
                 );
             }
             $user = array_shift($parts);
@@ -203,7 +207,10 @@ class File_Passwd_Unix extends File_Passwd_Common {
     function setMode($mode) {
         $mode = strToLower($mode);
         if (!isset($this->_modes[$mode])) {
-            return PEAR::raiseError("Encryption mode '$mode' not supported.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
+                FILE_PASSWD_INVALID_ENC_MODE
+            );
         }
         $this->_mode = $mode;
         return true;
@@ -280,7 +287,10 @@ class File_Passwd_Unix extends File_Passwd_Common {
     */
     function setMap($map = array()){
         if (!is_array($map)) {
-            return PEAR::raiseError('The name map $map must be of type array.');
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_PARAM_MUST_BE_ARRAY_STR, '$map'),
+                FILE_PASSWD_E_PARAM_MUST_BE_ARRAY
+            );
         }
         $this->_map = $map;
         return true;
@@ -338,17 +348,26 @@ class File_Passwd_Unix extends File_Passwd_Common {
     */
     function addUser($user, $pass, $extra = array()){
         if ($this->userExists($user)) {
-            return PEAR::raiseError("User '$user' already exists.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_EXISTS_ALREADY_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_ALREADY
+            );
         }
-        if (!preg_match('/^[a-z]+[a-z0-9_-]$/i', $user)) {
-            return PEAR::raiseError("User '$user' contains illegal characters.");
+        if (!preg_match($this->_pcre, $user)) {
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
+                FILE_PASSWD_E_INVALID_CHARS
+            );
         }
         if (!is_array($extra)) {
             setType($extra, 'array');
         }
         foreach ($extra as $e){
             if (strstr($e, ':')) {
-                return PEAR::raiseError("Extra property '$e' contains a colon.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'Property ', $e),
+                FILE_PASSWD_E_INVALID_CHARS
+            );
             }
         }
         
@@ -386,7 +405,7 @@ class File_Passwd_Unix extends File_Passwd_Common {
         if ($this->_shadowed) {
             return PEAR::raiseError(
                 'Password has been set to \'x\' because they are '.
-                'shadowed in another file.'
+                'shadowed in another file.', 0
             );
         }
         return true;
@@ -411,7 +430,10 @@ class File_Passwd_Unix extends File_Passwd_Common {
     */
     function modUser($user, $properties = array()){
         if (!$this->userExists($user)) {
-            return PEAR::raiseError("User '$user' doesn't exist.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_NOT
+            );
         }
         if (!is_array($properties)) {
             setType($properties, 'array');
@@ -419,7 +441,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
         foreach ($properties as $key => $value){
             if (strstr($value, ':')) {
                 return PEAR::raiseError(
-                    "Property '$value' contains a colon."
+                    sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
+                    FILE_PASSWD_E_INVALID_CHARS
                 );
             }
             $this->_users[$user][$key] = $value;
@@ -443,10 +466,13 @@ class File_Passwd_Unix extends File_Passwd_Common {
     */
     function changePasswd($user, $pass){
         if ($this->_shadowed) {
-            return PEAR::raiseError('Passwords of this passwd file are shadowed.');
+            return PEAR::raiseError('Passwords of this passwd file are shadowed.', 0);
         }
         if (!$this->userExists($user)) {
-            return PEAR::raiseError("User '$user' doesn't exist.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_NOT
+            );
         }
         $pass = $this->_genPass($pass);
         if (PEAR::isError($pass)) {
@@ -475,7 +501,10 @@ class File_Passwd_Unix extends File_Passwd_Common {
     */
     function verifyPasswd($user, $pass){
         if (!$this->userExists($user)) {
-            return PEAR::raiseError("User '$user' doesn't exist.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_NOT
+            );
         }
         $real = 
             $this->_usemap ? 
@@ -510,7 +539,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
                 break;
             default:
                 return PEAR::raiseError(
-                    "Encryption mode '{$this->_mode}' not supported."
+                    sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $this->_mode),
+                    FILE_PASSWD_INVALID_ENC_MODE
                 );
         }
     }

@@ -1,5 +1,4 @@
 <?php
-//
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -13,13 +12,26 @@
 // | obtain it through the world-wide-web, please send a note to          |
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
-// | Author: Michael Wallner <mike@iworks.at>                             |
+// | Author: Michael Wallner <mike@php.net>                               |
 // +----------------------------------------------------------------------+
 //
 // $Id$
-//
 
+/**
+* Baseclass for File_Passwd_* classes.
+* 
+* @author   Michael Wallner <mike@php.net>
+* @package  File_Passwd
+*/
+
+/**
+* Requires System
+*/
 require_once('System.php');
+/**
+* Requires File::Passwd
+*/
+require_once('File/Passwd.php');
 
 /**
 * Baseclass for File_Passwd_* classes.
@@ -34,7 +46,7 @@ require_once('System.php');
 *   o delete a certain user
 *   o list users
 * 
-* @author   Michael Wallner <mike@iworks.at>
+* @author   Michael Wallner <mike@php.net>
 * @package  File_Passwd
 * @version  $Revision$
 * @access   protected
@@ -51,7 +63,7 @@ class File_Passwd_Common {
     var $_file = 'passwd';
     
     /**
-    * File content
+    * file content
     *
     * @var aray
     * @access protected
@@ -59,12 +71,20 @@ class File_Passwd_Common {
     var $_contents = array();
     
     /**
-    * Users
+    * users
     *
     * @var array
     * @access protected
     */
     var $_users = array();
+    
+    /**
+    * PCRE for valid chars
+    * 
+    * @var  string
+    * @access   protected
+    */
+    var $_pcre = '/^[a-z]+[a-z0-9_-]*$/i';
     
     /**
     * Constructor (ZE2)
@@ -97,7 +117,10 @@ class File_Passwd_Common {
     * @return object    PEAR_Error
     */
     function parse(){
-        return PEAR::raiseError('Method parse() was not implemented!');
+        return PEAR::raiseError(
+            sprintf(FILE_PASSWD_E_METHOD_NOT_IMPLEMENTED_STR, 'parse'),
+            FILE_PASSWD_E_METHOD_NOT_IMPLEMENTED
+        );
     }
     
     /**
@@ -111,7 +134,10 @@ class File_Passwd_Common {
     * @return object    PEAR_Error
     */
     function save(){
-        return PEAR::raiseError('Method save() was not implemented!');
+        return PEAR::raiseError(
+            sprintf(FILE_PASSWD_E_METHOD_NOT_IMPLEMENTED_STR, 'save'),
+            FILE_PASSWD_E_METHOD_NOT_IMPLEMENTED
+        );
     }
     
     /**
@@ -132,16 +158,22 @@ class File_Passwd_Common {
         $dir    = dirname($file);
         if (!is_dir($dir) && !System::mkDir('-p -m 0755 ' . $dir)) {
             return PEAR::raiseError(
-                'Couldn\'t create Directory in which the ' .
-                "passwd file '$file' should reside."
+                sprintf(FILE_PASSWD_E_DIR_NOT_CREATED_STR, $dir),
+                FILE_PASSWD_E_DIR_NOT_CREATED
             );
         }
         if (!is_resource($fh = @fopen($file, $mode))) {
-            return PEAR::raiseError("Couldn't open '$file' with mode '$mode'.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_FILE_NOT_OPENED_STR, $file),
+                FILE_PASSWD_E_FILE_NOT_OPENED
+            );
         }
         if (!@flock($fh, LOCK_EX)) {
             fclose($fh);
-            return PEAR::raiseError("Couldn't lock file '$file'.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_FILE_NOT_LOCKED_STR, $file),
+                FILE_PASSWD_E_FILE_NOT_LOCKED
+            );
         }
         return $fh;
     }
@@ -160,10 +192,16 @@ class File_Passwd_Common {
     */
     function _close(&$file_handle){
         if (!@flock($file_handle, LOCK_UN)) {
-            return PEAR::raiseError('Couldn\'t release lock from filehandle.');
+            return PEAR::raiseError(
+                FILE_PASSWD_E_FILE_NOT_UNLOCKED_STR,
+                FILE_PASSWD_E_FILE_NOT_UNLOCKED
+            );
         }
         if (!@fclose($file_handle)) {
-            return PEAR::raiseError('Couldn\'t close filehandle.');
+            return PEAR::raiseError(
+                FILE_PASSWD_E_FILE_NOT_CLOSED_STR,
+                FILE_PASSWD_E_FILE_NOT_CLOSED
+            );
         }
         return true;
     }
@@ -268,7 +306,10 @@ class File_Passwd_Common {
     */
     function delUser($user){
         if (!$this->userExists($user)) {
-            return PEAR::raiseError("User '$user' doesn't exist.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_EXISTS_NOT_STR, 'User ', $user),
+                FILE_PASSWD_EXISTS_NOT
+            );
         }
         unset($this->_users[$user]);
         return true;
@@ -289,7 +330,10 @@ class File_Passwd_Common {
             return $this->_users;
         }
         if (!$this->userExists($user)) {
-            return PEAR::raiseError("User '$user' doesn't exist.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_EXISTS_NOT_STR, 'User ', $user),
+                FILE_PASSWD_EXISTS_NOT
+            );
         }
         return $this->_users[$user];
     }

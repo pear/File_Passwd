@@ -1,5 +1,4 @@
 <?php
-//
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -13,12 +12,21 @@
 // | obtain it through the world-wide-web, please send a note to          |
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
-// | Author: Michael Wallner <mike@iworks.at>                             |
+// | Author: Michael Wallner <mike@php.net>                               |
 // +----------------------------------------------------------------------+
 //
 // $Id$
-//
 
+/**
+* Manipulate AuthDigestFiles as used for HTTP Digest Authentication.
+*
+* @author   Michael Wallner <mike@php.net>
+* @package  File_Passwd
+*/
+
+/**
+* Requires File::Passwd::Common
+*/
 require_once('File/Passwd/Common.php');
 
 /**
@@ -47,7 +55,7 @@ require_once('File/Passwd/Common.php');
 *                   + realm => crypted_passwd
 * </pre>
 * 
-* @author   Michael Wallner <mike@iworks.at>
+* @author   Michael Wallner <mike@php.net>
 * @package  File_Passwd
 * @version  $Revision$
 * @access   public
@@ -118,17 +126,19 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     function addUser($user, $realm, $pass) {
         if ($this->userInRealm($user, $realm)) {
             return PEAR::raiseError(
-                "User '.$user.' already exists in realm '$realm'."
+                "User '$user' already exists in realm '$realm'.", 0
             );
         }
-        if (!preg_match('/^[a-z]+[a-z0-9\-_]*$/i', $user)) {
+        if (!preg_match($this->_pcre, $user)) {
             return PEAR::raiseError(
-                "User '$user' contains illegal characters."
+                sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
+                FILE_PASSWD_E_INVALID_CHARS
             );
         }
-        if (!preg_match('/^[a-z]+[a-z0-9\-_]*$/i', $realm)) {
+        if (!preg_match($this->_pcr, $realm)) {
             return PEAR::raiseError(
-                "Realm '$realm' contains illegal characters."
+                sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'Realm ', $realm),
+                FILE_PASSWD_E_INVALID_CHARS
             );
         }
         $this->_users[$user][$realm] = md5("$user:$realm:$pass");
@@ -220,7 +230,10 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     */
     function verifyPasswd($user, $realm, $pass) {
         if (!$this->userInRealm($user, $realm)) {
-            return PEAR::raiseError("User '$user' does not exist.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_USER_NOT_IN_REALM_STR, $user, $realm),
+                FILE_PASSWD_E_USER_NOT_IN_REALM
+            );
         }
         return ($this->_users[$user][$realm] === md5("$user:$realm:$pass"));
     }
@@ -251,7 +264,10 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     */
     function delUserInRealm($user, $inRealm){
         if (!$this->userInRealm($user, $inRealm)) {
-            return PEAR::raiseError("User '$user' is not in realm '$inRealm'.");
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_USER_NOT_IN_REALM_STR, $user, $inRealm),
+                FILE_PASSWD_E_USER_NOT_IN_REALM
+            );
         }
         unset($this->_users[$user][$inRealm]);
         return true;
@@ -271,7 +287,10 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
         foreach ($this->_contents as $line) {
             $user = explode(':', $entry);
             if (count($user) != 3) {
-                return PEAR::raiseError('AuthDigestFile has invalid format.');
+                return PEAR::raiseError(
+                    FILE_PASSWD_E_INVALID_FORMAT_STR,
+                    FILE_PASSWD_E_INVALID_FORMAT
+                );
             }
             list($user, $realm, $pass) = $user;
             $this->_users[$user][$realm] = trim($pass);
