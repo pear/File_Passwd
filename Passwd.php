@@ -1,5 +1,4 @@
 <?php
-/* vim: set ts=4 sw=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -18,14 +17,21 @@
 //
 // $Id$
 //
-// Manipulate standard UNIX passwd,.htpasswd and CVS pserver passwd files
 
-require_once 'PEAR.php' ;
+require_once('PEAR.php');
 
 /**
 * Class to manage passwd-style files
 *
-* @author Rasmus Lerdorf <rasmus@php.net>
+* @author       Rasmus Lerdorf <rasmus@php.net>
+* @package      File_Passwd
+* @category     File System
+* @version      $Revision$
+* @deprecated   <b>Please use the provided factory instead!</b>
+* 
+* <code>
+*  $passwd = &File_Passwd::factory('Unix');
+* </code>
 */
 class File_Passwd {
 
@@ -33,31 +39,31 @@ class File_Passwd {
     * Passwd file
     * @var string
     */
-    var $filename ;
+    var $filename;
 
     /**
     * Hash list of users
     * @var array
     */
-    var $users ;
+    var $users;
     
     /**
     * hash list of csv-users
     * @var array
     */
-    var $cvs ;
+    var $cvs;
     
     /**
     * filehandle for lockfile
     * @var int
     */
-    var $fplock ;
+    var $fplock;
     
     /**
     * locking state
     * @var boolean
     */
-    var $locked ;
+    var $locked;
     
     /**
     * name of the lockfile
@@ -67,11 +73,12 @@ class File_Passwd {
 
     /**
     * Constructor
-    * Requires the name of the passwd file. This functions opens the file and read it.
-    * Changes to this file will written first in the lock file, so it is still possible
-    * to access the passwd file by another programs. The lock parameter controls the locking
-    * oft the lockfile, not of the passwd file! ( Swapping $lock and $lockfile would
-    * breaks bc to v1.3 and smaller).
+    * 
+    * Requires the name of the passwd file. This functions opens the file and 
+    * read it. Changes to this file will written first in the lock file, 
+    * so it is still possible to access the passwd file by another programs. 
+    * The lock parameter controls the locking oft the lockfile, not of the 
+    * passwd file! (Swapping $lock and $lockfile would break BC).
     * Don't forget to call close() to save changes!
     * 
     * @param $file		name of the passwd file
@@ -128,7 +135,10 @@ class File_Passwd {
             $this->cvs[$user] = $cvsuser;
             return true;
         } else {
-            return PEAR::raiseError( "Couldn't add user '$user', because the user already exists!", 2);
+            return PEAR::raiseError(
+                "Couldn't add user '$user', because the user already exists!", 
+                2
+            );
         }
     } // end func addUser()
 
@@ -149,7 +159,10 @@ class File_Passwd {
             $this->cvs[$user] = $cvsuser;
             return true;
         } else {
-            return PEAR::raiseError( "Couldn't modify user '$user', because the user doesn't exists!", 3) ;
+            return PEAR::raiseError(
+                "Couldn't modify user '$user', because the user doesn't exists!",
+                3
+            );
         }
     } // end func modUser()
 
@@ -167,7 +180,10 @@ class File_Passwd {
             unset($this->users[$user]);
             unset($this->cvs[$user]);
         } else {
-            return PEAR::raiseError( "Couldn't delete user '$user', because the user doesn't exists!", 3) ; 
+            return PEAR::raiseError(
+                "Couldn't delete user '$user', because the user doesn't exists!",
+                3
+            ); 
         }
     } // end func delUser()
 
@@ -182,7 +198,12 @@ class File_Passwd {
     */
     function verifyPassword($user, $pass) {
         if(isset($this->users[$user])) {
-            if($this->users[$user] == crypt($pass, substr($this->users[$user], 0, CRYPT_SALT_LENGTH))) return true;
+            return (
+                $this->users[$user] == crypt(
+                    $pass, 
+                    substr($this->users[$user], 0, CRYPT_SALT_LENGTH)
+                )
+            );
         }
         return false;
     } // end func verifyPassword()
@@ -262,5 +283,35 @@ class File_Passwd {
        return($this->cvs[$user]);
     }
 
+    /**
+    * Factory for new extensions
+    * 
+    * o Unix        for standard Unix passwd files
+    * o CVS         for CVS pserver passwd files
+    * o SMB         for SMB server passwd files
+    * o Authbasic   for AuthUserFiles
+    * o Authdigest  for AuthDigestFiles
+    * 
+    * Returns a PEAR_Error if the desired class/file couldn't be loaded.
+    * 
+    * @static use &File_Passwd::factory() for instantiating you passwd object
+    * @throws PEAR_Error
+    * @access public
+    * @author Michael Wallner <mike@iworks.at>
+    * @return object    File_Passwd_$class - desired Passwd object or PEAR_Error
+    * @param  string    $class the desired subclass of File_Passwd
+    */
+    function &factory($class){
+        $class = ucFirst(strToLower($class));
+        if (!@include_once("Passwd/$class.php")) {
+            return PEAR::raiseError("Couldn't load file Passwd/$class.php");
+        }
+        $class = 'File_Passwd_'.$class;
+        if (!class_exists($class)) {
+            return PEAR::raiseError("Couldn't load class $class.");
+        }
+        $instance = &new $class();
+        return $instance;
+    }
 }
 ?>
