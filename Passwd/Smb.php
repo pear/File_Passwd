@@ -142,13 +142,13 @@ class File_Passwd_Smb extends File_Passwd_Common
     * @param    string  $pass       plaintext password
     * @param    string  $nt_or_lm   encryption mode to use (NT or LM hash)
     */
-    function staticAuth($file, $user, $pass, $nt_or_lm)
+    function staticAuth($file, $user, $pass, $nt_or_lm = 'nt')
     {
         $line = File_Passwd_Common::_auth($file, $user);
         if (!$line || PEAR::isError($line)) {
             return $line;
         }
-        @list(,$nt,$lm) = explode(':', $line);
+        @list(,,$nt,$lm) = explode(':', $line);
         $chap           = &new Crypt_MSCHAPv1;
         switch(strToLower($nt_or_lm)){
         	case FILE_PASSWD_NT: 
@@ -165,7 +165,7 @@ class File_Passwd_Smb extends File_Passwd_Common
                     FILE_PASSWD_E_INVALID_ENC_MODE
                 );
         }
-        return ($crypted === $real);
+        return (strToUpper(bin2hex($crypted)) === $real);
     }
     
     /**
@@ -217,8 +217,6 @@ class File_Passwd_Smb extends File_Passwd_Common
     * @param  string    $pass       the new plaintext password
     * @param  array     $params     additional properties of user
     *                                + userid
-    *                                + flags
-    *                                + lct
     *                                + comment
     * @param  boolean   $isMachine  whether to add an machine account
     */
@@ -243,10 +241,10 @@ class File_Passwd_Smb extends File_Passwd_Common
             $flags = '[U           ]';
         }
         $this->_users[$user] = array(
-            'userid'    => @$params['userid'],
             'flags'     => $flags,
-            'lct'       => @$params['lct'],
-            'comment'   => @$params['comment']
+            'userid'    => (int)@$params['userid'],
+            'comment'   => trim(@$params['comment']),
+            'lct'       => 'LCT-' . strToUpper(dechex(time()))
         );
         return $this->changePasswd($user, $pass);
     }
@@ -289,7 +287,8 @@ class File_Passwd_Smb extends File_Passwd_Common
                     FILE_PASSWD_E_INVALID_PROPERTY
                 );
             }
-            $this->_users[$user][$key] = $value;
+            $this->_users[$user][$key] = trim($value);
+            $this->_users[$user]['lct']= 'LCT-' . strToUpper(dechex(time()));
         }
         return true;
     }
@@ -313,8 +312,12 @@ class File_Passwd_Smb extends File_Passwd_Common
                 FILE_PASSWD_E_EXISTS_NOT
             );
         }
-        $nthash = strToUpper($this->msc->ntPasswordHash($pass));
-        $lmhash = strToUpper($this->msc->lmPasswordHash($pass));
+        if (empty($pass)) {
+            $nthash = $lmhash = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+        } else {
+            $nthash = strToUpper(bin2hex($this->msc->ntPasswordHash($pass)));
+            $lmhash = strToUpper(bin2hex($this->msc->lmPasswordHash($pass)));
+        }
         $this->_users[$user]['nthash'] = $nthash;
         $this->_users[$user]['lmhash'] = $lmhash;
         return true;
@@ -337,7 +340,7 @@ class File_Passwd_Smb extends File_Passwd_Common
     */
     function verifyEncryptedPasswd($user, $nthash, $lmhash = '')
     {
-        if (!$this->userExist($user)) {
+        if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
@@ -393,7 +396,13 @@ class File_Passwd_Smb extends File_Passwd_Common
     {
         $content = '';
         foreach ($this->_users as $user => $userdata) {
-            $content .= $user . ':' . implode(':', $userdata) . "\n";
+            $content .= $user . ':' .
+                        $userdata['userid'] . ':' .
+                        $userdata['nthash'] . ':' .
+                        $userdata['lmhash'] . ':' .
+                        $userdata['flags']  . ':' .
+                        $userdata['lct']    . ':' .
+                        $userdata['comment']. "\n";
         }
         return $this->_save($content);
     }    
