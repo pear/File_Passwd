@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.19 $ -->
+<!-- $Revision: 1.20 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
@@ -16,22 +16,14 @@ Provides methods to manipulate standard Unix, SMB server, AuthUser (.htpasswd), 
     </maintainer>
   </maintainers>
   <release>
-    <version>1.0b1</version>
-    <date>2003-11-04</date>
+    <version>1.0b2</version>
+    <date>2003-11-10</date>
     <state>beta</state>
     <notes>
+Updated License to PHP License 3.0
 
-* Stripped deprecated code from File_Passwd.
-* Added encryption constants for NT and LM hash.
-* Refined passwd generation and moved encryption methods to File_Passwd.
-* Fixed a minor bug in File_Passwd_Cvs::save() which added an empty system user.
-* Fixed some major bugs in File_Passwd_Smb, so this extension should work properly now; the following methods have been fixed:
-  o addUser(), modUser()
-  o changePasswd(), verify[Encrypted]Passwd()
-  o staticAuth(), save()
-
-* Added test cases for File_Passwd and File_Passwd_Smb.
-
+PHP5 fix:
+* File_Passwd_Unix::_genPass()
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">
