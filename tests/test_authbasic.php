@@ -127,7 +127,7 @@ class File_Passwd_AuthbasicTest extends PHPUnit_TestCase{
      * @access public
      */
     function testlistModes(){
-        $array = array('des' => 'd', 'md5' => 'm', 'sha' => 's');
+        $array = array('md5' => 'm', 'des' => 'd', 'sha' => 's');
         if (strToUpper(substr(PHP_OS, 0,3)) == 'WIN') {
             unset($array['des']);
         }
