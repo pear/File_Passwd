@@ -104,7 +104,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * Constructor (ZE2)
     * 
     * Rewritten because DES encryption is not 
-    * supportet by the Win32 htpasswd binary.
+    * supportet by the Win32 httpd.
     * 
     * @access protected
     * @param  string $file   path to AuthUserFile
@@ -203,8 +203,6 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     /** 
     * Change the password of a certain user
     *
-    * This method in fact adds the user with the new password after deleting it.
-    * 
     * Returns a PEAR_Error if user doesn't exist.
     * 
     * @throws PEAR_Error
@@ -227,15 +225,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     /** 
     * Verify password
     *
-    * ATTN: Not available with MD5 ecncryption!
-    * 
-    * If you use MD5 encryption you cannot verify your passwords.
-    * This depends on Apache's htpasswd binary, which uses a
-    * unusual format for MD5 passwords.
-    * 
     * Returns a PEAR_Error if:
     *   o user doesn't exist
-    *   o you try to verify MD5 passwords
     *   o an invalid encryption mode was supplied
     * 
     * @throws PEAR_Error
@@ -277,9 +268,6 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * 
     * ATTN: DES encryption not available on Win32!
     * 
-    * If you are on a Win32 plattform, the binary distribution of
-    * Apache's htpasswd executable doesn't support DES encryption.
-    * 
     * @access public
     * @return array
     */
@@ -293,9 +281,6 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * You can choose one of md5, sha or des.
     * 
     * ATTN: DES encryption not available on Win32!
-    * 
-    * If you are on a Win32 plattform, the binary distribution of
-    * Apache's htpasswd executable doesn't support DES encryption.
     * 
     * Returns a PEAR_Error if a specific encryption mode is not supported.
     * 
