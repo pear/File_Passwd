@@ -3,13 +3,22 @@ require_once 'System.php';
 require_once 'PHPUnit.php';
 require_once 'File/Passwd/Smb.php';
 
-$GLOBALS['tmpfile'] = System::mktemp();
+function hash_nt($txt)
+{
+    return strToUpper(bin2hex($GLOBALS['msc']->ntPasswordHash($txt)));
+}
+function hash_lm($txt)
+{
+    return strToUpper(bin2hex($GLOBALS['msc']->lmPasswordHash($txt)));
+}
 
-$GLOBALS['user'] = array(
+$GLOBALS['tmpfile'] = System::mktemp();
+$GLOBALS['msc']     = &new Crypt_MSCHAPv1();
+$GLOBALS['user']    = array(
     'mike' => array(
         'userid' => 501,
-        'nthash' => 'D4DA020AEDCD249A7A418867A6F0C18A',
-        'lmhash' => 'CCF9155E3E7DB453AAD3B435B51404EE',
+        'nthash' => hash_nt('123'),
+        'lmhash' => hash_lm('123'),
         'flags'  => '[U           ]',
         'lct'    => 'LCT-3FA7AE9B',
         'comment'=> 'Michael Wallner'
@@ -110,6 +119,7 @@ class File_Passwd_SmbTest extends PHPUnit_TestCase{
      */
     function testchangePasswd(){
         $abc = 'E0FBA38268D0EC66EF1CB452D5885E53';
+        $abc = hash_nt('abc');
         $this->pw->addUser('mike4', 123, array('userid' => 504));
         $rs = $this->pw->changePasswd('mike4', 'abc');
         $this->assertTrue($rs);
@@ -123,7 +133,8 @@ class File_Passwd_SmbTest extends PHPUnit_TestCase{
      */
     function testverifyEncryptedPasswd(){
         $this->pw->addUser('mike5', 'abc', array('userid' => 505));
-        $rs = $this->pw->verifyEncryptedPasswd('mike5', 'E0FBA38268D0EC66EF1CB452D5885E53');
+        $pass = hash_nt('abc');
+        $rs = $this->pw->verifyEncryptedPasswd('mike5', $pass);
         $this->assertTrue($rs);
         $this->assertTrue(!PEAR::isError($rs));
     }
@@ -145,7 +156,6 @@ class File_Passwd_SmbTest extends PHPUnit_TestCase{
      */
     function testsave(){
         $this->pw->setFile($GLOBALS['tmpfile']);
-        $this->pw->load();
         $this->pw->addUser('mike', 123, array('userid' => 501, 'comment' => 'Michael Wallner'));
         $_lct = $this->pw->_users['mike']['lct'];
         $rs = $this->pw->save();
@@ -157,8 +167,8 @@ class File_Passwd_SmbTest extends PHPUnit_TestCase{
         $array= array(
             'mike',
             '501',
-            'CCF9155E3E7DB453AAD3B435B51404EE',
-            'D4DA020AEDCD249A7A418867A6F0C18A',
+            hash_lm(123),
+            hash_nt(123),
             '[U           ]',
             $_lct,
             'Michael Wallner'
