@@ -1,55 +1,114 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
-
-<package>
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<package version="1.0">
   <name>File_Passwd</name>
-  <summary>Manipulate password files</summary>
+  <license>PHP</license>
+  <summary>Manipulate many kind of password files</summary>
   <description>
-    Provides methods to manipulate standard UNIX passwd, .htpasswd
-    and CVS pserver passwd files.
+    Provides methods to manipulate standard Unix passwd, SMB server,
+    AuthUser (.htpasswd), AuthDigest (.htdigest) and CVS pserver password files.
   </description>
-
   <maintainers>
     <maintainer>
-      <user>rasmus</user>
-      <name>Rasmus Lerdorf</name>
-      <email>rasmus@php.net</email>
-      <role>lead</role>
-    </maintainer>
-    <maintainer>
-      <user>tuupola</user>
-      <name>Mika Tuupola</name>
-      <email>tuupola@appelsiini.net</email>
+      <user>mike</user>
+      <name>Michael Wallner</name>
+      <email>mike@iworks.at</email>
       <role>lead</role>
     </maintainer>
   </maintainers>
-
   <release>
-    <license>PHP</license>
-    <version>0.9.1</version>
-    <date>2003-08-18</date>
+    <version>0.9.2</version>
+    <date>2003-09-19</date>
     <state>beta</state>
     <notes>
-Fix for bug #24895 (Suppress a warning if the passwd file 
-does not have 3 columns )
+Added several classes for extended functionality.
+File_Passwd now provides a factory method for all 'special-purpose' classes.
+* &amp;File_Passwd::factory('Unix')
+* &amp;File_Passwd::factory('Cvs')
+* &amp;File_Passwd::factory('Smb')
+* &amp;File_Passwd::factory('AuthBasic')
+* &amp;File_Passwd::factory('AuthDigest')
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">
-         <file role="php" name="Passwd.php" />
+        <file role="php">Passwd.php</file>
+        <dir name="Passwd">
+          <file role="php">Common.php</file>
+          <file role="php">Unix.php</file>
+          <file role="php">Cvs.php</file>
+          <file role="php">Smb.php</file>
+          <file role="php">Authbasic.php</file>
+          <file role="php">Authdigest.php</file>
+        </dir>
+        <dir name="docs" role="doc">
+          <file>blank.html</file>
+          <file>classtrees_File_Passwd.html</file>
+          <file>elementindex.html</file>
+          <file>elementindex_File_Passwd.html</file>
+          <file>index.html</file>
+          <file>li_File_Passwd.html</file>
+          <file>packages.html</file>
+          <dir name="File_Passwd">
+            <file>_Passwd_Passwd_Authbasic_php.html</file>
+            <file>_Passwd_Passwd_Authdigest_php.html</file>
+            <file>_Passwd_Passwd_Common_php.html</file>
+            <file>_Passwd_Passwd_Cvs_php.html</file>
+            <file>_Passwd_Passwd_php.html</file>
+            <file>_Passwd_Passwd_Smb_php.html</file>
+            <file>_Passwd_Passwd_Unix_php.html</file>
+            <file>File_Passwd.html</file>
+            <file>File_Passwd_Authbasic.html</file>
+            <file>File_Passwd_Authdigest.html</file>
+            <file>File_Passwd_Common.html</file>
+            <file>File_Passwd_Cvs.html</file>
+            <file>File_Passwd_Smb.html</file>
+            <file>File_Passwd_Unix.html</file>
+          </dir>
+          <dir name="media">
+            <file>banner.css</file>
+            <file>stylesheet.css</file>
+            <dir name="images">
+              <file>blank.png</file>
+              <file>Class.png</file>
+              <file>class_folder.png</file>
+              <file>Constant.png</file>
+              <file>Constructor.png</file>
+              <file>Destructor.png</file>
+              <file>file.png</file>
+              <file>folder.png</file>
+              <file>Function.png</file>
+              <file>function_folder.png</file>
+              <file>Global.png</file>
+              <file>I.png</file>
+              <file>Index.png</file>
+              <file>L.png</file>
+              <file>Lminus.png</file>
+              <file>Lplus.png</file>
+              <file>Method.png</file>
+              <file>next_button.png</file>
+              <file>next_button_disabled.png</file>
+              <file>package.png</file>
+              <file>package_folder.png</file>
+              <file>Page.png</file>
+              <file>previous_button.png</file>
+              <file>previous_button_disabled.png</file>
+              <file>PrivateClass.png</file>
+              <file>PrivateMethod.png</file>
+              <file>PrivateVariable.png</file>
+              <file>T.png</file>
+              <file>Tminus.png</file>
+              <file>Tplus.png</file>
+              <file>tutorial.png</file>
+              <file>tutorial_folder.png</file>
+              <file>up_button.png</file>
+              <file>Variable.png</file>
+            </dir>
+          </dir>
+        </dir>
       </dir>
     </filelist>
   </release>
-
-  <changelog>
-    <release>
-      <version>0.9.0</version>
-      <date>2002-10-30</date>
-      <notes>
-       Initial release of the original version. The 1.0.0 version will
-       have some adjustments which will break backwards compatibility.
-      </notes>
-    </release>
-  </changelog>
-
-
+  <deps>
+    <dep role="pkg" rel="has">System</dep>
+    <dep role="pkg" rel="has">Crypt_CHAP</dep>
+  </deps>
 </package>
