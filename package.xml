@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.33 $ -->
+<!-- $Revision: 1.34 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
@@ -20,7 +20,7 @@ Provides methods to manipulate standard Unix, SMB server, AuthUser (.htpasswd), 
     <date>2004-06-07</date>
     <state>stable</state>
     <notes>
-+ Added public static generatePassword() methods to all File_Passwd subclasses except File_Passwd_Custom.
++ Added public static generatePassword() methods to all File_Passwd_* classes except File_Passwd_Custom.
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">
