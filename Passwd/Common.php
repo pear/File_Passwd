@@ -307,8 +307,8 @@ class File_Passwd_Common {
     function delUser($user){
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
-                sprintf(FILE_PASSWD_EXISTS_NOT_STR, 'User ', $user),
-                FILE_PASSWD_EXISTS_NOT
+                sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_NOT
             );
         }
         unset($this->_users[$user]);

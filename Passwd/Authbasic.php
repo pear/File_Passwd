@@ -263,7 +263,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
             default :
                 return PEAR::raiseError(
                     sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $this->_mode),
-                    FILE_PASSWD_INVALID_ENC_MODE
+                    FILE_PASSWD_E_INVALID_ENC_MODE
                 );
         }
     }
@@ -355,7 +355,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
         if (!isset($this->_modes[$mode])) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $this->_mode),
-                FILE_PASSWD_INVALID_ENC_MODE
+                FILE_PASSWD_E_INVALID_ENC_MODE
             );
         }
         $this->_mode = $mode;
