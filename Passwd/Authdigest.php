@@ -135,7 +135,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
                 FILE_PASSWD_E_INVALID_CHARS
             );
         }
-        if (!preg_match($this->_pcr, $realm)) {
+        if (!preg_match($this->_pcre, $realm)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'Realm ', $realm),
                 FILE_PASSWD_E_INVALID_CHARS
@@ -152,22 +152,22 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     *   o associative array of users of ONE realm if $inRealm was supplied
     *     <pre>
     *       realm1
-    *        + user1
-    *        + user2
-    *        + user3
+    *        + user1 => pass
+    *        + user2 => pass
+    *        + user3 => pass
     *     </pre>
     *   o associative array of all realms with all users
     *     <pre>
     *       array
     *        + realm1 => array
-    *                     + user1
-    *                     + user2
-    *                     + user3
+    *                     + user1 => pass
+    *                     + user2 => pass
+    *                     + user3 => pass
     *        + realm2 => array
-    *                     + user3
+    *                     + user3 => pass
     *        + realm3 => array
-    *                     + user1
-    *                     + user2
+    *                     + user1 => pass
+    *                     + user2 => pass
     *     </pre>
     * 
     * @access public
@@ -177,7 +177,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     */
     function listUserInRealm($inRealm = ''){
         $result = array();
-        foreach ($this->_user as $user => $realms){
+        foreach ($this->_users as $user => $realms){
             foreach ($realms as $realm => $pass){
                 if (!empty($inRealm) && ($inRealm !== $realm)) {
                     continue;
@@ -185,7 +185,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
                 if (!isset($result[$realm])) {
                     $result[$realm] = array();
                 }
-                array_push($result[$realm], $user);
+                $result[$realm][$user] = $pass;
             }
         }
         return $result;
@@ -285,7 +285,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     function parse() {
         $this->_users = array();
         foreach ($this->_contents as $line) {
-            $user = explode(':', $entry);
+            $user = explode(':', $line);
             if (count($user) != 3) {
                 return PEAR::raiseError(
                     FILE_PASSWD_E_INVALID_FORMAT_STR,
