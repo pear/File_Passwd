@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.24 $ -->
+<!-- $Revision: 1.25 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
@@ -16,23 +16,12 @@ Provides methods to manipulate standard Unix, SMB server, AuthUser (.htpasswd), 
     </maintainer>
   </maintainers>
   <release>
-    <version>1.0b2</version>
-    <date>2003-12-19</date>
+    <version>1.0b3</version>
+    <date>2004-xx-xx</date>
     <state>beta</state>
-    <notes><![CDATA[
-* Fixed reference handling in File_Passwd_Unix::_genPass() (PHP5)
-* Fixed typo in File_Passwd_Unix::changePasswd() (PEAR_Error)
-
-* Updated License to PHP License 3.0
-* Made dependency to Crypt_CHAP for File_Passwd_Smb optional
-* Added optional dependency to PHP >= 4.3.0 for SHA encryption
-
-* File_Passwd:
-  o added crypt_plain() for plaintext passwds
-  o added FILE_PASSWD_PLAIN for plaintext passwd
-  
-* Added File_Passwd_Custom for custom formatted passwd files
-]]> </notes>
+    <notes>
+* Removed File_Passwd_Common::__clone()
+    </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">
         <file role="php">Passwd.php</file>

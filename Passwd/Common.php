@@ -8,7 +8,7 @@
 // | to obtain it through the world-wide-web, please send a note to       |
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 2003 Michael Wallner <mike@iworks.at>                  |
+// | Copyright (c) 2003-2004 Michael Wallner <mike@iworks.at>             |
 // +----------------------------------------------------------------------+
 //
 // $Id$
@@ -91,17 +91,6 @@ class File_Passwd_Common
     function __construct($file = 'passwd')
     {
         $this->setFile($file);
-    }
-    
-    /**
-    * Get Copy of this object (ZE2)
-    *
-    * @access public
-    * @return object    copy of this opject
-    */
-    function __clone()
-    {
-        return $this;
     }
     
     /**
@@ -387,6 +376,5 @@ class File_Passwd_Common
         }
         return false;
     }
-    
 }
 ?>

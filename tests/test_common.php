@@ -40,15 +40,6 @@ class File_Passwd_CommonTest extends PHPUnit_TestCase{
     }
     
     /**
-     * Regression test for File_Passwd_Common.__clone method
-     * @access public
-     */
-    function test__clone(){
-        $tmp = $this->pwd->__clone();
-        $this->assertEquals($tmp, $this->pwd);
-    }
-    
-    /**
      * Regression test for File_Passwd_Common.parse method
      * @access public
      */

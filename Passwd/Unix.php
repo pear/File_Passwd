@@ -8,7 +8,7 @@
 // | to obtain it through the world-wide-web, please send a note to       |
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 2003 Michael Wallner <mike@iworks.at>                  |
+// | Copyright (c) 2003-2004 Michael Wallner <mike@iworks.at>             |
 // +----------------------------------------------------------------------+
 //
 // $Id$
@@ -112,7 +112,8 @@ class File_Passwd_Unix extends File_Passwd_Common
     * @access public
     * @param  string    $file   path to passwd file
     */
-    function File_Passwd_Unix($file = 'passwd'){
+    function File_Passwd_Unix($file = 'passwd')
+    {
         $this->__construct($file);
     }
     
@@ -619,6 +620,5 @@ class File_Passwd_Unix extends File_Passwd_Common
         
         return call_user_func(array('File_Passwd', $func), $pass, $salt);
     }
-    
 }
 ?>

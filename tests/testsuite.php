@@ -1,4 +1,7 @@
 <?php
+
+require_once('PEAR.php');
+
 class TC {
     function runTest($name){
         $test = strToLower($name);

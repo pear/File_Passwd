@@ -8,7 +8,7 @@
 // | to obtain it through the world-wide-web, please send a note to       |
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 2003 Michael Wallner <mike@iworks.at>                  |
+// | Copyright (c) 2003-2004 Michael Wallner <mike@iworks.at>             |
 // +----------------------------------------------------------------------+
 //
 // $Id$
@@ -116,8 +116,8 @@ $GLOBALS['_FILE_PASSWD_64'] =
 *  $passwd = &File_Passwd::factory('Unix');
 * </code>
 */
-class File_Passwd {
-
+class File_Passwd
+{
     /**
     * Get API version
     *
@@ -125,7 +125,8 @@ class File_Passwd {
     * @access   public
     * @return   string          API version
     */
-    function apiVersion(){
+    function apiVersion()
+    {
     	return '1.0';
     }
 
@@ -212,7 +213,7 @@ class File_Passwd {
     {
         if (!function_exists('sha1')) {
             return PEAR::raiseError(
-                'SHA1 encryption is not available (PHP<4.3).',
+                'SHA1 encryption is not available (PHP < 4.3).',
                 FILE_PASSWD_E_INVALID_ENC_MODE
             );
         }
@@ -341,7 +342,8 @@ class File_Passwd {
     * @return   object    File_Passwd_$class - desired Passwd object
     * @param    string    $class the desired subclass of File_Passwd
     */
-    function &factory($class){
+    function &factory($class)
+    {
         $class = ucFirst(strToLower($class));
         if (!@include_once("File/Passwd/$class.php")) {
             return PEAR::raiseError("Couldn't load file Passwd/$class.php", 0);
@@ -397,10 +399,11 @@ class File_Passwd {
     *                               o Custom        encryption function and
     *                                               delimiter character
     */
-    function staticAuth($type, $file, $user, $pass, $opt = ''){
+    function staticAuth($type, $file, $user, $pass, $opt = '')
+    {
         $type = ucFirst(strToLower($type));
         if (!@include_once("File/Passwd/$type.php")) {
-            return PEAR::raiseError("Coudn't load file Passwd/$type.php", 0);
+            return PEAR::raiseError("Couldn't load file Passwd/$type.php", 0);
         }
         $func = array('File_Passwd_' . $type, 'staticAuth');
         return call_user_func($func, $file, $user, $pass, $opt);
