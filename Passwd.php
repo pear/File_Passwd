@@ -220,12 +220,12 @@ class File_Passwd {
     * @access   public
     * @return   mixed
     */
-    function crypt_apr_md5($plain, $salt)
+    function crypt_apr_md5($plain, $salt = null)
     {
         if (is_null($salt)) {
             $salt = File_Passwd::salt(8);
         } elseif (preg_match('/^\$apr1\$/', $salt)) {
-            $salt = preg_replace('/^\$apr1\$(.{8}).*/', '\\1', $salt);
+            $salt = preg_replace('/^\$apr1\$([^$]+)\$.*/', '\\1', $salt);
         } else {
             $salt = substr($salt, 0,8);
         }
@@ -394,6 +394,5 @@ class File_Passwd {
         $func = array('File_Passwd_' . $type, 'staticAuth');
         return call_user_func($func, $file, $user, $pass, $opt);
     }
-    
 }
 ?>
