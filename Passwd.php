@@ -18,7 +18,7 @@
 // $Id$
 
 /**
-* Manipulate my kinds of passwd files.
+* Manipulate many kinds of passwd files.
 * 
 * @author       Rasmus Lerdorf <rasmus@php.net>
 * @package      File_Passwd

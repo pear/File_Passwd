@@ -145,16 +145,16 @@ class File_Passwd_Smb extends File_Passwd_Common {
         if (!$line || PEAR::isError($line)) {
             return $line;
         }
-        @list(,$nt,$lm)  = explode(':', $line);
+        @list(,$nt,$lm) = explode(':', $line);
         $chap           = &new Crypt_MSCHAPv1;
         switch(strToLower($nt_or_lm)){
         	case 'nt': 
-                $real = $nt; 
-                $crypted = $chap->ntPasswordHash($pass); 
+                $real       = $nt; 
+                $crypted    = $chap->ntPasswordHash($pass); 
                 break;
         	case 'lm': 
-                $real = $lm;
-                $crypted = $chap->lmPasswordHash($pass); 
+                $real       = $lm;
+                $crypted    = $chap->lmPasswordHash($pass); 
                 break;
         	default:
                 return PEAR::raiseError(
