@@ -157,8 +157,8 @@ class File_Passwd_SmbTest extends PHPUnit_TestCase{
         $array= array(
             'mike',
             '501',
-            'D4DA020AEDCD249A7A418867A6F0C18A',
             'CCF9155E3E7DB453AAD3B435B51404EE',
+            'D4DA020AEDCD249A7A418867A6F0C18A',
             '[U           ]',
             $_lct,
             'Michael Wallner'

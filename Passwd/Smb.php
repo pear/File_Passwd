@@ -148,8 +148,8 @@ class File_Passwd_Smb extends File_Passwd_Common
         if (!$line || PEAR::isError($line)) {
             return $line;
         }
-        @list(,,$nt,$lm) = explode(':', $line);
-        $chap           = &new Crypt_MSCHAPv1;
+        @list(,,$lm,$nt) = explode(':', $line);
+        $chap            = &new Crypt_MSCHAPv1;
         switch(strToLower($nt_or_lm)){
         	case FILE_PASSWD_NT: 
                 $real       = $nt; 
@@ -398,8 +398,8 @@ class File_Passwd_Smb extends File_Passwd_Common
         foreach ($this->_users as $user => $userdata) {
             $content .= $user . ':' .
                         $userdata['userid'] . ':' .
-                        $userdata['nthash'] . ':' .
                         $userdata['lmhash'] . ':' .
+                        $userdata['nthash'] . ':' .
                         $userdata['flags']  . ':' .
                         $userdata['lct']    . ':' .
                         $userdata['comment']. "\n";
