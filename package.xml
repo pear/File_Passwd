@@ -26,12 +26,12 @@
 
   <release>
     <license>PHP</license>
-    <version>0.9.0</version>
-    <date>2002-10-30</date>
+    <version>0.9.1</version>
+    <date>2003-08-18</date>
     <state>beta</state>
     <notes>
-      Initial release of the original version. The 1.0.0 version will
-      have some adjustments which will break backwards combapility.
+Fix for bug #24895 (Suppress a warning if the passwd file 
+does not have 3 columns )
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">
@@ -39,5 +39,17 @@
       </dir>
     </filelist>
   </release>
+
+  <changelog>
+    <release>
+      <version>0.9.0</version>
+      <date>2002-10-30</date>
+      <notes>
+       Initial release of the original version. The 1.0.0 version will
+       have some adjustments which will break backwards compatibility.
+      </notes>
+    </release>
+  </changelog>
+
 
 </package>
