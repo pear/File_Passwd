@@ -34,19 +34,6 @@ require_once('System.php');
 require_once('File/Passwd.php');
 
 /**
-* SHA encryption
-*/
-define('FILE_PASSWD_SHA', 'sha');
-/**
-* MD5 encryption
-*/
-define('FILE_PASSWD_MD5', 'md5');
-/**
-* DES encryption
-*/
-define('FILE_PASSWD_DES', 'des');
-
-/**
 * Baseclass for File_Passwd_* classes.
 * 
 * <kbd><u>
@@ -358,8 +345,8 @@ class File_Passwd_Common
         }
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
-                sprintf(FILE_PASSWD_EXISTS_NOT_STR, 'User ', $user),
-                FILE_PASSWD_EXISTS_NOT
+                sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_NOT
             );
         }
         return $this->_users[$user];
