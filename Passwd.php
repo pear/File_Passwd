@@ -12,7 +12,7 @@
 // | obtain it through the world-wide-web, please send a note to          |
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
-// | Author: Rasmus Lerdorf <rasmus@php.net>                              |
+// | Author: Michael Wallner <mike@php.net>                               |
 // +----------------------------------------------------------------------+
 //
 // $Id$
@@ -20,7 +20,7 @@
 /**
 * Manipulate many kinds of passwd files.
 * 
-* @author       Rasmus Lerdorf <rasmus@php.net>
+* @author       Michael Wallner <mike@php.net>
 * @package      File_Passwd
 * @category     FileSystem
 */
@@ -123,14 +123,12 @@ class File_Passwd {
     /**
     * Get API version
     *
-    * @author   Michael Wallner <mike@php.net>
-    * 
     * @static
     * @access   public
     * @return   string          API version
     */
     function apiVersion(){
-    	return '@API_VERSION@';
+    	return '1.0';
     }
 
     /**
@@ -219,6 +217,8 @@ class File_Passwd {
     *
     * @access   public
     * @return   mixed
+    * @param    string  $plain  plaintext to crypt
+    * @param    string  $salt   the salt to use for encryption
     */
     function crypt_apr_md5($plain, $salt = null)
     {
@@ -323,9 +323,7 @@ class File_Passwd {
     * 
     * Returns a PEAR_Error if the desired class/file couldn't be loaded.
     * 
-    * @author   Michael Wallner <mike@php.net>
-    * 
-    * @static   use &File_Passwd::factory() for instantiating you passwd object
+    * @static   use &File_Passwd::factory() for instantiating your passwd object
     * 
     * @throws   PEAR_Error
     * @access   public
@@ -368,8 +366,6 @@ class File_Passwd {
     *   o Authbasic:    encryption method (des, sha or md5)
     *   o Authdigest:   the realm the user is in
     *   o Cvs:          n/a (empty)
-    * 
-    * @author   Michael Wallner <mike@php.net>
     * 
     * @static   call this method statically for a reasonable fast authentication
     * 
