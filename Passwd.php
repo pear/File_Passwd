@@ -455,6 +455,7 @@ class File_Passwd {
     * @param    string      $pass   the plaintext password
     * @param    string      $opt    o Smb:          NT or LM
     *                               o Unix:         des or md5
+    *                               o Authbasic     des, sha or md5
     *                               o Authdigest    realm the user is in
     */
     function staticAuth($type, $file, $user, $pass, $opt = ''){
@@ -464,23 +465,28 @@ class File_Passwd {
         }
         switch($type){
         	case 'Unix': 
-        		return File_Passwd_Unix::staticAuth($file, $user, $pass, $opt);
+        		return File_Passwd_Unix::staticAuth(
+                    $file, $user, $pass, $opt
+                );
         		break;
         	case 'Cvs': 
-        		return File_Passwd_Cvs::staticAuth($file, $user, $pass);
+        		return File_Passwd_Cvs::staticAuth(
+                    $file, $user, $pass
+                );
         		break;
             case 'Smb':
-                return File_Passwd_Smb::StaticAuth($file, $user, $pass, $opt);
+                return File_Passwd_Smb::StaticAuth(
+                    $file, $user, $pass, $opt
+                );
                 break;
             case 'Authbasic':
-                return File_Passwd_Authbasic::staticAuth($file, $user, $pass);
+                return File_Passwd_Authbasic::staticAuth(
+                    $file, $user, $pass, $opt
+                );
                 break;
             case 'Authdigest':
                 return File_Passwd_Authdigest::staticAuth(
-                    $file,
-                    $user,
-                    $pass,
-                    $opt
+                    $file, $user, $pass, $opt
                 );
                 break;
         }
