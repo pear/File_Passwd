@@ -351,8 +351,9 @@ class File_Passwd_Common
     *                       false if <var>$id</var> wasn't found or PEAR_Error
     * @param    string      $file   path to passwd file
     * @param    string      $id     user_id to search for
+    * @param    string      $sep    field separator
     */
-    function _auth($file, $id)
+    function _auth($file, $id, $sep = ':')
     {
         $file = realpath($file);
         if (!is_file($file)) {
@@ -362,8 +363,10 @@ class File_Passwd_Common
         if (PEAR::isError($fh)) {
             return $fh;
         }
+        $cmp = $id . $sep;
+        $len = strlen($cmp);
         while ($line = fgets($fh)) {
-        	if (strstr($line, $id)) {
+        	if (!strncmp($line, $cmp, $len)) {
         	    File_Passwd_Common::_close($fh);
                 return trim($line);
         	}

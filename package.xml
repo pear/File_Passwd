@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.39 $ -->
+<!-- $Revision: 1.40 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
@@ -19,11 +19,13 @@ and custom formatted password files.
   </maintainers>
   <release>
     <version>1.1.3</version>
-    <date>2005-02-xx</date>
+    <date>2005-03-15</date>
     <state>stable</state>
     <notes><![CDATA[
 * Performance improvements for APR MD5 encryption by Ants Aasma <ants.aasma@mig.ee>
 * Fixed bug in File_Passwd_Common::_open(): could not safe into non-existant file
+* Fixed security bug in File_Passwd_Common::_auth(): one could be authenticated 
+  with a substring of ones actual user name
 ]]> </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">

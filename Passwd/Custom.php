@@ -122,7 +122,7 @@ class File_Passwd_Custom extends File_Passwd_Common
             return PEAR::raiseError('Insufficient options.', 0);
         }
         
-        $line = File_Passwd_Common::_auth($file, $user);
+        $line = File_Passwd_Common::_auth($file, $user, $opts[1]);
         
         if (!$line || PEAR::isError($line)) {
             return $line;
