@@ -217,9 +217,8 @@ class File_Passwd
                 FILE_PASSWD_E_INVALID_ENC_MODE
             );
         }
-        return '{SHA}' . base64_encode(
-            File_Passwd::_hexbin(sha1($plain))
-        );
+        $hash = PEAR_ZE2 ? sha1($plain, true) : pack('H40', sha1($plain));
+        return '{SHA}' . base64_encode($hash);
 
     }
         
@@ -243,27 +242,27 @@ class File_Passwd
         
         $length     = strlen($plain);
         $context    = $plain . '$apr1$' . $salt;
-        $binary     = File_Passwd::_hexbin(md5($plain . $salt . $plain));
+        $binary     = pack('H32', md5($plain . $salt . $plain));
         
         for ($i = $length; $i > 0; $i -= 16) {
-            $context .= substr($binary, 0, ($i > 16 ? 16 : $i));
+            $context .= substr($binary, 0, min(16 , $i));
         }
         for ( $i = $length; $i > 0; $i >>= 1) {
             $context .= ($i & 1) ? chr(0) : $plain[0];
         }
         
-        $binary = File_Passwd::_hexbin(md5($context));
+        $binary = pack('H32', md5($context));
         
         for($i = 0; $i < 1000; $i++) {
-            $new = ($i & 1) ? $plain : substr($binary, 0,16);
+            $new = ($i & 1) ? $plain : $binary;
             if ($i % 3) {
                 $new .= $salt;
             }
             if ($i % 7) {
                 $new .= $plain;
             }
-            $new .= ($i & 1) ? substr($binary, 0,16) : $plain;
-            $binary = File_Passwd::_hexbin(md5($new));
+            $new .= ($i & 1) ? $binary : $plain;
+            $binary = PEAR_ZE2 ? md5($new, true) : pack('H32', md5($new));
         }
         
         $p = array();

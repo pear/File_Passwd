@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.37 $ -->
+<!-- $Revision: 1.38 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
@@ -18,11 +18,11 @@ and custom formatted password files.
     </maintainer>
   </maintainers>
   <release>
-    <version>1.1.2</version>
-    <date>2005-02-01</date>
+    <version>1.1.3</version>
+    <date>2005-02-xx</date>
     <state>stable</state>
     <notes><![CDATA[
-* Fixed Bug #3348 (# sign in any field breaks passwd file)
+* Performance improvements for APR MD5 encryption by Ants Aasma <ants.aasma@mig.ee>
 ]]> </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">
