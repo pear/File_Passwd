@@ -114,8 +114,6 @@ define('FILE_PASSWD_E_FILE_NOT_CLOSED_STR',         'Couldn\'t close file.');
 * Class to manage passwd-style files
 *
 * @author       Rasmus Lerdorf <rasmus@php.net>
-* @package      File_Passwd
-* @category     FileSystem
 * @version      $Revision$
 * @deprecated   <b>Please use the provided factory instead!</b>
 * 
