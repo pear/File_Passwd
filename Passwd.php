@@ -96,7 +96,7 @@ class File_Passwd {
     
         $fp = fopen($file,'r') ;
         if( !$fp) {
-            return PEAR::raiseError( "Couldn't open '$file'!", 1, PEAR_ERROR_RETURN) ;
+            return PEAR::raiseError( "Couldn't open '$file'!", 1) ;
         }
         while(!feof($fp)) {
             $line = fgets($fp, 128);
@@ -128,7 +128,7 @@ class File_Passwd {
             $this->cvs[$user] = $cvsuser;
             return true;
         } else {
-            return PEAR::raiseError( "Couldn't add user '$user', because the user already exists!", 2, PEAR_ERROR_RETURN);
+            return PEAR::raiseError( "Couldn't add user '$user', because the user already exists!", 2);
         }
     } // end func addUser()
 
@@ -149,7 +149,7 @@ class File_Passwd {
             $this->cvs[$user] = $cvsuser;
             return true;
         } else {
-            return PEAR::raiseError( "Couldn't modify user '$user', because the user doesn't exists!", 3, PEAR_ERROR_RETURN) ;
+            return PEAR::raiseError( "Couldn't modify user '$user', because the user doesn't exists!", 3) ;
         }
     } // end func modUser()
 
@@ -167,7 +167,7 @@ class File_Passwd {
             unset($this->users[$user]);
             unset($this->cvs[$user]);
         } else {
-            return PEAR::raiseError( "Couldn't delete user '$user', because the user doesn't exists!", 3, PEAR_ERROR_RETURN) ; 
+            return PEAR::raiseError( "Couldn't delete user '$user', because the user doesn't exists!", 3) ; 
         }
     } // end func delUser()
 
