@@ -31,345 +31,94 @@
 require_once('PEAR.php');
 
 /**
-* Undefined error.
+* Encryption constants.
 */
-define('FILE_PASSWD_E_UNDEFINED',                   0);
+// SHA encryption.
+define('FILE_PASSWD_SHA',   'sha');
+// MD5 encryption
+define('FILE_PASSWD_MD5',   'md5');
+// DES encryption
+define('FILE_PASSWD_DES',   'des');
+// NT hash encryption.
+define('FILE_PASSWD_NT',    'nt');
+// LM hash encryption.
+define('FILE_PASSWD_LM',    'lm');
+
 /**
-* Invalid file format.
+* Error constants.
 */
+// Undefined error.
+define('FILE_PASSWD_E_UNDEFINED',                   0);
+// Invalid file format.
 define('FILE_PASSWD_E_INVALID_FORMAT',              1);
 define('FILE_PASSWD_E_INVALID_FORMAT_STR',          'Passwd file has invalid format.');
-/**
-* Invalid extra property.
-*/
+// Invalid extra property.
 define('FILE_PASSWD_E_INVALID_PROPERTY',            2);
 define('FILE_PASSWD_E_INVALID_PROPERTY_STR',        'Invalid property \'%s\'.');
-/**
-* Invalid characters.
-*/
+// Invalid characters.
 define('FILE_PASSWD_E_INVALID_CHARS',               3);
 define('FILE_PASSWD_E_INVALID_CHARS_STR',           '%s\'%s\' contains illegal characters.');
-/**
-* Invalid encryption mode.
-*/
+// Invalid encryption mode.
 define('FILE_PASSWD_E_INVALID_ENC_MODE',            4);
 define('FILE_PASSWD_E_INVALID_ENC_MODE_STR',        'Encryption mode \'%s\' not supported.');
-/**
-* Exists already.
-*/
+// Exists already.
 define('FILE_PASSWD_E_EXISTS_ALREADY',              5);
 define('FILE_PASSWD_E_EXISTS_ALREADY_STR',          '%s\'%s\' already exists.');
-/**
-* Exists not.
-*/
+// Exists not.
 define('FILE_PASSWD_E_EXISTS_NOT',                  6);
 define('FILE_PASSWD_E_EXISTS_NOT_STR',              '%s\'%s\' doesn\'t exist.');
-/**
-* User not in group.
-*/
+// User not in group.
 define('FILE_PASSWD_E_USER_NOT_IN_GROUP',           7);
 define('FILE_PASSWD_E_USER_NOT_IN_GROUP_STR',       'User \'%s\' doesn\'t exist in group \'%s\'.');
-/**
-* User not in realm.
-*/
+// User not in realm.
 define('FILE_PASSWD_E_USER_NOT_IN_REALM',           8);
 define('FILE_PASSWD_E_USER_NOT_IN_REALM_STR',       'User \'%s\' doesn\'t exist in realm \'%s\'.');
-/**
-* Parameter must be of type array.
-*/
+// Parameter must be of type array.
 define('FILE_PASSWD_E_PARAM_MUST_BE_ARRAY',         9);
 define('FILE_PASSWD_E_PARAM_MUST_BE_ARRAY_STR',     'Parameter %s must be of type array.');
-/**
-* Method not implemented.
-*/
+// Method not implemented.
 define('FILE_PASSWD_E_METHOD_NOT_IMPLEMENTED',      10);
 define('FILE_PASSWD_E_METHOD_NOT_IMPLEMENTED_STR',  'Method \'%s()\' not implemented.');
-/**
-* Directory couldn't be created.
-*/
+// Directory couldn't be created.
 define('FILE_PASSWD_E_DIR_NOT_CREATED',             11);
 define('FILE_PASSWD_E_DIR_NOT_CREATED_STR',         'Couldn\'t create directory \'%s\'.');
-/**
-* File couldn't be opened.
-*/
+// File couldn't be opened.
 define('FILE_PASSWD_E_FILE_NOT_OPENED',             12);
 define('FILE_PASSWD_E_FILE_NOT_OPENED_STR',         'Couldn\'t open file \'%s\'.');
-/**
-* File coudn't be locked.
-*/
+// File coudn't be locked.
 define('FILE_PASSWD_E_FILE_NOT_LOCKED',             13);
 define('FILE_PASSWD_E_FILE_NOT_LOCKED_STR',         'Couldn\'t lock file \'%s\'.');
-/**
-* File couldn't be unlocked.
-*/
+// File couldn't be unlocked.
 define('FILE_PASSWD_E_FILE_NOT_UNLOCKED',           14);
 define('FILE_PASSWD_E_FILE_NOT_UNLOCKED_STR',       'Couldn\'t unlock file.');
-/**
-* File couldn't be closed.
-*/
+// File couldn't be closed.
 define('FILE_PASSWD_E_FILE_NOT_CLOSED',             15);
 define('FILE_PASSWD_E_FILE_NOT_CLOSED_STR',         'Couldn\'t close file.');
 
 /**
-* Class to manage passwd-style files
-*
-* @author       Rasmus Lerdorf <rasmus@php.net>
-* @version      $Revision$
-* @deprecated   <b>Please use the provided factory instead!</b>
+* Allowed 64 chars for salts
+*/
+$GLOBALS['_FILE_PASSWD_64'] =
+    './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+/**
+* The package File_Passwd provides classes and methods 
+* to handle many different kinds of passwd files.
 * 
+* The File_Passwd class in certain is a factory container for its special 
+* purpose extension classes, each handling a specific passwd file format.
+* It also provides a static method for reasonable fast user authentication.
+* Beside that it offers some encryption methods used by the extensions.
+*
+* @author       Michael Wallner <mike@php.net>
+* @version      $Revision$
+* 
+* Usage Example:
 * <code>
 *  $passwd = &File_Passwd::factory('Unix');
 * </code>
 */
 class File_Passwd {
-
-    /**
-    * Passwd file
-    * @var string
-    */
-    var $filename;
-
-    /**
-    * Hash list of users
-    * @var array
-    */
-    var $users;
-    
-    /**
-    * hash list of csv-users
-    * @var array
-    */
-    var $cvs;
-    
-    /**
-    * filehandle for lockfile
-    * @var int
-    */
-    var $fplock;
-    
-    /**
-    * locking state
-    * @var boolean
-    */
-    var $locked;
-    
-    /**
-    * name of the lockfile
-    * @var string    
-    */ 
-    var $lockfile = './passwd.lock';
-
-    /**
-    * Constructor
-    * 
-    * Requires the name of the passwd file. This functions opens the file and 
-    * read it. Changes to this file will written first in the lock file, 
-    * so it is still possible to access the passwd file by another programs. 
-    * The lock parameter controls the locking oft the lockfile, not of the 
-    * passwd file! (Swapping $lock and $lockfile would break BC).
-    * Don't forget to call close() to save changes!
-    * 
-    * @param $file		name of the passwd file
-    * @param $lock		if 'true' $lockfile will be locked
-    * @param $lockfile	name of the temp file, where changes are saved
-    *
-    * @access public
-    * @see close() 
-    */
-
-    function File_Passwd($file, $lock = 0, $lockfile = "") {
-        $this->filename = $file;
-        if( !empty( $lockfile) ) {
-            $this->lockfile = $lockfile ;
-        }
-
-        if($lock) {
-            $this->fplock = fopen($this->lockfile, 'w');
-            flock($this->fplock, LOCK_EX);
-            $this->locked = true;
-        }
-    
-        $fp = fopen($file,'r') ;
-        if( !$fp) {
-            return PEAR::raiseError( "Couldn't open '$file'!", 1) ;
-        }
-        while(!feof($fp)) {
-            $line = fgets($fp, 128);
-            if (!strlen($line)) {
-                continue;
-            }
-            @list($user, $pass, $cvsuser) = explode(':', $line);
-            if(strlen($user)) {
-                $this->users[$user] = trim($pass);
-                $this->cvs[$user] = trim($cvsuser);	
-            }
-        }
-        fclose($fp);
-    } // end func File_Passwd()
-
-    /**
-    * Adds a user
-    *
-    * @param $user new user id
-    * @param $pass password for new user
-    * @param $cvs  cvs user id (needed for pserver passwd files)
-    *
-    * @return mixed returns PEAR_Error, if the user already exists
-    * @access public
-    */
-    function addUser($user, $pass, $cvsuser = "") {
-        if(!isset($this->users[$user]) && $this->locked) {
-            $this->users[$user] = crypt($pass);
-            $this->cvs[$user] = $cvsuser;
-            return true;
-        } else {
-            return PEAR::raiseError(
-                "Couldn't add user '$user', because the user already exists!", 
-                2
-            );
-        }
-    } // end func addUser()
-
-    /**
-    * Modifies a user
-    *
-    * @param $user user id
-    * @param $pass new password for user
-    * @param $cvs  cvs user id (needed for pserver passwd files)
-    *
-    * @return mixed returns PEAR_Error, if the user doesn't exists
-    * @access public
-    */
-
-    function modUser($user, $pass, $cvsuser="") {
-        if(isset($this->users[$user]) && $this->locked) {
-            $this->users[$user] = crypt($pass);
-            $this->cvs[$user] = $cvsuser;
-            return true;
-        } else {
-            return PEAR::raiseError(
-                "Couldn't modify user '$user', because the user doesn't exists!",
-                3
-            );
-        }
-    } // end func modUser()
-
-    /**
-    * Deletes a user
-    *
-    * @param $user user id
-    *
-    * @return mixed returns PEAR_Error, if the user doesn't exists
-    * @access public	
-    */
-    
-    function delUser($user) {
-        if(isset($this->users[$user]) && $this->locked) {
-            unset($this->users[$user]);
-            unset($this->cvs[$user]);
-        } else {
-            return PEAR::raiseError(
-                "Couldn't delete user '$user', because the user doesn't exists!",
-                3
-            ); 
-        }
-    } // end func delUser()
-
-    /**
-    * Verifies a user's password
-    *
-    * @param $user user id
-    * @param $pass password for user
-    *
-    * @return boolean true if password is ok
-    * @access public		
-    */
-    function verifyPassword($user, $pass) {
-        if(isset($this->users[$user])) {
-            return (
-                $this->users[$user] == crypt(
-                    $pass, 
-                    substr($this->users[$user], 0, CRYPT_SALT_LENGTH)
-                )
-            );
-        }
-        return false;
-    } // end func verifyPassword()
-
-    /**
-    * Return all users from passwd file
-    *
-    * @access public
-    * @return array
-    */
-    function listUsers() {
-        return $this->users;
-    } // end func listUsers()
-
-    /**
-    * Writes changes to passwd file and unlocks it
-    *
-    * @access public
-    */
-    function close() {
-        if($this->locked) {
-            foreach($this->users as $user => $pass) {
-                if($this->cvs[$user]) {
-                    fputs($this->fplock, "$user:$pass:" . $this->cvs[$user] . "\n");
-                } else {
-                    fputs($this->fplock, "$user:$pass\n");
-                }
-            }
-            rename($this->lockfile, $this->filename);
-            flock($this->fplock, LOCK_UN);
-            $this->locked = false;
-            fclose($this->fplock);
-        }
-    } // end func close()
-
-
-    /**
-    * Lock the lockfile
-    *
-    * @access public
-    */
-    function lock() {
-        $this->fplock = fopen($this->lockfile, 'w');
-        flock($this->fplock, LOCK_EX);
-        $this->locked = true;
-    }
-
-    /**
-    * Unlock the lockfile
-    *
-    * @access public
-    */
-    function unlock() {
-        flock($this->fplock, LOCK_UN);
-        $this->locked = false;
-        fclose($this->fplock);
-    }
-
-    /**
-    * Determine if lockfile is locked
-    *
-    * @return boolean
-    * @access public
-    */
-    function isLocked() {
-        return($this->locked);
-    }
-
-    /**
-    * Get the CVS username 
-    *
-    * @param  string username
-    * @return string
-    * @access public
-    */
-    function getCvsUser($user) {
-       return($this->cvs[$user]);
-    }
 
     /**
     * Get API version
@@ -383,7 +132,186 @@ class File_Passwd {
     function apiVersion(){
     	return '@API_VERSION@';
     }
+
+    /**
+    * Generate salt
+    *
+    * @access   public
+    * @return   mixed
+    * @param    int     $length     salt length
+    * @return   string  the salt
+    */
+    function salt($length = 2)
+    {
+        $salt = '';
+        $length = (int) $length;
+        $length < 2 && $length = 2;
+        for($i = 0; $i < $length; $i++) {
+            $salt .= $GLOBALS['_FILE_PASSWD_64'][rand(0, 63)];
+        }
+        return $salt;
+    }
+
+    /**
+    * DES encryption
+    *
+    * @static
+    * @access   public
+    * @return   string  crypted text
+    * @param    string  $plain  plaintext to encrypt
+    * @param    string  $salt   the salt to use for encryption (2 chars)
+    */
+    function crypt_des($plain, $salt = null)
+    {
+        (is_null($salt) || strlen($salt) < 2) && $salt = File_Passwd::salt(2);
+        return crypt($plain, $salt);
+    }
     
+    /**
+    * MD5 encryption
+    *
+    * @static
+    * @access   public
+    * @return   string  crypted text
+    * @param    string  $plain  plaintext to encrypt
+    * @param    string  $salt   the salt to use for encryption 
+    *                           (>2 chars starting with $1$)
+    */
+    function crypt_md5($plain, $salt = null)
+    {
+        if (
+            is_null($salt) || 
+            strlen($salt) < 3 || 
+            !preg_match('/^\$1\$/', $salt))
+        {
+            $salt = '$1$' . File_Passwd::salt(8);
+        }
+        return crypt($plain, $salt);
+    }
+    
+    /**
+    * SHA1 encryption
+    *
+    * Returns a PEAR_Error if sha1() is not available (PHP<4.3).
+    * 
+    * @static
+    * @throws   PEAR_Error
+    * @access   public
+    * @return   mixed   crypted string or PEAR_Error
+    * @param    string  $plain  plaintext to encrypt
+    */
+    function crypt_sha($plain)
+    {
+        if (!function_exists('sha1')) {
+            return PEAR::raiseError(
+                'SHA1 encryption is not available (PHP<4.3).',
+                FILE_PASSWD_E_INVALID_ENC_MODE
+            );
+        }
+        return '{SHA}' . base64_encode(
+            File_Passwd::_hexbin(sha1($plain))
+        );
+
+    }
+        
+    /**
+    * APR compatible MD5 encryption
+    *
+    * @access   public
+    * @return   mixed
+    */
+    function crypt_apr_md5($plain, $salt)
+    {
+        if (is_null($salt)) {
+            $salt = File_Passwd::salt(8);
+        } elseif (preg_match('/^\$apr1\$/', $salt)) {
+            $salt = preg_replace('/^\$apr1\$(.{8}).*/', '\\1', $salt);
+        } else {
+            $salt = substr($salt, 0,8);
+        }
+        
+        $length     = strlen($plain);
+        $context    = $plain . '$apr1$' . $salt;
+        $binary     = File_Passwd::_hexbin(md5($plain . $salt . $plain));
+        
+        for ($i = $length; $i > 0; $i -= 16) {
+            $context .= substr($binary, 0, ($i > 16 ? 16 : $i));
+        }
+        for ( $i = $length; $i > 0; $i >>= 1) {
+            $context .= ($i & 1) ? chr(0) : $plain[0];
+        }
+        
+        $binary = File_Passwd::_hexbin(md5($context));
+        
+        for($i = 0; $i < 1000; $i++) {
+            $new = ($i & 1) ? $plain : substr($binary, 0,16);
+            if ($i % 3) {
+                $new .= $salt;
+            }
+            if ($i % 7) {
+                $new .= $plain;
+            }
+            $new .= ($i & 1) ? substr($binary, 0,16) : $plain;
+            $binary = File_Passwd::_hexbin(md5($new));
+        }
+        
+        $p = array();
+        for ($i = 0; $i < 5; $i++) {
+            $k = $i + 6;
+            $j = $i + 12;
+            if ($j == 16) {
+                $j = 5;
+            }
+            $p[] = File_Passwd::_64(
+                (ord($binary[$i]) << 16) |
+                (ord($binary[$k]) << 8) |
+                (ord($binary[$j])),
+                5
+            );
+        }
+        
+        return 
+            '$apr1$' . $salt . '$' . implode($p) . 
+            File_Passwd::_64(ord($binary[11]), 3);
+    }
+
+    /**
+    * Convert hexadecimal string to binary data
+    *
+    * @static
+    * @access   private
+    * @return   mixed
+    * @param    string  $hex
+    */
+    function _hexbin($hex)
+    {
+        $rs = '';
+        $ln = strlen($hex);
+        for($i = 0; $i < $ln; $i += 2) {
+            $rs .= chr(hexdec($hex{$i} . $hex{$i+1}));
+        }
+        return $rs;
+    }
+    
+    /**
+    * Convert to allowed 64 characters for encryption
+    *
+    * @static
+    * @access   private
+    * @return   string
+    * @param    string  $value
+    * @param    int     $count
+    */
+    function _64($value, $count)
+    {
+        $result = '';
+        while(--$count) {
+            $result .= $GLOBALS['_FILE_PASSWD_64'][$value & 0x3f];
+            $value >>= 6;
+        }
+        return $result;
+    }
+
     /**
     * Factory for new extensions
     * 
