@@ -115,11 +115,11 @@ class File_Passwd_CvsTest extends PHPUnit_TestCase{
     }
     
     /**
-     * Regression test for File_Passwd_Cvs._genPass method
+     * Regression test for File_Passwd_Cvs.generatePassword method
      * @access public
      */
-    function test_genPass(){
-        $this->assertEquals('12IbR.gJ8wcpc', $this->pwd->_genPass(123, '12IbR.gJ8wcpc'));
+    function testgeneratePassword(){
+        $this->assertEquals('12IbR.gJ8wcpc', $this->pwd->generatePassword(123, '12IbR.gJ8wcpc'));
     }
     
     function teststaticAuth(){

@@ -114,7 +114,7 @@ class File_Passwd_Unix extends File_Passwd_Common
     */
     function File_Passwd_Unix($file = 'passwd')
     {
-        $this->__construct($file);
+        parent::__construct($file);
     }
     
     /**
@@ -608,7 +608,7 @@ class File_Passwd_Unix extends File_Passwd_Common
             $crypters = get_class_methods('File_Passwd');
         }
         
-        $mode = is_null($mode) ? strToLower($this->_mode) : strToLower($mode);
+        $mode = !isset($mode) ? strToLower($this->_mode) : strToLower($mode);
         $func = 'crypt_' . $mode;
         
         if (!in_array($func, $crypters)) {
@@ -620,5 +620,31 @@ class File_Passwd_Unix extends File_Passwd_Common
         
         return call_user_func(array('File_Passwd', $func), $pass, $salt);
     }
+    
+    /**
+    * Generate Password
+    *
+    * Returns PEAR_Error FILE_PASSD_E_INVALID_ENC_MODE if the supplied
+    * encryption mode is not supported.
+    *
+    * @see File_Passwd
+    * @static
+    * @access   public
+    * @return   mixed   The crypted password on success or PEAR_Error on failure.
+    * @param    string  $pass The plaintext password.
+    * @param    string  $mode The encryption mode to use.
+    * @param    string  $salt The salt to use.
+    */
+    function generatePassword($pass, $mode = 'md5', $salt = null)
+    {
+        if (!isset($mode)) {
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, '<NULL>'),
+                FILE_PASSWD_E_INVALID_ENC_MODE                
+            );
+        }
+        return File_Passwd_Unix::_genPass($pass, $salt, $mode);
+    }
+    
 }
 ?>

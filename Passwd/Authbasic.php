@@ -88,7 +88,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     */
     function File_Passwd_Authbasic($file = '.htpasswd')
     {
-        $this->__construct($file);
+        File_Passwd_Authbasic::__construct($file);
     }
 
     /**
@@ -358,5 +358,30 @@ class File_Passwd_Authbasic extends File_Passwd_Common
         $this->_contents = array();
         return true;
     }
+    
+    /**
+    * Generate Password
+    * 
+    * Returns PEAR_Error FILE_PASSD_E_INVALID_ENC_MODE if the supplied
+    * encryption mode is not supported.
+    *
+    * @static
+    * @access   public
+    * @return   mixed   The crypted password on success or PEAR_Error on failure.
+    * @param    string  $pass The plaintext password.
+    * @param    string  $mode The encryption mode to use (des|md5|sha).
+    * @param    string  $salt The salt to use.
+    */
+    function generatePassword($pass, $mode = FILE_PASSWD_DES, $salt = null)
+    {
+        if (!in_array(strToLower($mode), array('des', 'md5', 'sha'))) {
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
+                FILE_PASSWD_E_INVALID_ENC_MODE                
+            );
+        }
+        return File_Passwd_Authbasic::_genPass($pass, $salt, $mode);
+    }
+    
 }
 ?>

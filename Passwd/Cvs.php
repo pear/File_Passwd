@@ -66,7 +66,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
     */
     function File_Passwd_Cvs($file = 'passwd')
     {
-        $this->__construct($file);
+        parent::__construct($file);
     }
     
     /**
@@ -93,7 +93,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
             return $line;
         }
         @list(,$real)   = explode(':', $line);
-        return (File_Passwd_Cvs::_genPass($pass, $real) === $real);
+        return (File_Passwd_Cvs::generatePassword($pass, $real) === $real);
     }
     
     /**
@@ -195,7 +195,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
                 FILE_PASSWD_E_INVALID_CHARS
             );
         }
-        $this->_users[$user]['passwd'] = $this->_genPass($pass);
+        $this->_users[$user]['passwd'] = $this->generatePassword($pass);
         $this->_users[$user]['system'] = $system_user;
         return true;
     }
@@ -220,7 +220,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
             );
         }
         $real = $this->_users[$user]['passwd'];
-        return ($real === $this->_genPass($pass, $real));
+        return ($real === $this->generatePassword($pass, $real));
     }
     
     /**
@@ -240,7 +240,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
                 FILE_PASSWD_E_EXISTS_NOT
             );
         }
-        $this->_users[$user]['passwd'] = $this->_genPass($pass);
+        $this->_users[$user]['passwd'] = $this->generatePassword($pass);
         return true;
     }
     
@@ -280,13 +280,13 @@ class File_Passwd_Cvs extends File_Passwd_Common
     /**
     * Generate crypted password
     *
-    * @throws PEAR_Error
+    * @static
     * @access public
     * @return string    the crypted password
     * @param  string    $pass   new plaintext password
     * @param  string    $salt   new crypted password from which to gain the salt
     */
-    function _genPass($pass, $salt = null)
+    function generatePassword($pass, $salt = null)
     {
         return File_Passwd::crypt_des($pass, $salt);
     }

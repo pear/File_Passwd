@@ -93,7 +93,7 @@ class File_Passwd_Smb extends File_Passwd_Common
     */
     function File_Passwd_Smb($file = 'smbpasswd')
     {
-        $this->__construct($file);
+        File_Passwd_Smb::__construct($file);
     }
     
     /**
@@ -393,6 +393,25 @@ class File_Passwd_Smb extends File_Passwd_Common
                         $userdata['comment']. "\n";
         }
         return $this->_save($content);
-    }    
+    }
+    
+    /**
+    * Generate Password
+    *
+    * @static
+    * @access   public
+    * @return   string  The crypted password.
+    * @param    string  $pass The plaintext password.
+    * @param    string  $mode The encryption mode to use (nt|lm).
+    */
+    function generatePassword($pass, $mode = 'nt')
+    {
+        $chap = &new Crypt_CHAP_MSv1;
+        $hash = strToLower($mode) == 'nt' ? 
+            $chap->ntPasswordHash($pass) :
+            $chap->lmPasswordHash($pass);
+        return strToUpper(bin2hex($hash));
+    }
+    
 }
 ?>

@@ -219,7 +219,7 @@ class File_Passwd_Common
             return $fh;
         }
         $this->_contents = array();
-        while ($line = fgets($fh)){
+        while ($line = fgets($fh)) {
             $line = trim(preg_replace('/^(\S*.*)#.*$/', '\\1', $line));
             if (empty($line)) {
                 continue;
@@ -364,7 +364,7 @@ class File_Passwd_Common
         if (PEAR::isError($fh)) {
             return $fh;
         }
-        while($line = fgets($fh)){
+        while ($line = fgets($fh)) {
         	if (strstr($line, $id)) {
         	    File_Passwd_Common::_close($fh);
                 return trim($line);

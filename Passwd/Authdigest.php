@@ -74,7 +74,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     */
     function File_Passwd_Authdigest($file = '.htdigest')
     {
-        $this->__construct($file);
+        parent::__construct($file);
     }
 
     /**
@@ -333,5 +333,21 @@ class File_Passwd_Authdigest extends File_Passwd_Common
         $this->_contents = array();
         return true;
     }
+    
+    /**
+    * Generate Password
+    *
+    * @static
+    * @access   public
+    * @return   string  The crypted password.
+    * @param    string  $user The username.
+    * @param    string  $realm The realm the user is in.
+    * @param    string  $pass The plaintext password.
+    */
+    function generatePassword($user, $realm, $pass)
+    {
+        return md5("$user:$realm:$pass");
+    }
+    
 }
 ?>

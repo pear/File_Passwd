@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.32 $ -->
+<!-- $Revision: 1.33 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
@@ -16,11 +16,11 @@ Provides methods to manipulate standard Unix, SMB server, AuthUser (.htpasswd), 
     </maintainer>
   </maintainers>
   <release>
-    <version>1.0.2</version>
-    <date>2004-03-30</date>
+    <version>1.1.0</version>
+    <date>2004-06-07</date>
     <state>stable</state>
     <notes>
-* Maintainance release for Crypt_CHAP-1.0.0
++ Added public static generatePassword() methods to all File_Passwd subclasses except File_Passwd_Custom.
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">
