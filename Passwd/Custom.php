@@ -76,7 +76,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     */
     var $_usemap = false;
 
-	/**
+    /**
     * Constructor
     *
     * @access   protected
