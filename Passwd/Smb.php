@@ -34,10 +34,7 @@ require_once 'Crypt/CHAP.php';
 /**
 * Manipulate SMB server passwd files.
 *
-* <kbd><u>
-*   Usage Example 1 (modifying existing file):
-* </u></kbd>
-*
+* # Usage Example 1 (modifying existing file):
 * <code>
 * $f = &File_Passwd::factory('SMB');
 * $f->setFile('./smbpasswd');
@@ -51,10 +48,7 @@ require_once 'Crypt/CHAP.php';
 * $f->save();
 * </code>
 * 
-* <kbd><u>
-*   Usage Example 2 (creating a new file):
-* </u></kbd>
-*
+* # Usage Example 2 (creating a new file):
 * <code>
 * $f = &File_Passwd::factory('SMB');
 * $f->setFile('./smbpasswd');
@@ -63,10 +57,7 @@ require_once 'Crypt/CHAP.php';
 * $f->save();
 * </code>
 * 
-* <kbd><u>
-*   Usage Example 3 (authentication):
-* </u></kbd>
-*
+* # Usage Example 3 (authentication):
 * <code>
 * $f = &File_Passwd::factory('SMB');
 * $f->setFile('./smbpasswd');
@@ -116,7 +107,7 @@ class File_Passwd_Smb extends File_Passwd_Common
     function __construct($file = 'smbpasswd')
     {
         $this->setFile($file);
-        $this->msc = &new Crypt_MSCHAPv1;
+        $this->msc = &new Crypt_CHAP_MSv1;
     }     
     
     /**
@@ -145,7 +136,8 @@ class File_Passwd_Smb extends File_Passwd_Common
             return $line;
         }
         @list(,,$lm,$nt) = explode(':', $line);
-        $chap            = &new Crypt_MSCHAPv1;
+        $chap            = &new Crypt_CHAP_MSv1;
+        
         switch(strToLower($nt_or_lm)){
         	case FILE_PASSWD_NT: 
                 $real       = $nt; 

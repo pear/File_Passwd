@@ -13,7 +13,7 @@ function hash_lm($txt)
 }
 
 $GLOBALS['tmpfile'] = System::mktemp();
-$GLOBALS['msc']     = &new Crypt_MSCHAPv1();
+$GLOBALS['msc']     = &new Crypt_CHAP_MSv1();
 $GLOBALS['user']    = array(
     'mike' => array(
         'userid' => 501,
