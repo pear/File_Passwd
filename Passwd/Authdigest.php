@@ -35,7 +35,7 @@ require_once('File/Passwd/Common.php');
 *   $htd->save();
 * </code>
 *
-* <kdb><u>
+* <kbd><u>
 *   Output of listUser()
 * </u></kbd>
 * <pre>
