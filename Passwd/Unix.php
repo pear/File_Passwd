@@ -635,7 +635,7 @@ class File_Passwd_Unix extends File_Passwd_Common
     * @param    string  $mode The encryption mode to use.
     * @param    string  $salt The salt to use.
     */
-    function generatePassword($pass, $mode = 'md5', $salt = null)
+    function generatePasswd($pass, $mode = FILE_PASSWD_MD5, $salt = null)
     {
         if (!isset($mode)) {
             return PEAR::raiseError(
@@ -644,6 +644,15 @@ class File_Passwd_Unix extends File_Passwd_Common
             );
         }
         return File_Passwd_Unix::_genPass($pass, $salt, $mode);
+    }
+    
+    /**
+     * @ignore
+     * @deprecated
+     */
+    function generatePassword($pass, $mode = FILE_PASSWD_MD5, $salt = null)
+    {
+        return File_Passwd_Unix::generatePasswd($pass, $mode, $salt);
     }
     
 }

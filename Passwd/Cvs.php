@@ -286,10 +286,18 @@ class File_Passwd_Cvs extends File_Passwd_Common
     * @param  string    $pass   new plaintext password
     * @param  string    $salt   new crypted password from which to gain the salt
     */
-    function generatePassword($pass, $salt = null)
+    function generatePasswd($pass, $salt = null)
     {
         return File_Passwd::crypt_des($pass, $salt);
     }
     
+    /**
+     * @ignore
+     * @deprecated
+     */
+    function generatePassword($pass, $salt = null)
+    {
+        return File_Passwd_Cvs::generatePasswd($pass, $salt);
+    }
 }
 ?>

@@ -404,7 +404,7 @@ class File_Passwd_Smb extends File_Passwd_Common
     * @param    string  $pass The plaintext password.
     * @param    string  $mode The encryption mode to use (nt|lm).
     */
-    function generatePassword($pass, $mode = 'nt')
+    function generatePasswd($pass, $mode = 'nt')
     {
         $chap = &new Crypt_CHAP_MSv1;
         $hash = strToLower($mode) == 'nt' ? 
@@ -413,5 +413,13 @@ class File_Passwd_Smb extends File_Passwd_Common
         return strToUpper(bin2hex($hash));
     }
     
+    /**
+     * @ignore
+     * @deprecated
+     */
+    function generatePassword($pass, $mode = 'nt')
+    {
+        return File_Passwd_Smb::generatePasswd($pass, $mode);
+    }
 }
 ?>

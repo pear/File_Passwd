@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.34 $ -->
+<!-- $Revision: 1.35 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
   <summary>Manipulate many kinds of password files</summary>
   <description>
-Provides methods to manipulate standard Unix, SMB server, AuthUser (.htpasswd), AuthDigest (.htdigest), CVS pserver and custom formatted password files.
+Provides methods to manipulate and authenticate against standard Unix, 
+SMB server, AuthUser (.htpasswd), AuthDigest (.htdigest), CVS pserver 
+and custom formatted password files.
   </description>
   <maintainers>
     <maintainer>
@@ -16,12 +18,13 @@ Provides methods to manipulate standard Unix, SMB server, AuthUser (.htpasswd), 
     </maintainer>
   </maintainers>
   <release>
-    <version>1.1.0</version>
-    <date>2004-06-07</date>
+    <version>1.1.1</version>
+    <date>2004-10-05</date>
     <state>stable</state>
-    <notes>
-+ Added public static generatePassword() methods to all File_Passwd_* classes except File_Passwd_Custom.
-    </notes>
+    <notes><![CDATA[
+Renamed File_Passwd_*::generatePassword() to generatePasswd() to be consistent;
+introduced generatePassword() methods are still available for BC reasons.
+]]> </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">
         <file role="php">Passwd.php</file>

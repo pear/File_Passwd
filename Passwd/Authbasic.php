@@ -372,7 +372,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     * @param    string  $mode The encryption mode to use (des|md5|sha).
     * @param    string  $salt The salt to use.
     */
-    function generatePassword($pass, $mode = FILE_PASSWD_DES, $salt = null)
+    function generatePasswd($pass, $mode = FILE_PASSWD_DES, $salt = null)
     {
         if (!in_array(strToLower($mode), array('des', 'md5', 'sha'))) {
             return PEAR::raiseError(
@@ -383,5 +383,13 @@ class File_Passwd_Authbasic extends File_Passwd_Common
         return File_Passwd_Authbasic::_genPass($pass, $salt, $mode);
     }
     
+    /**
+     * @ignore
+     * @deprecated
+     */
+    function generatePassword($pass, $mode = FILE_PASSWD_DES, $salt = null)
+    {
+        return File_Passwd_Authbasic::generatePasswd($pass, $mode, $salt);
+    }
 }
 ?>

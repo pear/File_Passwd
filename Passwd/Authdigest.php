@@ -344,10 +344,18 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     * @param    string  $realm The realm the user is in.
     * @param    string  $pass The plaintext password.
     */
-    function generatePassword($user, $realm, $pass)
+    function generatePasswd($user, $realm, $pass)
     {
         return md5("$user:$realm:$pass");
     }
     
+    /**
+     * @ignore
+     * @deprecated
+     */
+    function generatePassword($user, $realm, $pass)
+    {
+        return File_Passwd_Authdigest::generatePasswd($user, $realm, $pass);
+    }
 }
 ?>
