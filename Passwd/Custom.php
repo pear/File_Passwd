@@ -394,7 +394,7 @@ class File_Passwd_Custom extends File_Passwd_Common
                 FILE_PASSWD_E_EXISTS_ALREADY
             );
         }
-        if (!preg_match($this->_pcre, $user)) {
+        if (!preg_match($this->_pcre, $user) || strstr($user, $this->_delim)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
                 FILE_PASSWD_E_INVALID_CHARS
@@ -405,10 +405,10 @@ class File_Passwd_Custom extends File_Passwd_Common
         }
         foreach ($extra as $e){
             if (strstr($e, $this->_delim)) {
-            return PEAR::raiseError(
-                sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'Property ', $e),
-                FILE_PASSWD_E_INVALID_CHARS
-            );
+                return PEAR::raiseError(
+                    sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'Property ', $e),
+                    FILE_PASSWD_E_INVALID_CHARS
+                );
             }
         }
         
