@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.16 $ -->
+<!-- $Revision: 1.17 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
   <summary>Manipulate many kinds of password files</summary>
   <description>
-    Provides methods to manipulate standard Unix, SMB server,
-    AuthUser (.htpasswd), AuthDigest (.htdigest) and CVS pserver password files.
+Provides methods to manipulate standard Unix, SMB server, AuthUser (.htpasswd), AuthDigest (.htdigest) and CVS pserver password files.
   </description>
   <maintainers>
     <maintainer>
       <user>mike</user>
       <name>Michael Wallner</name>
-      <email>mike@iworks.at</email>
+      <email>mike@php.net</email>
       <role>lead</role>
     </maintainer>
   </maintainers>
   <release>
-    <version>0.10.0</version>
-    <date>2003-10-19</date>
+    <version>1.0b1</version>
+    <date>2003-11-02</date>
     <state>beta</state>
     <notes>
-* Refined passwd generation
 * Stripped deprecated code from File_Passwd
 * Added encryption constants for NT and LM hash
+* Refined passwd generation and moved encryption methods to File_Passwd
+* Fixed a minor bug in File_Passwd_Cvs::save() which added an empty system user
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">
@@ -36,20 +36,20 @@
           <file role="php">Authbasic.php</file>
           <file role="php">Authdigest.php</file>
         </dir>
-		<dir name="tests" role="test">
-			<file>testsuite.php</file>
-			<file>test_common.php</file>
-			<file>test_unix.php</file>
-			<file>test_cvs.php</file>
-			<file>test_authbasic.php</file>
-			<file>test_authdigest.php</file>
-			<file>README.txt</file>
-			<file>common.txt</file>
-			<file>passwd.unix.txt</file>
-			<file>passwd.cvs.txt</file>
-			<file>passwd.authbasic.txt</file>
-			<file>passwd.authdigest.txt</file>
-		</dir>
+      		<dir name="tests" role="test">
+      			<file>testsuite.php</file>
+      			<file>test_common.php</file>
+      			<file>test_unix.php</file>
+      			<file>test_cvs.php</file>
+      			<file>test_authbasic.php</file>
+      			<file>test_authdigest.php</file>
+      			<file>README.txt</file>
+      			<file>common.txt</file>
+      			<file>passwd.unix.txt</file>
+      			<file>passwd.cvs.txt</file>
+      			<file>passwd.authbasic.txt</file>
+      			<file>passwd.authdigest.txt</file>
+      		</dir>
       </dir>
     </filelist>
   </release>
