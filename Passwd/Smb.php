@@ -24,12 +24,12 @@
 /**
 * Requires File::Passwd::Common
 */
-require_once('File/Passwd/Common.php');
+require_once 'File/Passwd/Common.php';
 
 /**
 * Requires Crypt::CHAP
 */
-require_once('Crypt/CHAP.php');
+require_once 'Crypt/CHAP.php';
 
 /**
 * Manipulate SMB server passwd files.

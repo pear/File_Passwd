@@ -23,11 +23,11 @@
 /**
 * Requires System
 */
-require_once('System.php');
+require_once 'System.php';
 /**
 * Requires File::Passwd
 */
-require_once('File/Passwd.php');
+require_once 'File/Passwd.php';
 
 /**
 * Baseclass for File_Passwd_* classes.

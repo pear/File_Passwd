@@ -24,7 +24,7 @@
 /**
 * Requires PEAR.
 */
-require_once('PEAR.php');
+require_once 'PEAR.php';
 
 /**
 * Encryption constants.
@@ -345,7 +345,7 @@ class File_Passwd
     function &factory($class)
     {
         $class = ucFirst(strToLower($class));
-        if (!@include_once("File/Passwd/$class.php")) {
+        if (!@include_once "File/Passwd/$class.php") {
             return PEAR::raiseError("Couldn't load file Passwd/$class.php", 0);
         }
         $class = 'File_Passwd_'.$class;
@@ -402,7 +402,7 @@ class File_Passwd
     function staticAuth($type, $file, $user, $pass, $opt = '')
     {
         $type = ucFirst(strToLower($type));
-        if (!@include_once("File/Passwd/$type.php")) {
+        if (!@include_once "File/Passwd/$type.php") {
             return PEAR::raiseError("Couldn't load file Passwd/$type.php", 0);
         }
         $func = array('File_Passwd_' . $type, 'staticAuth');

@@ -23,7 +23,7 @@
 /**
 * Requires File::Passwd::Common
 */
-require_once('File/Passwd/Common.php');
+require_once 'File/Passwd/Common.php';
 
 /** 
 * Manipulate custom formatted passwd files
