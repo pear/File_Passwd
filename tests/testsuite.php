@@ -18,4 +18,5 @@ TC::runTest('Cvs');
 TC::runTest('Unix');
 TC::runTest('Authbasic');
 TC::runTest('Authdigest');
+TC::runTest('Custom');
 ?>
