@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE package SYSTEM "../package.dtd">
+
+<package>
+  <name>File_Passwd</name>
+  <summary>Manipulate password files</summary>
+  <description>
+    Provides methods to manipulate standard UNIX passwd, .htpasswd
+    and CVS pserver passwd files.
+  </description>
+
+  <maintainers>
+    <maintainer>
+      <user>rasmus</user>
+      <name>Rasmus Lerdorf</name>
+      <email>rasmus@php.net</email>
+      <role>lead</role>
+    </maintainer>
+    <maintainer>
+      <user>tuupola</user>
+      <name>Mika Tuupola</name>
+      <email>tuupola@appelsiini.net</email>
+      <role>lead</role>
+    </maintainer>
+  </maintainers>
+
+  <release>
+    <license>PHP</license>
+    <version>0.9.0</version>
+    <date>2002-10-30</date>
+    <state>beta</state>
+    <notes>
+      Initial release of the original version. The 1.0.0 version will
+      have some adjustments which will break backwards combapility.
+    </notes>
+    <filelist>
+      <dir name="/" baseinstalldir="File">
+         <file role="php" name="Passwd.php" />
+      </dir>
+    </filelist>
+  </release>
+
+</package>
