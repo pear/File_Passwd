@@ -117,15 +117,15 @@ class File_Passwd_Custom extends File_Passwd_Common
     */
     function staticAuth($file, $user, $pass, $opts)
     {
+        setType($opts, 'array');
+        if (count($opts) != 2 || empty($opts[1])) {
+            return PEAR::raiseError('Insufficient options.', 0);
+        }
+        
         $line = File_Passwd_Common::_auth($file, $user);
         
         if (!$line || PEAR::isError($line)) {
             return $line;
-        }
-        
-        setType($opts, 'array');
-        if (count($opts) != 2 || empty($opts[1])) {
-            return PEAR::raiseError('Insufficient options.', 0);
         }
         
         list(,$real)= explode($opts[1], $line);
