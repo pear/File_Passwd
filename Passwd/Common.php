@@ -366,10 +366,10 @@ class File_Passwd_Common
         $cmp = $id . $sep;
         $len = strlen($cmp);
         while ($line = fgets($fh)) {
-        	if (!strncmp($line, $cmp, $len)) {
-        	    File_Passwd_Common::_close($fh);
+            if (!strncmp($line, $cmp, $len)) {
+                File_Passwd_Common::_close($fh);
                 return trim($line);
-        	}
+       	    }
         }
         $e = File_Passwd_Common::_close($fh);
         if (PEAR::isError($e)) {
