@@ -106,11 +106,11 @@ class File_PasswdTest extends PHPUnit_TestCase{
     function teststaticAuth(){
         foreach($GLOBALS['_EXT_'] as $ext){
             $pwfile = 'passwd.' . strToLower($ext) . '.txt';
-            $option = $ext == 'Authdigest' ? 'realm1' : 'des';
-            $error = File_Passwd::staticAuth($ext, $pwfile, 'mike', '123', $option);
+            $option = (($ext == 'Authdigest') ? 'realm1' : (($ext == 'Smb') ? 'nt' : 'des'));
+            $error = File_Passwd::staticAuth($ext, $pwfile, 'mike', 123, $option);
             $this->assertTrue($error);
             if (PEAR::isError($error)) {
-                echo $error->getMessage() . "\n";
+                echo "File_Passwd_$ext::staticAuth() ". $error->getMessage() . "\n";
             }
         }
         
