@@ -561,7 +561,7 @@ class File_Passwd_Unix extends File_Passwd_Common {
             default:
                 return PEAR::raiseError(
                     sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $this->_mode),
-                    FILE_PASSWD_INVALID_ENC_MODE
+                    FILE_PASSWD_E_INVALID_ENC_MODE
                 );
         }
     }
