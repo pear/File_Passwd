@@ -87,11 +87,15 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     * @return mixed true on success or PEAR_Error
     */
     function save(){
-        $contents = '';
+        $content = '';
         foreach ($this->_users as $user => $v){
-            $contents .= "$user:{$v['passwd']}:{$v['system']}\n";
+            $content .= $user . ':' . $v['passwd'];
+            if (isset($v['system']) && !empty($v['passwd'])) {
+                $content .= ':' . $v['system'];
+            }
+            $content .= "\n";
         }
-        return $this->_save($contents);
+        return $this->_save($content);
     }
     
     /** 
@@ -106,16 +110,18 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     function parse() {
         $this->_users = array();
         foreach ($this->_contents as $line) {
-            $user = explode(':', $entry);
+            $user = explode(':', $line);
             if (count($user) < 2) {
                 return PEAR::raiseError(
                     FILE_PASSWD_E_INVALID_FORMAT_STR,
                     FILE_PASSWD_E_INVALID_FORMAT
                 );
             }
-            list($user, $pass, $system) = $user;
+            @list($user, $pass, $system) = $user;
             $this->_users[$user]['passwd'] = $pass;
-            $this->_users[$user]['system'] = $system;
+            if (!empty($system)) {
+                $this->_users[$user]['system'] = $system;
+            }
         }
         $this->_contents = array();
         return true;
@@ -152,7 +158,7 @@ class File_Passwd_Cvs extends File_Passwd_Common {
             );
         }
         setType($system_user, 'string');
-        if (!preg_match($this->_pcre, $system_user)) {
+        if (!empty($system_user) && !preg_match($this->_pcre, $system_user)) {
             return PEAR::raiseError(
                 sprintf(
                     FILE_PASSWD_E_INVALID_CHARS_STR, 
@@ -179,7 +185,7 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     * @param  string    $pass   the plaintext password that should be verified
     */
     function verifyPasswd($user, $pass){
-        if (!$this->userExist($user)) {
+        if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
