@@ -621,7 +621,7 @@ class File_Passwd_Unix extends File_Passwd_Common
             );
         }
         
-        return File_Passwd::$func($pass, $salt);
+        return call_user_func(array('File_Passwd', $func), $pass, $salt);
     }
     
 }
