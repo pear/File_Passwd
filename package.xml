@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.20 $ -->
+<!-- $Revision: 1.21 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
   <summary>Manipulate many kinds of password files</summary>
   <description>
-Provides methods to manipulate standard Unix, SMB server, AuthUser (.htpasswd), AuthDigest (.htdigest) and CVS pserver password files.
+Provides methods to manipulate standard Unix, SMB server, AuthUser (.htpasswd), AuthDigest (.htdigest), CVS pserver and custom formatted password files.
   </description>
   <maintainers>
     <maintainer>
@@ -17,14 +17,22 @@ Provides methods to manipulate standard Unix, SMB server, AuthUser (.htpasswd), 
   </maintainers>
   <release>
     <version>1.0b2</version>
-    <date>2003-11-10</date>
+    <date>2003-12-18</date>
     <state>beta</state>
-    <notes>
-Updated License to PHP License 3.0
+    <notes><![CDATA[
+* Fixed reference handling in File_Passwd_Unix::_genPass() (PHP5)
+* Fixed typo in File_Passwd_Unix::changePasswd() (PEAR_Error)
 
-PHP5 fix:
-* File_Passwd_Unix::_genPass()
-    </notes>
+* Updated License to PHP License 3.0
+* Made dependency to Crypt_CHAP for File_Passwd_Smb optional
+* Added optional dependency to PHP >= 4.3.1 for SHA encryption
+
+* File_Passwd:
+  o added crypt_plain() for plaintext passwds
+  o added FILE_PASSWD_PLAIN for plaintext passwd
+  
+* Added File_Passwd_Custom for custom formatted passwd files
+]]> </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">
         <file role="php">Passwd.php</file>
@@ -35,6 +43,7 @@ PHP5 fix:
           <file role="php">Smb.php</file>
           <file role="php">Authbasic.php</file>
           <file role="php">Authdigest.php</file>
+          <file role="php">Custom.php</file>
         </dir>
         <dir name="tests" role="test">
           <file>testsuite.php</file>
@@ -57,6 +66,6 @@ PHP5 fix:
     </filelist>
   </release>
   <deps>
-    <dep type="pkg" rel="has">Crypt_CHAP</dep>
+    <dep type="pkg" rel="ge" version="0.8.6" optional="yes">Crypt_CHAP</dep>
   </deps>
 </package>
