@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class File_Passwd_Smb</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class File_Passwd_Smb</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+			</div>
+	<div class="info-box-body">
+		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Manipulate SMB server passwd files.</p>
+<p class="description"><p><kbd><u>
+   Usage Example 1 (modifying existing file):
+ </u></kbd></p><p><pre><br />1      <span class="src-var">$f</span> = <span class="src-sym">&amp;</span><span class="src-id"><a href="../File_Passwd/File_Passwd.html">File_Passwd</a></span><span class="src-sym">::</span><span class="src-id">factory</span><span class="src-sym">(</span><span class="src-str">'SMB'</span><span class="src-sym">)</span>;<br />2      <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Common.html#methodsetFile">setFile</a><span class="src-sym">(</span><span class="src-str">'./smbpasswd'</span><span class="src-sym">)</span>;<br />3      <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Common.html#methodload">load</a><span class="src-sym">(</span><span class="src-sym">)</span>;<br />4      <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Smb.html#methodaddUser">addUser</a><span class="src-sym">(</span><span class="src-str">'sepp3'</span><span class="src-sym">,</span> <span class="src-str">'MyPw'</span><span class="src-sym">,</span> <span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'userid'</span> =&gt; <span class="src-num">12</span><span class="src-sym">)</span><span class="src-sym">)</span>;<br />5      <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Smb.html#methodchangePasswd">changePasswd</a><span class="src-sym">(</span><span class="src-str">'sepp'</span><span class="src-sym">,</span> <span class="src-str">'MyPw'</span><span class="src-sym">)</span>;<br />6      <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Common.html#methoddelUser">delUser</a><span class="src-sym">(</span><span class="src-str">'karli'</span><span class="src-sym">)</span>;<br />7      <span class="src-key">foreach</span><span class="src-sym">(</span><span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Common.html#methodlistUser">listUser</a><span class="src-sym">(</span><span class="src-sym">)</span> <span class="src-key">as</span> <span class="src-var">$user</span> =&gt; <span class="src-var">$data</span><span class="src-sym">)</span> <span class="src-sym">{</span><br />8        echo <span class="src-var">$user</span> . <span class="src-str">':'</span> . <a href="http://www.php.net/implode">implode</a><span class="src-sym">(</span><span class="src-str">':'</span><span class="src-sym">,</span> <span class="src-var">$data</span><span class="src-sym">)</span> .<span class="src-str">&quot;\n&quot;</span>;<br />9      <span class="src-sym">}</span><br />10     <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Smb.html#methodsave">save</a><span class="src-sym">(</span><span class="src-sym">)</span>;</pre></p><p><kbd><u>
+   Usage Example 2 (creating a new file):
+ </u></kbd></p><p><pre><br />1      <span class="src-var">$f</span> = <span class="src-sym">&amp;</span><span class="src-id"><a href="../File_Passwd/File_Passwd.html">File_Passwd</a></span><span class="src-sym">::</span><span class="src-id">factory</span><span class="src-sym">(</span><span class="src-str">'SMB'</span><span class="src-sym">)</span>;<br />2      <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Common.html#methodsetFile">setFile</a><span class="src-sym">(</span><span class="src-str">'./smbpasswd'</span><span class="src-sym">)</span>;<br />3      <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Smb.html#methodaddUser">addUser</a><span class="src-sym">(</span><span class="src-str">'sepp1'</span><span class="src-sym">,</span> <span class="src-str">'MyPw'</span><span class="src-sym">,</span> <span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'userid'</span>=&gt; <span class="src-num">12</span><span class="src-sym">)</span><span class="src-sym">)</span>;<br />4      <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Smb.html#methodaddUser">addUser</a><span class="src-sym">(</span><span class="src-str">'sepp3'</span><span class="src-sym">,</span> <span class="src-str">'MyPw'</span><span class="src-sym">,</span> <span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'userid'</span> =&gt; <span class="src-num">1000</span><span class="src-sym">)</span><span class="src-sym">)</span>;<br />5      <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Smb.html#methodsave">save</a><span class="src-sym">(</span><span class="src-sym">)</span>;</pre></p><p><kbd><u>
+   Usage Example 3 (authentication):
+ </u></kbd></p><p><pre><br />1      <span class="src-var">$f</span> = <span class="src-sym">&amp;</span><span class="src-id"><a href="../File_Passwd/File_Passwd.html">File_Passwd</a></span><span class="src-sym">::</span><span class="src-id">factory</span><span class="src-sym">(</span><span class="src-str">'SMB'</span><span class="src-sym">)</span>;<br />2      <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Common.html#methodsetFile">setFile</a><span class="src-sym">(</span><span class="src-str">'./smbpasswd'</span><span class="src-sym">)</span>;<br />3      <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Common.html#methodload">load</a><span class="src-sym">(</span><span class="src-sym">)</span>;<br />4      <span class="src-key">if</span> <span class="src-sym">(</span><span class="src-id">true</span> === <span class="src-var">$f</span><span class="src-sym">-&gt;</span><a href="../File_Passwd/File_Passwd_Smb.html#methodverifyPasswd">verifyPasswd</a><span class="src-sym">(</span><span class="src-str">'sepp'</span><span class="src-sym">,</span> <span class="src-str">'MyPw'</span><span class="src-sym">)</span><span class="src-sym">)</span> <span class="src-sym">{</span><br />5          echo <span class="src-str">&quot;User valid&quot;</span>;<br />6      <span class="src-sym">}</span> <span class="src-key">else</span> <span class="src-sym">{</span><br />7          echo <span class="src-str">&quot;User invalid or disabled&quot;</span>;<br />8      <span class="src-sym">}</span></pre></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">version:</span> $Revision$</li>
+				<li><span class="field">author:</span> Michael Wallner &lt;<a href="mailto:mike@iworks.at">mailto:mike@iworks.at</a>&gt;</li>
+				<li><span class="field">author:</span> Michael Bretterklieber &lt;<a href="mailto:michael@bretterklieber.com">mailto:michael@bretterklieber.com</a>&gt;</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Passwd_Passwd_Smb_php.html">Program_Root/Passwd/Smb.php</a> (line <span class="field">78</span>)
+		</p>
+		
+				
+		<pre><a href="../File_Passwd/File_Passwd_Common.html">File_Passwd_Common</a>
+   |
+   --File_Passwd_Smb</pre>
+	
+			</div>
+</div>
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+								<div class="var-title">
+					<img src="../media/images/Variable.png" alt=" " />
+					<span class="var-type">object</span>
+					<a href="#$msc" title="details" class="var-name">$msc</a>
+				</div>
+							</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+								
+				<div class="method-definition">
+					<img src="../media/images/Constructor.png" alt=" "/>
+											<span class="method-result">File_Passwd_Smb</span>
+										<a href="#File_Passwd_Smb" title="details" class="method-name">File_Passwd_Smb</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span> = <span class="var-default">'smbpasswd'</span>])
+									</div>
+								
+				<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">mixed</span>
+										<a href="#addUser" title="details" class="method-name">addUser</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$user</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$pass</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$params</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$isMachine</span> = <span class="var-default">false</span>])
+									</div>
+								
+				<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">mixed</span>
+										<a href="#changePasswd" title="details" class="method-name">changePasswd</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$user</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$pass</span>)
+									</div>
+								
+				<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">mixed</span>
+										<a href="#modUser" title="details" class="method-name">modUser</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$user</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$params</span>)
+									</div>
+								
+				<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">mixed</span>
+										<a href="#parse" title="details" class="method-name">parse</a>
+										()
+									</div>
+								
+				<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">mixed</span>
+										<a href="#save" title="details" class="method-name">save</a>
+										()
+									</div>
+								
+				<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">mixed</span>
+										<a href="#verifyEncryptedPasswd" title="details" class="method-name">verifyEncryptedPasswd</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$user</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$nthash</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$lmhash</span> = <span class="var-default">''</span>])
+									</div>
+								
+				<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">mixed</span>
+										<a href="#verifyPasswd" title="details" class="method-name">verifyPasswd</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$user</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$pass</span>)
+									</div>
+								
+				<div class="method-definition">
+					<img src="../media/images/Method.png" alt=" "/>
+											<span class="method-result">void</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span> = <span class="var-default">'smbpasswd'</span>])
+									</div>
+							</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$msc" id="$msc"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<img src="../media/images/Variable.png" />
+		<span class="var-title">
+			<span class="var-type">object</span>
+			<span class="var-name">$msc</span>
+						(line <span class="line-number">86</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Object which generates the NT-Hash and LAN-Manager-Hash passwds</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+							<h4>Inherited Variables</h4>
+				<A NAME='inherited_vars'><!-- --></A>
+									<p>Inherited from <span class="classname"><a href="../File_Passwd/File_Passwd_Common.html">File_Passwd_Common</a></span></p>
+					<blockquote>
+													<img src="../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../File_Passwd/File_Passwd_Common.html#var$_contents">File_Passwd_Common::$_contents</a></span><br>
+							</span>
+													<img src="../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../File_Passwd/File_Passwd_Common.html#var$_file">File_Passwd_Common::$_file</a></span><br>
+							</span>
+													<img src="../media/images/Variable.png" />
+							<span class="var-title">
+								<span class="var-name"><a href="../File_Passwd/File_Passwd_Common.html#var$_users">File_Passwd_Common::$_users</a></span><br>
+							</span>
+											</blockquote> 
+										
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+														<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodFile_Passwd_Smb" id="File_Passwd_Smb"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Constructor.png" />
+		<span class="method-title">Constructor File_Passwd_Smb</span> (line <span class="line-number">94</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Constructor</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">File_Passwd_Smb</span>
+		<span class="method-name">
+			File_Passwd_Smb
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span> = <span class="var-default">'smbpasswd'</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$file</span><span class="var-description">: SMB passwd file</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodaddUser" id="addUser"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">addUser</span> (line <span class="line-number">159</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Add a user</p>
+<p class="description"><p>Returns a PEAR_Error if the user already exists</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> true on success or PEAR_Error</li>
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">throws:</span> PEAR_Error</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			addUser
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$user</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$pass</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$params</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$isMachine</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$user</span><span class="var-description">: the user to add</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pass</span><span class="var-description">: the new plaintext password</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span><span class="var-description">: additional properties of user <ul><li>userid</li><li>flags</li><li>lct</li><li>comment</li></ul></span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$isMachine</span><span class="var-description">: whether to add an machine account</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodchangePasswd" id="changePasswd"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">changePasswd</span> (line <span class="line-number">219</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Change the passwd of a certain user</p>
+<p class="description"><p>Returns a PEAR_Error if <var>$user</var> doesn't exist.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> true on success or PEAR_Error</li>
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">throws:</span> PEAR_Error</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			changePasswd
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$user</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$pass</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$user</span><span class="var-description">: the user whose passwd should be changed</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pass</span><span class="var-description">: the new plaintext passwd</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodmodUser" id="modUser"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">modUser</span> (line <span class="line-number">194</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Modify a certain user</p>
+<p class="description"><p><strong>You should not modify the password with this method
+ unless it is already encrypted as nthash and lmhash!</strong></p><p>Returns a PEAR_Error if: <ul><li>user doesn't exist</li><li>an invalid property was supplied</li></ul></p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> true on success or PEAR_Error</li>
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">throws:</span> PEAR_Error</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			modUser
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$user</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$params</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$user</span><span class="var-description">: the user to modify</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span><span class="var-description">: an associative array of properties to change</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodparse" id="parse"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">parse</span> (line <span class="line-number">119</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Parse smbpasswd file</p>
+<p class="description"><p>Returns a PEAR_Error if passwd file has invalid format.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> true on success or PEAR_Error</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			parse
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../File_Passwd/File_Passwd_Common.html#methodparse">File_Passwd_Common::parse()</a></dt>
+						<dd>Parse the content of the file</dd>
+					</dl>
+		
+	</div>
+<a name="methodsave" id="save"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">save</span> (line <span class="line-number">304</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Apply changes and rewrite CVS passwd file</p>
+<p class="description"><p>Returns a PEAR_Error if: <ul><li>directory in which the file should reside couldn't be created</li><li>file couldn't be opened in write mode</li><li>file couldn't be locked exclusively</li><li>file couldn't be unlocked</li><li>file couldn't be closed</li></ul></p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> true on success or PEAR_Error</li>
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">throws:</span> PEAR_Error</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			save
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../File_Passwd/File_Passwd_Common.html#methodsave">File_Passwd_Common::save()</a></dt>
+						<dd>Apply changes and rewrite passwd file</dd>
+					</dl>
+		
+	</div>
+<a name="methodverifyEncryptedPasswd" id="verifyEncryptedPasswd"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">verifyEncryptedPasswd</span> (line <span class="line-number">245</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Verifies a user's password</p>
+<p class="description"><p>Prefer NT-Hash instead of weak LAN-Manager-Hash</p><p>Returns a PEAR_Error if: <ul><li>user doesn't exist</li><li>user is disabled</li></ul></p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> true if passwds equal, false if they don't or PEAR_Error</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			verifyEncryptedPasswd
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$user</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$nthash</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$lmhash</span> = <span class="var-default">''</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$user</span><span class="var-description">: username</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$nthash</span><span class="var-description">: NT-Hash in hex</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$lmhash</span><span class="var-description">: LAN-Manager-Hash in hex</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodverifyPasswd" id="verifyPasswd"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">verifyPasswd</span> (line <span class="line-number">284</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Verifies an account with the given plaintext password</p>
+<p class="description"><p>Returns a PEAR_Error if: <ul><li>user doesn't exist</li><li>user is disabled</li></ul></p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> true if passwds equal, false if they don't or PEAR_Error</li>
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">throws:</span> PEAR_Error</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			verifyPasswd
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$user</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$pass</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$user</span><span class="var-description">: username</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$pass</span><span class="var-description">: the plaintext password</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<img src="../media/images/Method.png" />
+		<span class="method-title">__construct</span> (line <span class="line-number">106</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Constructor (ZE2)</p>
+<p class="description"><p>Rewritten because we want to init our crypt engine.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			__construct
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span> = <span class="var-default">'smbpasswd'</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$file</span><span class="var-description">: SMB passwd file</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../File_Passwd/File_Passwd_Common.html#method__construct">File_Passwd_Common::__construct()</a></dt>
+						<dd>Constructor (ZE2)</dd>
+					</dl>
+		
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../File_Passwd/File_Passwd_Common.html">File_Passwd_Common</a></span></p>
+					<blockquote>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#methoddelUser">File_Passwd_Common::delUser()</a></span><br>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#methodgetFile">File_Passwd_Common::getFile()</a></span><br>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#methodlistUser">File_Passwd_Common::listUser()</a></span><br>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#methodload">File_Passwd_Common::load()</a></span><br>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#methodparse">File_Passwd_Common::parse()</a></span><br>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#methodsave">File_Passwd_Common::save()</a></span><br>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#methodsetFile">File_Passwd_Common::setFile()</a></span><br>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#methoduserExists">File_Passwd_Common::userExists()</a></span><br>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#method_close">File_Passwd_Common::_close()</a></span><br>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#method_open">File_Passwd_Common::_open()</a></span><br>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#method_save">File_Passwd_Common::_save()</a></span><br>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#method__clone">File_Passwd_Common::__clone()</a></span><br>
+													<img src="../media/images/Method.png" />
+							<span class="method-name"><a href="../File_Passwd/File_Passwd_Common.html#method__construct">File_Passwd_Common::__construct()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+	
+	<p class="notes" id="credit">
+		Documention generated on Sat, 20 Sep 2003 16:14:43 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.2.1</a>
+	</p>
+	</div></body>
+</html>
