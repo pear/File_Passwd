@@ -571,6 +571,9 @@ class File_Passwd_Custom extends File_Passwd_Common
         }
         
         if (!is_callable($func)) {
+            if (is_array($func)) {
+                $func = implode('::', $func);
+            }
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $func),
                 FILE_PASSWD_E_INVALID_ENC_MODE
