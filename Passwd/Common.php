@@ -220,11 +220,9 @@ class File_Passwd_Common
         }
         $this->_contents = array();
         while ($line = fgets($fh)) {
-            $line = trim(preg_replace('/^(\S*.*)#.*$/', '\\1', $line));
-            if (empty($line)) {
-                continue;
+            if (!preg_match('/^\s*#/', $line) && $line = trim($line)) {
+                $this->_contents[] = $line;
             }
-            $this->_contents[] = $line;
         }
         $e = $this->_close($fh);
         if (PEAR::isError($e)) {

@@ -6,6 +6,14 @@ require_once 'File/Passwd/Unix.php';
 
 $GLOBALS['tmpfile'] = System::mktemp();
 $GLOBALS['users']   = array(
+            'bug3348' => array(
+                'pass' =>   'wxLaOdcajuKoI',
+                'uid' =>    '500',
+                'gid' =>    '501',
+                'gecos' =>  'having # in gecos',
+                'home' =>   '/nonexistent',
+                'shell' =>  '/bin/false',
+            ),
             'mike' => array(
                 'pass' =>   'q4M4mpfilkNnU',
                 'uid' =>    '501',
@@ -29,7 +37,7 @@ $GLOBALS['users']   = array(
                 'gecos' =>  'User3',
                 'home' =>   '/home/mary',
                 'shell' =>  '/bin/ksh'
-            )
+            ),
         );
 
 /**
