@@ -88,6 +88,57 @@ class File_Passwd_Custom extends File_Passwd_Common
     }
 
     /**
+    * Fast authentication of a certain user
+    * 
+    * Returns a PEAR_Error if:
+    *   o file doesn't exist
+    *   o file couldn't be opened in read mode
+    *   o file couldn't be locked exclusively
+    *   o file couldn't be unlocked (only if auth fails)
+    *   o file couldn't be closed (only if auth fails)
+    *   o invalid encryption function <var>$opts[0]</var>,
+    *     or no delimiter character <var>$opts[1]</var> was provided
+    *
+    * @throws   PEAR_Error  FILE_PASSWD_E_UNDEFINED |
+    *                       FILE_PASSWD_E_FILE_NOT_OPENED |
+    *                       FILE_PASSWD_E_FILE_NOT_LOCKED |
+    *                       FILE_PASSWD_E_FILE_NOT_UNLOCKED |
+    *                       FILE_PASSWD_E_FILE_NOT_CLOSED |
+    *                       FILE_PASSWD_E_INVALID_ENC_MODE
+    * @static   call this method statically for a reasonable fast authentication
+    * @access   public
+    * @return   mixed   Returns &true; if authenticated, &false; if not or 
+    *                   <classname>PEAR_Error</classname> on failure.
+    * @param    string  $file   path to passwd file
+    * @param    string  $user   user to authenticate
+    * @param    string  $pass   plaintext password
+    * @param    array   $otps   encryption function and delimiter charachter
+    *                           (in this order)
+    */
+    function staticAuth($file, $user, $pass, $opts)
+    {
+        $line = File_Passwd_Common::_auth($file, $user);
+        
+        if (!$line || PEAR::isError($line)) {
+            return $line;
+        }
+        
+        setType($opts, 'array');
+        if (count($opts) != 2 || empty($opts[1])) {
+            return PEAR::raiseError('Insufficient options.', 0);
+        }
+        
+        list(,$real)= explode($opts[1], $line);
+        $crypted    = File_Passwd_Custom::_genPass($pass, $real, $opts[0]);
+        
+        if (PEAR::isError($crypted)) {
+            return $crypted;
+        }
+        
+        return ($crypted === $real);
+    }
+
+    /**
     * Set delimiter
     * 
     * You can set a custom char to delimit the columns of a data set.

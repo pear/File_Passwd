@@ -191,6 +191,12 @@ class File_Passwd_CustomTest extends PHPUnit_TestCase{
         $this->pwd->addUser('testverify', 'password');
         $this->assertFalse(PEAR::isError($this->pwd->verifyPasswd('testverify', 'password')));
     }
+
+    function teststaticAuth(){
+        $this->assertTrue(true === File_Passwd::staticAuth('Custom', 'passwd.custom.txt', 'mike', 'mikespass', array(array('File_Passwd', 'crypt_plain'), '|')));
+        $this->assertTrue(false === File_Passwd::staticAuth('Custom', 'passwd.custom.txt', 'mike', 'abc', array(array('File_Passwd', 'crypt_plain'), '|')));
+        $this->assertTrue(PEAR::isError(File_Passwd::staticAuth('Custom', 'passwd.custom.txt', 'mike', 'mikespass')));
+    }
     
 }
 
