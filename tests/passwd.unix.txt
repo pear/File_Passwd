@@ -1,0 +1,3 @@
+mike:q4M4mpfilkNnU:501:502:User1:/home/mike:/bin/bash
+pete:dS80VTLQHZ6VM:502:503:User2:/home/pete:/bin/sh
+mary:jHSiqFjaEiKPM:503:504:User3:/home/mary:/bin/ksh
