@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.15 $ -->
+<!-- $Revision: 1.16 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
@@ -24,7 +24,6 @@
 * Refined passwd generation
 * Stripped deprecated code from File_Passwd
 * Added encryption constants for NT and LM hash
-* Stripped old File_Passwd code
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">
