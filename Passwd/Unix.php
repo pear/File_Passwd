@@ -500,9 +500,11 @@ class File_Passwd_Unix extends File_Passwd_Common
                 FILE_PASSWD_E_EXISTS_NOT
             );
         }
+        
         if (!is_array($properties)) {
             setType($properties, 'array');
         }
+        
         foreach ($properties as $key => $value){
             if (strstr($value, ':')) {
                 return PEAR::raiseError(
@@ -512,6 +514,7 @@ class File_Passwd_Unix extends File_Passwd_Common
             }
             $this->_users[$user][$key] = $value;
         }
+        
         return true;
     }
     
@@ -532,23 +535,30 @@ class File_Passwd_Unix extends File_Passwd_Common
     function changePasswd($user, $pass)
     {
         if ($this->_shadowed) {
-            return PEAR::raiseError('Passwords of this passwd file are shadowed.', 0);
+            return PEAR::raiseError(
+                'Passwords of this passwd file are shadowed.', 
+                0
+            );
         }
+        
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
         }
+        
         $pass = $this->_genPass($pass);
         if (PEAR::isError($pass)) {
             return $e;
         }
+        
         if ($this->_usemap) {
             $this->_users[$user]['pass'] = $pass;
         } else {
             $this->_users[$user][0] = $pass;
         }
+        
         return true;
     }
     
@@ -596,16 +606,21 @@ class File_Passwd_Unix extends File_Passwd_Common
     */
     function _genPass($pass, $salt = null, $mode = null)
     {
-        if (is_null($mode)) {
-            $mode = $this->_mode;
+        static $crypters;
+        if (!isset($crypters)) {
+            $crypters = get_class_methods('File_Passwd');
         }
+        
+        $mode = is_null($mode) ? strToLower($this->_mode) : strToLower($mode);
         $func = 'crypt_' . $mode;
-        if (!in_array($func, get_class_methods('File_Passwd'))) {
+        
+        if (!in_array($func, $crypters)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
                 FILE_PASSWD_E_INVALID_ENC_MODE
             );
         }
+        
         return File_Passwd::$func($pass, $salt);
     }
     
