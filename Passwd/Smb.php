@@ -221,7 +221,7 @@ class File_Passwd_Smb extends File_Passwd_Common {
             return PEAR::raiseError("User '$user' doesn't exist.");
         }
         $nthash = strToUpper($this->msc->ntPasswordHash($pass));
-        $lmhash = strToUpper($this->msc->lmPAsswordHash($pass));
+        $lmhash = strToUpper($this->msc->lmPasswordHash($pass));
         $this->_users[$user]['nthash'] = $nthash;
         $this->_users[$user]['lmhash'] = $lmhash;
         return true;
