@@ -422,6 +422,11 @@ class File_Passwd {
     /**
     * Fast authentication of a certain user
     * 
+    * Though this approach should be reasonable fast, it is NOT
+    * with APR compatible MD5 encryption used for htpasswd style
+    * password files encrypted in MD5. Generating one MD5 password
+    * takes about 0.3 seconds!
+    * 
     * Returns a PEAR_Error if:
     *   o file doesn't exist
     *   o file couldn't be opened in read mode
@@ -434,13 +439,10 @@ class File_Passwd {
     * Depending on <var>$type</var>, <var>$opt</var> should be:
     *   o Smb:          encryption method (NT or LM)
     *   o Unix:         encryption method (des or md5)
+    *   o Authbasic:    encryption method (des, sha or md5)
     *   o Authdigest:   the realm the user is in
-    *   o Authbasic:    n/a (empty) (*)
     *   o Cvs:          n/a (empty)
     * 
-    *   (*) The File_Passwd_Authbasic facility can verify
-    *       only DES enrypted passwords when called statically.
-    *
     * @author   Michael Wallner <mike@php.net>
     * 
     * @static   call this method statically for a reasonable fast authentication
