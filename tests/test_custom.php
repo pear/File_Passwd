@@ -70,7 +70,7 @@ class File_Passwd_CustomTest extends PHPUnit_TestCase{
      */
     function testgetDelim(){
         $this->pwd->setDelim('%');
-        $this->assertTrue('%', $this->pwd->getDelim());
+        $this->assertEquals('%', $this->pwd->getDelim());
     }
     
     /**
@@ -116,8 +116,8 @@ class File_Passwd_CustomTest extends PHPUnit_TestCase{
      * @access public
      */
     function testgetMap(){
-        $this->pwd->setMap();
-        $this->assertEquals(array(), $this->pwd->getMap());
+        $this->pwd->setMap(array('prop'));
+        $this->assertEquals(array('prop'), $this->pwd->getMap());
     }
     
     /**
@@ -189,7 +189,9 @@ class File_Passwd_CustomTest extends PHPUnit_TestCase{
      */
     function testverifyPasswd(){
         $this->pwd->addUser('testverify', 'password');
-        $this->assertFalse(PEAR::isError($this->pwd->verifyPasswd('testverify', 'password')));
+        $rs = $this->pwd->verifyPasswd('testverify', 'password');
+        $this->assertFalse(PEAR::isError($rs));
+        $this->assertTrue($rs);
     }
 
     function teststaticAuth(){
