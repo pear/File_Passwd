@@ -144,9 +144,9 @@ class File_Passwd_Common
     */
     function &_open($mode, $file = null)
     {
-        $file   = realpath( is_null($file) ? $this->_file : $file );
-        $dir    = dirname($file);
-        $lock   = strstr($mode, 'r') ? LOCK_SH : LOCK_EX;
+        isset($file) or $file = $this->_file;
+        $dir  = dirname($file);
+        $lock = strstr($mode, 'r') ? LOCK_SH : LOCK_EX;
         if (!is_dir($dir) && !System::mkDir('-p -m 0755 ' . $dir)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_DIR_NOT_CREATED_STR, $dir),
