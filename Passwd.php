@@ -16,16 +16,106 @@
 // +----------------------------------------------------------------------+
 //
 // $Id$
-//
 
+/**
+* Manipulate my kinds of passwd files.
+* 
+* @author       Rasmus Lerdorf <rasmus@php.net>
+* @package      File_Passwd
+* @category     FileSystem
+*/
+
+/**
+* Requires PEAR.
+*/
 require_once('PEAR.php');
+
+/**
+* Undefined error.
+*/
+define('FILE_PASSWD_E_UNDEFINED',                   0);
+/**
+* Invalid file format.
+*/
+define('FILE_PASSWD_E_INVALID_FORMAT',              1);
+define('FILE_PASSWD_E_INVALID_FORMAT_STR',          'Passwd file has invalid format.');
+/**
+* Invalid extra property.
+*/
+define('FILE_PASSWD_E_INVALID_PROPERTY',            2);
+define('FILE_PASSWD_E_INVALID_PROPERTY_STR',        'Invalid property \'%s\'.');
+/**
+* Invalid characters.
+*/
+define('FILE_PASSWD_E_INVALID_CHARS',               3);
+define('FILE_PASSWD_E_INVALID_CHARS_STR',           '%s\'%s\' contains illegal characters.');
+/**
+* Invalid encryption mode.
+*/
+define('FILE_PASSWD_E_INVALID_ENC_MODE',            4);
+define('FILE_PASSWD_E_INVALID_ENC_MODE_STR',        'Encryption mode \'%s\' not supported.');
+/**
+* Exists already.
+*/
+define('FILE_PASSWD_E_EXISTS_ALREADY',              5);
+define('FILE_PASSWD_E_EXISTS_ALREADY_STR',          '%s\'%s\' already exists.');
+/**
+* Exists not.
+*/
+define('FILE_PASSWD_E_EXISTS_NOT',                  6);
+define('FILE_PASSWD_E_EXISTS_NOT_STR',              '%s\'%s\' doesn\'t exist.');
+/**
+* User not in group.
+*/
+define('FILE_PASSWD_E_USER_NOT_IN_GROUP',           7);
+define('FILE_PASSWD_E_USER_NOT_IN_GROUP_STR',       'User \'%s\' doesn\'t exist in group \'%s\'.');
+/**
+* User not in realm.
+*/
+define('FILE_PASSWD_E_USER_NOT_IN_REALM',           8);
+define('FILE_PASSWD_E_USER_NOT_IN_REALM_STR',       'User \'%s\' doesn\'t exist in realm \'%s\'.');
+/**
+* Parameter must be of type array.
+*/
+define('FILE_PASSWD_E_PARAM_MUST_BE_ARRAY',         9);
+define('FILE_PASSWD_E_PARAM_MUST_BE_ARRAY_STR',     'Parameter %s must be of type array.');
+/**
+* Method not implemented.
+*/
+define('FILE_PASSWD_E_METHOD_NOT_IMPLEMENTED',      10);
+define('FILE_PASSWD_E_METHOD_NOT_IMPLEMENTED_STR',  'Method \'%s()\' not implemented.');
+/**
+* Directory couldn't be created.
+*/
+define('FILE_PASSWD_E_DIR_NOT_CREATED',             11);
+define('FILE_PASSWD_E_DIR_NOT_CREATED_STR',         'Couldn\'t create directory \'%s\'.');
+/**
+* File couldn't be opened.
+*/
+define('FILE_PASSWD_E_FILE_NOT_OPENED',             12);
+define('FILE_PASSWD_E_FILE_NOT_OPENED_STR',         'Couldn\'t open file \'%s\'.');
+/**
+* File coudn't be locked.
+*/
+define('FILE_PASSWD_E_FILE_NOT_LOCKED',             13);
+define('FILE_PASSWD_E_FILE_NOT_LOCKED_STR',         'Couldn\'t lock file \'%s\'.');
+/**
+* File couldn't be unlocked.
+*/
+define('FILE_PASSWD_E_FILE_NOT_UNLOCKED',           14);
+define('FILE_PASSWD_E_FILE_NOT_UNLOCKED_STR',       'Couldn\'t unlock file.');
+/**
+* File couldn't be closed.
+*/
+define('FILE_PASSWD_E_FILE_NOT_CLOSED',             15);
+define('FILE_PASSWD_E_FILE_NOT_CLOSED_STR',         'Couldn\'t close file.');
 
 /**
 * Class to manage passwd-style files
 *
 * @author       Rasmus Lerdorf <rasmus@php.net>
 * @package      File_Passwd
-* @category     File System
+* @category     FileSystem
 * @version      $Revision$
 * @deprecated   <b>Please use the provided factory instead!</b>
 * 
@@ -297,7 +387,7 @@ class File_Passwd {
     * @static use &File_Passwd::factory() for instantiating you passwd object
     * @throws PEAR_Error
     * @access public
-    * @author Michael Wallner <mike@iworks.at>
+    * @author Michael Wallner <mike@php.net>
     * @return object    File_Passwd_$class - desired Passwd object or PEAR_Error
     * @param  string    $class the desired subclass of File_Passwd
     */
