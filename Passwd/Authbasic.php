@@ -30,12 +30,6 @@
 require_once('File/Passwd/Common.php');
 
 /**
-* Allowed 64 characters for MD5 encryption
-*/
-$GLOBALS['_FILE_PASSWD_AUTHBASIC_64'] = 
-    './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
-/**
 * Manipulate AuthUserFiles as used for HTTP Basic Authentication.
 *
 * <kbd><u>
@@ -145,7 +139,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
             return $line;
         }
         list(,$real)    = explode(':', $line);
-        $crypted        = File_Passwd_Authbasic::_genPass($pass, $real, $mode)
+        $crypted        = File_Passwd_Authbasic::_genPass($pass, $real, $mode);
         if (PEAR::isError($crypted)) {
             return $crypted;
         }
@@ -327,23 +321,16 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     */
     function _genPass($pass, $salt = null, $mode = null)
     {
-        $salt = is_null($salt) ? File_Passwd_Authbasic::_genSalt() : $salt;
         $mode = is_null($mode) ? strToLower($this->_mode) : strToLower($mode);
 
-        switch($mode){
-            case 'des': 
-                return crypt($pass, substr($salt, 0,2));
-                break;
-            case 'sha':
-                return '{SHA}' . base64_encode(
-                    File_Passwd_Authbasic::_hexbin(sha1($pass))
-                );
-                break;
-            case 'md5':
-                return File_Passwd_Authbasic::_md5crypt($pass, $salt);
-                break;
+        if ($mode == 'md5') {
+            return File_Passwd::crypt_apr_md5($pass, $salt);
+        } elseif ($mode == 'des') {
+            return File_Passwd::crypt_des($pass, $salt);
+        } elseif ($mode == 'sha') {
+            return File_Passwd::crypt_sha($pass, $salt);
         }
-
+        
         return PEAR::raiseError(
             sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
             FILE_PASSWD_E_INVALID_ENC_MODE                
@@ -387,59 +374,6 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     */
     function _md5crypt($string, $salt = null)
     {
-        if (is_null($salt)) {
-            $salt = File_Passwd_Authbasic::_genSalt();
-        } elseif (preg_match('/^\$apr1\$/', $salt)) {
-            $salt = preg_replace('/^\$apr1\$(.{8}).*/', '\\1', $salt);
-        } else {
-            $salt = substr($salt, 0,8);
-        }
-        
-        $length     = strlen($string);
-        $context    = $string . '$apr1$' . $salt;
-        $binary     = File_Passwd_Authbasic::_hexbin(
-            md5($string . $salt . $string)
-        );
-        
-        for ($i = $length; $i > 0; $i -= 16) {
-            $context .= substr($binary, 0, ($i > 16 ? 16 : $i));
-        }
-        for ( $i = $length; $i > 0; $i >>= 1) {
-            $context .= ($i & 1) ? chr(0) : $string[0];
-        }
-        
-        $binary = File_Passwd_Authbasic::_hexbin(md5($context));
-        
-        for($i = 0; $i < 1000; $i++) {
-            $new = ($i & 1) ? $string : substr($binary, 0,16);
-            if ($i % 3) {
-                $new .= $salt;
-            }
-            if ($i % 7) {
-                $new .= $string;
-            }
-            $new .= ($i & 1) ? substr($binary, 0,16) : $string;
-            $binary = File_Passwd_Authbasic::_hexbin(md5($new));
-        }
-        
-        $p = array();
-        for ($i = 0; $i < 5; $i++) {
-            $k = $i + 6;
-            $j = $i + 12;
-            if ($j == 16) {
-                $j = 5;
-            }
-            $p[] = File_Passwd_Authbasic::_md5to64(
-                (ord($binary[$i]) << 16) |
-                (ord($binary[$k]) << 8) |
-                (ord($binary[$j])),
-                5
-            );
-        }
-        
-        return 
-            '$apr1$' . $salt . '$' . implode($p) . 
-            File_Passwd_Authbasic::_md5to64(ord($binary[11]), 3);
     }
     
     /**
@@ -457,41 +391,5 @@ class File_Passwd_Authbasic extends File_Passwd_Common
         return $rs;
     }
 
-    /**
-    * Convert hexadecimal string to binary data
-    *
-    * @static
-    * @access   private
-    * @return   mixed
-    * @param    string  $hex
-    */
-    function _hexbin($hex)
-    {
-        $rs = '';
-        $ln = strlen($hex);
-        for($i = 0; $i < $ln; $i += 2) {
-            $rs .= chr(hexdec($hex{$i} . $hex{$i+1}));
-        }
-        return $rs;
-    }
-    
-    /**
-    * Convert to allowed 64 characters for encryption
-    *
-    * @static
-    * @access   private
-    * @return   string
-    * @param    string  $value
-    * @param    int     $count
-    */
-    function _md5to64($value, $count)
-    {
-        $result = '';
-        while(--$count) {
-            $result .= $GLOBALS['_FILE_PASSWD_AUTHBASIC_64'][$value & 0x3f];
-            $value >>= 6;
-        }
-        return $result;
-    }
 }
 ?>

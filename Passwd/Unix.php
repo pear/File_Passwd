@@ -599,23 +599,14 @@ class File_Passwd_Unix extends File_Passwd_Common
         if (is_null($mode)) {
             $mode = $this->_mode;
         }
-        switch(strToLower($mode)){
-            case 'des': 
-                $salt = substr((is_null($salt) ? md5(rand()) : $salt), 0,2);
-                return crypt($pass, $salt);
-                break;
-            case 'md5': 
-                if (is_null($salt)) {
-                    return crypt($pass);
-                }
-                return crypt($pass, substr($salt, 0,12));
-                break;
-            default:
-                return PEAR::raiseError(
-                    sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
-                    FILE_PASSWD_E_INVALID_ENC_MODE
-                );
+        $func = 'crypt_' . $mode;
+        if (!in_array($func, get_class_methods('File_Passwd'))) {
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
+                FILE_PASSWD_E_INVALID_ENC_MODE
+            );
         }
+        return File_Passwd::$func($pass, $salt);
     }
     
 }

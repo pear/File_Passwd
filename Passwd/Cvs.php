@@ -293,8 +293,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
     */
     function _genPass($pass, $salt = null)
     {
-        $salt = substr((is_null($salt) ? md5(rand()) : $salt), 0,2);
-        return crypt($pass, $salt);
+        return File_Passwd::crypt_des($pass, $salt);
     }
     
 }
