@@ -546,7 +546,7 @@ class File_Passwd_Unix extends File_Passwd_Common
         
         $pass = $this->_genPass($pass);
         if (PEAR::isError($pass)) {
-            return $e;
+            return $pass;
         }
         
         if ($this->_usemap) {
