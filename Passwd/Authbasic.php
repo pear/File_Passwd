@@ -362,34 +362,5 @@ class File_Passwd_Authbasic extends File_Passwd_Common
         $this->_contents = array();
         return true;
     }
-    
-    /**
-    * Encrypt string (with given salt) in APR-md5 style
-    * 
-    * @static
-    * @access   private
-    * @return   string  encrypted passwd
-    * @param    string  $string     the sting to encrypt
-    * @param    string  $salt       the salt to use for encryption
-    */
-    function _md5crypt($string, $salt = null)
-    {
-    }
-    
-    /**
-    * Generate salt
-    *
-    * @access   private
-    * @return   string
-    */
-    function _genSalt()
-    {
-        $rs = '';
-        for($i = 0; $i < 8; $i++) {
-            $rs .= $GLOBALS['_FILE_PASSWD_AUTHBASIC_64'][rand(0,63)];
-        }
-        return $rs;
-    }
-
 }
 ?>
