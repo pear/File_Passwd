@@ -189,7 +189,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
                 FILE_PASSWD_E_INVALID_CHARS
             );
         }
-        setType($system_user, 'string');
+        @setType($system_user, 'string');
         if (!empty($system_user) && !preg_match($this->_pcre, $system_user)) {
             return PEAR::raiseError(
                 sprintf(
