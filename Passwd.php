@@ -330,6 +330,7 @@ class File_Passwd {
     * o SMB         for SMB server passwd files
     * o Authbasic   for AuthUserFiles
     * o Authdigest  for AuthDigestFiles
+    * o Custom      for custom formatted passwd files
     * 
     * Returns a PEAR_Error if the desired class/file couldn't be loaded.
     * 
@@ -376,6 +377,7 @@ class File_Passwd {
     *   o Authbasic:    encryption method (des, sha or md5)
     *   o Authdigest:   the realm the user is in
     *   o Cvs:          n/a (empty)
+    *   o Custom:       array of 2 elements: encryption function and delimiter
     * 
     * @static   call this method statically for a reasonable fast authentication
     * 
@@ -383,14 +385,17 @@ class File_Passwd {
     * @access   public
     * @return   return      mixed   true if authenticated, 
     *                               false if not or PEAR_error
+    * 
     * @param    string      $type   Unix, Cvs, Smb, Authbasic or Authdigest
     * @param    string      $file   path to passwd file
     * @param    string      $user   the user to authenticate
     * @param    string      $pass   the plaintext password
-    * @param    string      $opt    o Smb:          NT or LM
+    * @param    mixed       $opt    o Smb:          NT or LM
     *                               o Unix:         des or md5
     *                               o Authbasic     des, sha or md5
     *                               o Authdigest    realm the user is in
+    *                               o Custom        encryption function and
+    *                                               delimiter character
     */
     function staticAuth($type, $file, $user, $pass, $opt = ''){
         $type = ucFirst(strToLower($type));
