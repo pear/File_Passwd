@@ -61,14 +61,16 @@ require_once('File/Passwd/Common.php');
 * @version  $Revision$
 * @access   public
 */
-class File_Passwd_Cvs extends File_Passwd_Common {
+class File_Passwd_Cvs extends File_Passwd_Common
+{
 
     /**
     * Constructor
     *
     * @access public
     */
-    function File_Passwd_Cvs($file = 'passwd'){
+    function File_Passwd_Cvs($file = 'passwd')
+    {
         $this->__construct($file);
     }
     
@@ -89,7 +91,8 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     * @param    string  $user   user to authenticate
     * @param    string  $pass   plaintext password
     */
-    function staticAuth($file, $user, $pass){
+    function staticAuth($file, $user, $pass)
+    {
         $line = File_Passwd_Common::_auth($file, $user);
         if (!$line || PEAR::isError($line)) {
             return $line;
@@ -112,7 +115,8 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     * @access public
     * @return mixed true on success or PEAR_Error
     */
-    function save(){
+    function save()
+    {
         $content = '';
         foreach ($this->_users as $user => $v){
             $content .= $user . ':' . $v['passwd'];
@@ -133,7 +137,8 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     * @access public
     * @return mixed true on success or PEAR_Error
     */
-    function parse() {
+    function parse()
+    {
         $this->_users = array();
         foreach ($this->_contents as $line) {
             $user = explode(':', $line);
@@ -170,7 +175,8 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     * @param  string    $pass           the password of the user tot add
     * @param  string    $system_user    the systemuser this user maps to
     */
-    function addUser($user, $pass, $system_user = ''){
+    function addUser($user, $pass, $system_user = '')
+    {
         if ($this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_ALREADY_STR, 'User ', $user),
@@ -210,7 +216,8 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     * @param  string    $user   user whose password should be verified
     * @param  string    $pass   the plaintext password that should be verified
     */
-    function verifyPasswd($user, $pass){
+    function verifyPasswd($user, $pass)
+    {
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
@@ -230,7 +237,8 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     * @access public
     * @return mixed true on success or PEAR_Error
     */
-    function changePasswd($user, $pass){
+    function changePasswd($user, $pass)
+    {
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
@@ -252,7 +260,8 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     * @access public
     * @return mixed true on success or PEAR_Error
     */
-    function changeSysUser($user, $system){
+    function changeSysUser($user, $system)
+    {
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
@@ -282,7 +291,8 @@ class File_Passwd_Cvs extends File_Passwd_Common {
     * @param  string    $pass   new plaintext password
     * @param  string    $salt   new crypted password from which to gain the salt
     */
-    function _genPass($pass, $salt = null){
+    function _genPass($pass, $salt = null)
+    {
         $salt = substr((is_null($salt) ? md5(rand()) : $salt), 0,2);
         return crypt($pass, $salt);
     }

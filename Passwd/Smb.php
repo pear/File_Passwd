@@ -88,8 +88,8 @@ require_once('Crypt/CHAP.php');
 * @version  $Revision$
 * @access   public
 */
-class File_Passwd_Smb extends File_Passwd_Common {
-    
+class File_Passwd_Smb extends File_Passwd_Common
+{
     /**
     * Object which generates the NT-Hash and LAN-Manager-Hash passwds
     * 
@@ -104,7 +104,8 @@ class File_Passwd_Smb extends File_Passwd_Common {
     * @access public
     * @param  string $file  SMB passwd file
     */
-    function File_Passwd_Smb($file = 'smbpasswd') {
+    function File_Passwd_Smb($file = 'smbpasswd')
+    {
         $this->__construct($file);
     }
     
@@ -116,7 +117,8 @@ class File_Passwd_Smb extends File_Passwd_Common {
     * @access public
     * @param  string $file  SMB passwd file
     */
-    function __construct($file = 'smbpasswd'){
+    function __construct($file = 'smbpasswd')
+    {
         $this->setFile($file);
         $this->msc = &new Crypt_MSCHAPv1;
     }     
@@ -140,7 +142,8 @@ class File_Passwd_Smb extends File_Passwd_Common {
     * @param    string  $pass       plaintext password
     * @param    string  $nt_or_lm   encryption mode to use (NT or LM hash)
     */
-    function staticAuth($file, $user, $pass, $nt_or_lm){
+    function staticAuth($file, $user, $pass, $nt_or_lm)
+    {
         $line = File_Passwd_Common::_auth($file, $user);
         if (!$line || PEAR::isError($line)) {
             return $line;
@@ -173,7 +176,8 @@ class File_Passwd_Smb extends File_Passwd_Common {
     * @access public
     * @return mixed   true on success or PEAR_Error
     */    
-    function parse() {
+    function parse()
+    {
         foreach ($this->_contents as $line){
             $info = explode(':', $line);
             if (count($info) < 4) {
@@ -218,7 +222,8 @@ class File_Passwd_Smb extends File_Passwd_Common {
     *                                + comment
     * @param  boolean   $isMachine  whether to add an machine account
     */
-    function addUser($user, $pass, $params, $isMachine = false) {
+    function addUser($user, $pass, $params, $isMachine = false)
+    {
         if ($this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_ALREADY_STR, 'User ', $user),
@@ -262,7 +267,8 @@ class File_Passwd_Smb extends File_Passwd_Common {
     * @param  string    $user   the user to modify
     * @param  array     $params an associative array of properties to change
     */
-    function modUser($user, $params) {
+    function modUser($user, $params)
+    {
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
@@ -299,7 +305,8 @@ class File_Passwd_Smb extends File_Passwd_Common {
     * @param  string    $user   the user whose passwd should be changed
     * @param  string    $pass   the new plaintext passwd
     */
-    function changePasswd($user, $pass){
+    function changePasswd($user, $pass)
+    {
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
@@ -328,7 +335,8 @@ class File_Passwd_Smb extends File_Passwd_Common {
     * @param string $nthash     NT-Hash in hex
     * @param string $lmhash     LAN-Manager-Hash in hex
     */
-    function verifyEncryptedPasswd($user, $nthash, $lmhash = '') {
+    function verifyEncryptedPasswd($user, $nthash, $lmhash = '')
+    {
         if (!$this->userExist($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
@@ -360,7 +368,8 @@ class File_Passwd_Smb extends File_Passwd_Common {
     * @param  string    $user username
     * @param  string    $pass the plaintext password
     */
-    function verifyPasswd($user, $pass) {
+    function verifyPasswd($user, $pass)
+    {
         $nthash = bin2hex($this->msc->ntPasswordHash($pass));
         $lmhash = bin2hex($this->msc->lmPasswordHash($pass));
         return $this->verifyEncryptedPasswd($user, $nthash, $lmhash);
@@ -380,7 +389,8 @@ class File_Passwd_Smb extends File_Passwd_Common {
     * @access public
     * @return mixed true on success or PEAR_Error
     */
-    function save() {
+    function save()
+    {
         $content = '';
         foreach ($this->_users as $user => $userdata) {
             $content .= $user . ':' . implode(':', $userdata) . "\n";

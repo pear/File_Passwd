@@ -65,8 +65,8 @@ define('FILE_PASSWD_DES', 'des');
 * @access   protected
 * @internal extend this class for your File_Passwd_* class
 */
-class File_Passwd_Common {
-
+class File_Passwd_Common
+{
     /**
     * passwd file
     *
@@ -105,7 +105,8 @@ class File_Passwd_Common {
     * @access protected
     * @param  string    $file   path to passwd file
     */
-    function __construct($file = 'passwd'){
+    function __construct($file = 'passwd')
+    {
         $this->setFile($file);
     }
     
@@ -115,7 +116,8 @@ class File_Passwd_Common {
     * @access public
     * @return object    copy of this opject
     */
-    function __clone(){
+    function __clone()
+    {
         return $this;
     }
     
@@ -129,7 +131,8 @@ class File_Passwd_Common {
     * @access public
     * @return object    PEAR_Error
     */
-    function parse(){
+    function parse()
+    {
         return PEAR::raiseError(
             sprintf(FILE_PASSWD_E_METHOD_NOT_IMPLEMENTED_STR, 'parse'),
             FILE_PASSWD_E_METHOD_NOT_IMPLEMENTED
@@ -146,7 +149,8 @@ class File_Passwd_Common {
     * @access public
     * @return object    PEAR_Error
     */
-    function save(){
+    function save()
+    {
         return PEAR::raiseError(
             sprintf(FILE_PASSWD_E_METHOD_NOT_IMPLEMENTED_STR, 'save'),
             FILE_PASSWD_E_METHOD_NOT_IMPLEMENTED
@@ -166,7 +170,8 @@ class File_Passwd_Common {
     * @return mixed resource of type file handle or PEAR_Error
     * @param  string    $mode   the mode to open the file with
     */
-    function &_open($mode, $file = null){
+    function &_open($mode, $file = null)
+    {
         $file   = realpath( is_null($file) ? $this->_file : $file );
         $dir    = dirname($file);
         if (!is_dir($dir) && !System::mkDir('-p -m 0755 ' . $dir)) {
@@ -203,7 +208,8 @@ class File_Passwd_Common {
     * @return mixed true on success or PEAR_Error
     * @param  resource  $file_handle    the file handle to operate on
     */
-    function _close(&$file_handle){
+    function _close(&$file_handle)
+    {
         if (!@flock($file_handle, LOCK_UN)) {
             return PEAR::raiseError(
                 FILE_PASSWD_E_FILE_NOT_UNLOCKED_STR,
@@ -233,7 +239,8 @@ class File_Passwd_Common {
     * @access public
     * @return mixed true on success or PEAR_Error
     */
-    function load(){
+    function load()
+    {
         $fh = &$this->_open('r');
         if (PEAR::isError($fh)) {
             return $fh;
@@ -267,7 +274,8 @@ class File_Passwd_Common {
     * @access protected
     * @return mixed true on success or PEAR_Error
     */
-    function _save($content){
+    function _save($content)
+    {
         $fh = &$this->_open('w');
         if (PEAR::isError($fh)) {
             return $fh;
@@ -282,7 +290,8 @@ class File_Passwd_Common {
     * @access public
     * @return void
     */
-    function setFile($file){
+    function setFile($file)
+    {
         $this->_file = $file;
     }
     
@@ -292,7 +301,8 @@ class File_Passwd_Common {
     * @access public
     * @return string
     */
-    function getFile(){
+    function getFile()
+    {
         return $this->_file;
     }
 
@@ -303,7 +313,8 @@ class File_Passwd_Common {
     * @return bool
     * @param  string    $user   the name of the user to check if already exists
     */
-    function userExists($user){
+    function userExists($user)
+    {
         return isset($this->_users[$user]);
     }
     
@@ -317,7 +328,8 @@ class File_Passwd_Common {
     * @return mixed true on success or PEAR_Error
     * @param  string    
     */
-    function delUser($user){
+    function delUser($user)
+    {
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
@@ -338,7 +350,8 @@ class File_Passwd_Common {
     * @return mixed array of a/all user(s) or PEAR_Error
     * @param  string    $user   the user to list or all users if empty
     */
-    function listUser($user = ''){
+    function listUser($user = '')
+    {
         if (empty($user)) {
             return $this->_users;
         }
@@ -368,7 +381,8 @@ class File_Passwd_Common {
     * @param    string      $file   path to passwd file
     * @param    string      $id     user_id to search for
     */
-    function _auth($file, $id){
+    function _auth($file, $id)
+    {
         $file = realpath($file);
         if (!is_file($file)) {
             return PEAR::raiseError("File '$file' couldn't be found.", 0);

@@ -60,8 +60,8 @@ require_once('File/Passwd/Common.php');
 * @version  $Revision$
 * @access   public
 */
-class File_Passwd_Authdigest extends File_Passwd_Common {
-
+class File_Passwd_Authdigest extends File_Passwd_Common
+{
     /** 
     * Path to AuthDigestFile
     *
@@ -76,7 +76,8 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     * @access public
     * @param string $file       path to AuthDigestFile
     */
-    function File_Passwd_Authdigest($file = '.htdigest') {
+    function File_Passwd_Authdigest($file = '.htdigest')
+    {
         $this->__construct($file);
     }
 
@@ -100,7 +101,8 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     * @param    string  $pass   plaintext password
     * @param    string  $realm  the realm the user is in
     */
-    function staticAuth($file, $user, $pass, $realm){
+    function staticAuth($file, $user, $pass, $realm)
+    {
         $line = File_Passwd_Common::_auth($file, $user.':'.$realm);
         if (!$line || PEAR::isError($line)) {
             return $line;
@@ -123,7 +125,8 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     * @access public
     * @return mixed true on success or a PEAR_Error
     */
-    function save() {
+    function save()
+    {
         $content = '';
         if (count($this->_users)) {
             foreach ($this->_users as $user => $realm) {
@@ -152,7 +155,8 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     * @param string $realm  the realm the user should be in
     * @param string $pass   the plaintext password
     */
-    function addUser($user, $realm, $pass) {
+    function addUser($user, $realm, $pass)
+    {
         if ($this->userInRealm($user, $realm)) {
             return PEAR::raiseError(
                 "User '$user' already exists in realm '$realm'.", 0
@@ -204,7 +208,8 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     * @param string $inRealm    the realm to list users of;
     *                           if omitted, you'll get all realms
     */
-    function listUserInRealm($inRealm = ''){
+    function listUserInRealm($inRealm = '')
+    {
         $result = array();
         foreach ($this->_users as $user => $realms){
             foreach ($realms as $realm => $pass){
@@ -237,7 +242,8 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     * @param string $realm  the realm the user is in
     * @param string $pass   the new plaintext password
     */
-    function changePasswd($user, $realm, $pass) {
+    function changePasswd($user, $realm, $pass)
+    {
         if (PEAR::isError($error = $this->delUser($user, $realm))) {
             return $error;
         } else {
@@ -257,7 +263,8 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     * @param string $realm  the realm the user is in
     * @param string $pass   the plaintext password to verify
     */
-    function verifyPasswd($user, $realm, $pass) {
+    function verifyPasswd($user, $realm, $pass)
+    {
         if (!$this->userInRealm($user, $realm)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_USER_NOT_IN_REALM_STR, $user, $realm),
@@ -276,7 +283,8 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     * @param string $user   the user to check
     * @param string $realm  the realm the user shuold be in
     */
-    function userInRealm($user, $realm){
+    function userInRealm($user, $realm)
+    {
       return (isset($this->_users[$user][$realm]));
     }
     
@@ -291,7 +299,8 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     * @param  string    $user       the user to remove
     * @param  string    $inRealm    the realm the user should be in
     */
-    function delUserInRealm($user, $inRealm){
+    function delUserInRealm($user, $inRealm)
+    {
         if (!$this->userInRealm($user, $inRealm)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_USER_NOT_IN_REALM_STR, $user, $inRealm),
@@ -311,7 +320,8 @@ class File_Passwd_Authdigest extends File_Passwd_Common {
     * @access public
     * @return mixed true on success or PEAR_Error
     */
-    function parse() {
+    function parse()
+    {
         $this->_users = array();
         foreach ($this->_contents as $line) {
             $user = explode(':', $line);

@@ -64,8 +64,8 @@ $GLOBALS['_FILE_PASSWD_AUTHBASIC_64'] =
 * @version  $Revision$
 * @access   public
 */
-class File_Passwd_Authbasic extends File_Passwd_Common {
-
+class File_Passwd_Authbasic extends File_Passwd_Common
+{
     /** 
     * Path to AuthUserFile
     *
@@ -96,7 +96,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @access public
     * @param  string $file   path to AuthUserFile
     */
-    function File_Passwd_Authbasic($file = '.htpasswd') {
+    function File_Passwd_Authbasic($file = '.htpasswd')
+    {
         $this->__construct($file);
     }
 
@@ -109,7 +110,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @access protected
     * @param  string $file   path to AuthUserFile
     */
-    function __construct($file = '.htpasswd') {
+    function __construct($file = '.htpasswd')
+    {
         if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
             unset($this->_modes['des']);
         }
@@ -136,7 +138,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @param    string  $pass   plaintext password
     * @param    string  $mode   des, sha or md5
     */
-    function staticAuth($file, $user, $pass, $mode){
+    function staticAuth($file, $user, $pass, $mode)
+    {
         $line = File_Passwd_Common::_auth($file, $user);
         if (!$line || PEAR::isError($line)) {
             return $line;
@@ -159,7 +162,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @access public
     * @return mixed true on success or PEAR_Error
     */
-    function save() {
+    function save()
+    {
         $content = '';
         foreach ($this->_users as $user => $pass) {
             $content .= $user . ':' . $pass . "\n";
@@ -183,7 +187,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @param string $user
     * @param string $pass
     */
-    function addUser($user, $pass) {
+    function addUser($user, $pass)
+    {
         if ($this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_ALREADY_STR, 'User ', $user),
@@ -211,7 +216,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @param string $user   the user whose password should be changed
     * @param string $pass   the new plaintext password
     */
-    function changePasswd($user, $pass) {
+    function changePasswd($user, $pass)
+    {
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
@@ -235,7 +241,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @param string $user   the user whose password should be verified
     * @param string $pass   the plaintext password to verify
     */
-    function verifyPasswd($user, $pass) {
+    function verifyPasswd($user, $pass)
+    {
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
@@ -252,7 +259,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @access public
     * @return string
     */
-    function getMode() {
+    function getMode()
+    {
         return $this->_mode;
     }
 
@@ -271,7 +279,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @access public
     * @return array
     */
-    function listModes() {
+    function listModes()
+    {
         return array_keys($this->_modes);
     }
 
@@ -289,7 +298,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @return mixed true on succes or PEAR_Error
     * @param string $mode
     */
-    function setMode($mode) {
+    function setMode($mode)
+    {
         $mode = strToLower($mode);
         if (!isset($this->_modes[$mode])) {
             return PEAR::raiseError(
@@ -311,9 +321,11 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @param    string  $mode   encyption mode, usually determined from
     *                           <var>$this->_mode</var>
     */
-    function _genPass($pass, $salt = null, $mode = null){
+    function _genPass($pass, $salt = null, $mode = null)
+    {
         $salt = is_null($salt) ? File_Passwd_Authbasic::_genSalt() : $salt;
         $mode = is_null($mode) ? strToLower($this->_mode) : strToLower($mode);
+
         switch($mode){
             case 'des': 
                 return crypt($pass, substr($salt, 0,2));
@@ -327,6 +339,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
                 return File_Passwd_Authbasic::_md5crypt($pass, $salt);
                 break;
         }
+
         return PEAR::raiseError(
             sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
             FILE_PASSWD_E_INVALID_ENC_MODE                
@@ -342,7 +355,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @access public
     * @return mixed true on success or PEAR_error
     */
-    function parse() {
+    function parse()
+    {
         $this->_users = array();
         foreach ($this->_contents as $line) {
             $user = explode(':', $line);
@@ -367,7 +381,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @param    string  $string     the sting to encrypt
     * @param    string  $salt       the salt to use for encryption
     */
-    function _md5crypt($string, $salt = null){
+    function _md5crypt($string, $salt = null)
+    {
         if (is_null($salt)) {
             $salt = File_Passwd_Authbasic::_genSalt();
         } elseif (preg_match('/^\$apr1\$/', $salt)) {
@@ -429,7 +444,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @access   private
     * @return   string
     */
-    function _genSalt(){
+    function _genSalt()
+    {
         $rs = '';
         for($i = 0; $i < 8; $i++) {
             $rs .= $GLOBALS['_FILE_PASSWD_AUTHBASIC_64'][rand(0,63)];
@@ -445,7 +461,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @return   mixed
     * @param    string  $hex
     */
-    function _hexbin($hex){
+    function _hexbin($hex)
+    {
         $rs = '';
         $ln = strlen($hex);
         for($i = 0; $i < $ln; $i += 2) {
@@ -463,7 +480,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @param    string  $value
     * @param    int     $count
     */
-    function _md5to64($value, $count){
+    function _md5to64($value, $count)
+    {
         $result = '';
         while(--$count) {
             $result .= $GLOBALS['_FILE_PASSWD_AUTHBASIC_64'][$value & 0x3f];

@@ -68,8 +68,8 @@ require_once('File/Passwd/Common.php');
 * @version  $Revision$
 * @access   public
 */
-class File_Passwd_Unix extends File_Passwd_Common {
-
+class File_Passwd_Unix extends File_Passwd_Common
+{
     /**
     * A 'name map' wich refer to the extra properties
     *
@@ -139,7 +139,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @param    string  $pass   plaintext password
     * @param    string  $mode   encryption mode to use (des or md5)
     */
-    function staticAuth($file, $user, $pass, $mode){
+    function staticAuth($file, $user, $pass, $mode)
+    {
         $line = File_Passwd_Common::_auth($file, $user);
         if (!$line || PEAR::isError($line)) {
             return $line;
@@ -166,7 +167,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @access public
     * @return mixed true on success or PEAR_Error
     */
-    function save(){
+    function save()
+    {
         $content = '';
         foreach ($this->_users as $user => $array){
             $pass   = array_shift($array);
@@ -189,7 +191,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @access public
     * @return mixed true on success or PEAR_Error
     */
-    function parse(){
+    function parse()
+    {
         $this->_users = array();
         foreach ($this->_contents as $line){
             $parts = explode(':', $line);
@@ -239,7 +242,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @return   mixed   true on succes or PEAR_Error
     * @param    string  $mode   encryption mode to use; either md5 or des
     */
-    function setMode($mode) {
+    function setMode($mode)
+    {
         $mode = strToLower($mode);
         if (!isset($this->_modes[$mode])) {
             return PEAR::raiseError(
@@ -266,7 +270,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @access   public
     * @return   array
     */
-    function listModes() {
+    function listModes()
+    {
         return $this->_modes;
     }
 
@@ -279,7 +284,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @access   public
     * @return   string
     */
-    function getMode(){
+    function getMode()
+    {
         return $this->_mode;
     }
     
@@ -310,7 +316,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * 
     * @param    boolean $bool   whether to use the 'name map' or not
     */
-    function useMap($bool = null){
+    function useMap($bool = null)
+    {
         if (is_null($bool)) {
             return $this->_usemap;
         }
@@ -332,7 +339,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @access   public
     * @return   mixed       true on success or PEAR_Error
     */
-    function setMap($map = array()){
+    function setMap($map = array())
+    {
         if (!is_array($map)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_PARAM_MUST_BE_ARRAY_STR, '$map'),
@@ -352,7 +360,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @access public
     * @return array
     */
-    function getMap(){
+    function getMap()
+    {
         return $this->_map;
     }
     
@@ -362,7 +371,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @access public
     * @return boolean
     */
-    function isShadowed(){
+    function isShadowed()
+    {
         return $this->_shadowed;
     }
     
@@ -396,7 +406,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @param  string    $pass   the password of the user to add
     * @param  array     $extra  extra properties of user to add
     */
-    function addUser($user, $pass, $extra = array()){
+    function addUser($user, $pass, $extra = array())
+    {
         if ($this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_ALREADY_STR, 'User ', $user),
@@ -481,7 +492,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @param    array       $properties     an associative array of 
     *                                       properties to modify
     */
-    function modUser($user, $properties = array()){
+    function modUser($user, $properties = array())
+    {
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
@@ -517,7 +529,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @param string $user   the user whose password should be changed
     * @param string $pass   the new plaintext password
     */
-    function changePasswd($user, $pass){
+    function changePasswd($user, $pass)
+    {
         if ($this->_shadowed) {
             return PEAR::raiseError('Passwords of this passwd file are shadowed.', 0);
         }
@@ -552,7 +565,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @param  string    $user   the user whose password should be verified
     * @param  string    $pass   the password to verify
     */
-    function verifyPasswd($user, $pass){
+    function verifyPasswd($user, $pass)
+    {
         if (!$this->userExists($user)) {
             return PEAR::raiseError(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
@@ -580,7 +594,8 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * @param  string    $mode   the encryption mode to use; don't set, because
     *                           it's usually taken from File_Passwd_Unix::_mode
     */
-    function _genPass($pass, $salt = null, $mode = null){
+    function _genPass($pass, $salt = null, $mode = null)
+    {
         if (is_null($mode)) {
             $mode = $this->_mode;
         }
