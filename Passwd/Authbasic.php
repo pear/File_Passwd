@@ -449,7 +449,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
         $rs = '';
         $ln = strlen($hex);
         for($i = 0; $i < $ln; $i += 2) {
-            $rs .= chr(array_shift(sscanf(substr($hex, $i, 2), '%x')));
+            $rs .= chr(hexdec($hex{$i} . $hex{$i+1}));
         }
         return $rs;
     }
@@ -465,7 +465,6 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     */
     function _md5to64($value, $count){
         $result = '';
-        $count  = abs($count);
         while(--$count) {
             $result .= $GLOBALS['_FILE_PASSWD_AUTHBASIC_64'][$value & 0x3f];
             $value >>= 6;
