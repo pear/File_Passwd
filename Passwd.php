@@ -103,7 +103,7 @@ class File_Passwd {
             if (!strlen($line)) {
                 continue;
             }
-            list($user, $pass, $cvsuser) = explode(':', $line);
+            @list($user, $pass, $cvsuser) = explode(':', $line);
             if(strlen($user)) {
                 $this->users[$user] = trim($pass);
                 $this->cvs[$user] = trim($cvsuser);	
