@@ -463,34 +463,8 @@ class File_Passwd {
         if (!@include_once("File/Passwd/$type.php")) {
             return PEAR::raiseError("Coudn't load file Passwd/$type.php", 0);
         }
-        switch($type){
-        	case 'Unix': 
-        		return File_Passwd_Unix::staticAuth(
-                    $file, $user, $pass, $opt
-                );
-        		break;
-        	case 'Cvs': 
-        		return File_Passwd_Cvs::staticAuth(
-                    $file, $user, $pass
-                );
-        		break;
-            case 'Smb':
-                return File_Passwd_Smb::StaticAuth(
-                    $file, $user, $pass, $opt
-                );
-                break;
-            case 'Authbasic':
-                return File_Passwd_Authbasic::staticAuth(
-                    $file, $user, $pass, $opt
-                );
-                break;
-            case 'Authdigest':
-                return File_Passwd_Authdigest::staticAuth(
-                    $file, $user, $pass, $opt
-                );
-                break;
-        }
-        return false;
+        $func = array('File_Passwd_' . $type, 'staticAuth');
+        return call_user_func($func, $file, $user, $pass, $opt);
     }
     
 }
