@@ -39,6 +39,8 @@ define('FILE_PASSWD_DES',   'des');
 define('FILE_PASSWD_NT',    'nt');
 // LM hash encryption.
 define('FILE_PASSWD_LM',    'lm');
+// PLAIN (no encryption)
+define('FILE_PASSWD_PLAIN', 'plain');
 
 /**
 * Error constants.
@@ -146,6 +148,18 @@ class File_Passwd {
         return $salt;
     }
 
+    /**
+    * No encryption (plaintext)
+    *
+    * @access   public
+    * @return   string  plaintext input
+    * @param    string  plaintext passwd
+    */
+    function crypt_plain($plain)
+    {
+        return $plain;
+    }
+    
     /**
     * DES encryption
     *
