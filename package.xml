@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.11 $ -->
+<!-- $Revision: 1.12 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
@@ -25,6 +25,9 @@ Major changes in File_Passwd_Authbasic:
 * htpasswd binary isn't needed anymore!
 * md5 passwords now can be verified
 * if you want to use sha encryption you must have PHP >= 4.3.0
+
+Introduced constants for encryption modes.
+
 Fixed some bugs and typos.
     </notes>
     <filelist>
