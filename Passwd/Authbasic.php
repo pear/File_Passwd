@@ -30,6 +30,12 @@
 require_once('File/Passwd/Common.php');
 
 /**
+* Allowed 64 characters for MD5 encryption
+*/
+$GLOBALS['_FILE_PASSWD_AUTHBASIC_64'] = 
+    './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+/**
 * Manipulate AuthUserFiles as used for HTTP Basic Authentication.
 *
 * <kbd><u>
@@ -39,17 +45,11 @@ require_once('File/Passwd/Common.php');
 *   $htp = &File_Passwd::factory('AuthBasic');
 *   $htp->setMode('sha');
 *   $htp->setFile('/www/mike/auth/.htpasswd');
-*   $htp->setExePath('/usr/bin/htpasswd');
 *   $htp->load();
 *   $htp->addUser('mike', 'secret');
 *   $htp->save();
 * </code>
 * 
-* <b>NOTE:</b>
-* You usually need not set the full path to the
-* htpasswd binary unless it's not in your $PATH.
-* For use in safe_mode see "Limitations".
-*
 * <kbd><u>
 *   Output of listUser()
 * </u></kbd>
@@ -58,20 +58,6 @@ require_once('File/Passwd/Common.php');
 *       + user => crypted_passwd
 *       + user => crypted_passwd
 * </pre>
-* 
-* 
-* <kbd><u>
-*   Limitations:
-* </u></kbd>
-* 
-* If you have "safe_mode" enabled you only
-* can use DES encryption for your passwords.
-* <b>NOTE:</b>
-* If you're additionally on Win32 you even cannot use this class.
-* <i>
-* This behavior derives from the unusual implementiation
-* of the Apache's htpasswd encryption.
-* </i>
 * 
 * @author   Michael Wallner <mike@php.net>
 * @package  File_Passwd
@@ -94,15 +80,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @var string
     * @access private
     */
-    var $_mode = 'des';
-
-    /** 
-    * Path to htpasswd executable
-    *
-    * @var string
-    * @access private
-    */
-    var $_path_to_htp = 'htpasswd';
+    var $_mode = 'sha';
 
     /** 
     * Supported encryption modes
@@ -134,21 +112,12 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     function __construct($file = '.htpasswd') {
         if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
             unset($this->_modes['des']);
-            if (ini_get('safe_mode')) {
-                die('Sorry, you\'re on Win32 and safe_mode is enabled.');
-            }
-        }
-        if (ini_get('safe_mode')) {
-            unset($this->_modes['sha']);
-            unset($this->_modes['md5']);
         }
         $this->setFile($file);
     }
 
     /**
     * Fast authentication of a certain user
-    * 
-    * NOTE: Only DES encryption supported.
     * 
     * Returns a PEAR_Error if:
     *   o file doesn't exist
@@ -165,14 +134,15 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @param    string  $file   path to passwd file
     * @param    string  $user   user to authenticate
     * @param    string  $pass   plaintext password
+    * @param    string  $mode   des, sha or md5
     */
-    function staticAuth($file, $user, $pass){
+    function staticAuth($file, $user, $pass, $mode){
         $line = File_Passwd_Common::_auth($file, $user);
         if (!$line || PEAR::isError($line)) {
             return $line;
         }
-        list(,$real)= explode(':', $line);
-        return (crypt($pass, substr($real, 0,2)) === $real);
+        list(,$real) = explode(':', $line);
+        return ($real === File_Passwd_Authbasic::_genPass($pass, $real, $mode));
     }
     
     /** 
@@ -235,9 +205,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     *
     * This method in fact adds the user with the new password after deleting it.
     * 
-    * Returns a PEAR_Error if:
-    *   o user doesn't exists
-    *   o user contains illegal characters
+    * Returns a PEAR_Error if user doesn't exist.
     * 
     * @throws PEAR_Error
     * @access public
@@ -246,10 +214,14 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @param string $pass   the new plaintext password
     */
     function changePasswd($user, $pass) {
-        if (PEAR::isError($error = $this->delUser($user))) {
-            return $error;
+        if (!$this->userExists($user)) {
+            return PEAR::raiseError(
+                sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
+                FILE_PASSWD_E_EXISTS_NOT
+            );
         }
-        return $this->addUser($user, $pass);
+        $this->_users[$user] = $this->_genPass($pass);
+        return true;
     }
 
     /** 
@@ -279,56 +251,8 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
                 FILE_PASSWD_E_EXISTS_NOT
             );
         }
-        switch ($this->_mode) {
-            case 'sha' :
-                return ($this->_genPass($pass) === $this->_users[$user]);
-                break;
-            case 'des' :
-                $real = crypt($pass, substr($this->_users[$user], 0, 2));
-                return ($real == $this->_users[$user]);
-                break;
-            case 'md5':
-                return PEAR::raiseError('md5 passwords cannot be verified', 0);
-                break;
-            default :
-                return PEAR::raiseError(
-                    sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $this->_mode),
-                    FILE_PASSWD_E_INVALID_ENC_MODE
-                );
-        }
-    }
-
-    /** 
-    * Get path to htpasswd executable if supplied earlier
-    *
-    * @access public
-    * @return string
-    */
-    function getExePath() {
-        return $this->_path_to_htp;
-    }
-
-    /** 
-    * Set path to htpasswd executable
-    *
-    * NOTE: You usually don't need to set the complete path to 
-    *       the htpasswd binary unless it is NOT in your PATH!
-    * 
-    * Returns a PEAR_Error if supplied path doesn't map to a file or
-    * is not equal to 'htpasswd'. That's just if you want to reset this
-    * property to the default value.
-    * 
-    * @throws PEAR_Error
-    * @access public
-    * @return mixed true on succes or a PEAR_Error
-    * @param string $path_to_htp
-    */
-    function setExePath($path_to_htp) {
-        if (!is_file($path_to_htp) && ($path_to_htp != 'htpasswd')) {
-            return PEAR::raiseError('Invalid path to htpasswd excecutable.', 0);
-        }
-        $this->_path_to_htp = $path_to_htp;
-        return true;
+        $real = $this->_users[$user];
+        return ($real === $this->_genPass($pass, $real));
     }
 
     /** 
@@ -398,24 +322,29 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
     * @access   private
     * @return   string  the crypted password
     * @param    string  $pass   the plaintext password
+    * @param    string  $salt   the salt to use
+    * @param    string  $mode   encyption mode, usually determined from
+    *                           <var>$this->_mode</var>
     */
-    function _genPass($pass){
-        /**
-        * If safe_mode is enabled this is the only chance
-        * to get a htpasswd style password.
-        */
-        if ($this->_mode == 'des') {
-            return crypt($pass, substr(md5(rand()), 0,2));
+    function _genPass($pass, $salt = null, $mode = null){
+        $salt = is_null($salt) ? File_Passwd_Authbasic::_genSalt() : $salt;
+        $mode = is_null($mode) ? strToLower($this->_mode) : strToLower($mode);
+        switch($mode){
+            case 'des': 
+                return crypt($pass, substr($salt, 0,2));
+                break;
+            case 'sha':
+                return '{SHA}' . base64_encode(
+                    File_Passwd_Authbasic::_hexbin(sha1($pass))
+                );
+                break;
+            case 'md5':
+                return File_Passwd_Authbasic::_md5crypt($pass, $salt);
+                break;
         }
-        /**
-        * Else execute htpasswd on the shell.
-        */
-        $htpw = $this->_path_to_htp.' -nb'.$this->_modes[$this->_mode];
-        $pass = addSlashes($pass);
-        return preg_replace(
-            '/.*myDefaultUserForHtPasswd:(\S*).*/s', 
-            '\\1',
-            trim(`$htpw myDefaultUserForHtPasswd "$pass"`)
+        return PEAR::raiseError(
+            sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
+            FILE_PASSWD_E_INVALID_ENC_MODE                
         );
     }
     
@@ -442,6 +371,121 @@ class File_Passwd_Authbasic extends File_Passwd_Common {
         }
         $this->_contents = array();
         return true;
+    }
+    
+    /**
+    * Encrypt string (with given salt) in APR-md5 style
+    * 
+    * @static
+    * @access   private
+    * @return   string  encrypted passwd
+    * @param    string  $string     the sting to encrypt
+    * @param    string  $salt       the salt to use for encryption
+    */
+    function _md5crypt($string, $salt = null){
+        if (is_null($salt)) {
+            $salt = File_Passwd_Authbasic::_genSalt();
+        } elseif (preg_match('/^\$apr1\$/', $salt)) {
+            $salt = preg_replace('/^\$apr1\$(.{8}).*/', '\\1', $salt);
+        } else {
+            $salt = substr($salt, 0,8);
+        }
+        
+        $length     = strlen($string);
+        $context    = $string . '$apr1$' . $salt;
+        $binary     = File_Passwd_Authbasic::_hexbin(
+            md5($string . $salt . $string)
+        );
+        
+        for ($i = $length; $i > 0; $i -= 16) {
+            $context .= substr($binary, 0, ($i > 16 ? 16 : $i));
+        }
+        for ( $i = $length; $i > 0; $i >>= 1) {
+            $context .= ($i & 1) ? chr(0) : $string[0];
+        }
+        
+        $binary = File_Passwd_Authbasic::_hexbin(md5($context));
+        
+        for($i = 0; $i < 1000; $i++) {
+            $new = ($i & 1) ? $string : substr($binary, 0,16);
+            if ($i % 3) {
+                $new .= $salt;
+            }
+            if ($i % 7) {
+                $new .= $string;
+            }
+            $new .= ($i & 1) ? substr($binary, 0,16) : $string;
+            $binary = File_Passwd_Authbasic::_hexbin(md5($new));
+        }
+        
+        $p = array();
+        for ($i = 0; $i < 5; $i++) {
+            $k = $i + 6;
+            $j = $i + 12;
+            if ($j == 16) {
+                $j = 5;
+            }
+            $p[] = File_Passwd_Authbasic::_md5to64(
+                (ord($binary[$i]) << 16) |
+                (ord($binary[$k]) << 8) |
+                (ord($binary[$j])),
+                5
+            );
+        }
+        
+        return 
+            '$apr1$' . $salt . '$' . implode($p) . 
+            File_Passwd_Authbasic::_md5to64(ord($binary[11]), 3);
+    }
+    
+    /**
+    * Generate salt
+    *
+    * @access   private
+    * @return   string
+    */
+    function _genSalt(){
+        $rs = '';
+        for($i = 0; $i < 8; $i++) {
+            $rs .= $GLOBALS['_FILE_PASSWD_AUTHBASIC_64'][rand(0,63)];
+        }
+        return $rs;
+    }
+
+    /**
+    * Convert hexadecimal string to binary data
+    *
+    * @static
+    * @access   private
+    * @return   mixed
+    * @param    string  $hex
+    */
+    function _hexbin($hex){
+        $rs = '';
+        $ln = strlen($hex);
+        for($i = 0; $i < $ln; $i += 2) {
+            $rs .= chr(array_shift(sscanf(substr($hex, $i, 2), '%x')));
+        }
+        return $rs;
+    }
+    
+    /**
+    * Convert to allowed 64 characters for encryption
+    *
+    * @static
+    * @access   private
+    * @return   string
+    * @param    string  $value
+    * @param    int     $count
+    */
+    function _md5to64($value, $count){
+        $result = '';
+        $count  = abs($count);
+        while(--$count) {
+            $result .= $GLOBALS['_FILE_PASSWD_AUTHBASIC_64'][$value & 0x3f];
+            $value >>= 6;
+        }
+        return $result;
     }
 }
 ?>
