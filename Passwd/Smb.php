@@ -151,11 +151,11 @@ class File_Passwd_Smb extends File_Passwd_Common
         @list(,$nt,$lm) = explode(':', $line);
         $chap           = &new Crypt_MSCHAPv1;
         switch(strToLower($nt_or_lm)){
-        	case 'nt': 
+        	case FILE_PASSWD_NT: 
                 $real       = $nt; 
                 $crypted    = $chap->ntPasswordHash($pass); 
                 break;
-        	case 'lm': 
+        	case FILE_PASSWD_LM: 
                 $real       = $lm;
                 $crypted    = $chap->lmPasswordHash($pass); 
                 break;
