@@ -144,8 +144,12 @@ class File_Passwd_Authbasic extends File_Passwd_Common
         if (!$line || PEAR::isError($line)) {
             return $line;
         }
-        list(,$real) = explode(':', $line);
-        return ($real === File_Passwd_Authbasic::_genPass($pass, $real, $mode));
+        list(,$real)    = explode(':', $line);
+        $crypted        = File_Passwd_Authbasic::_genPass($pass, $real, $mode)
+        if (PEAR::isError($crypted)) {
+            return $crypted;
+        }
+        return ($real === $crypted);
     }
     
     /** 
