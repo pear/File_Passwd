@@ -199,10 +199,13 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * 
     * Returns a PEAR_Error if supplied encryption mode is not supported.
     *
-    * @throws PEAR_Error
-    * @access public
-    * @return mixed true on succes or PEAR_Error
-    * @param  string    $mode   encryption mode to use; either md5 or des
+    * @see      setMode()
+    * @see      listModes()
+    * 
+    * @throws   PEAR_Error
+    * @access   public
+    * @return   mixed   true on succes or PEAR_Error
+    * @param    string  $mode   encryption mode to use; either md5 or des
     */
     function setMode($mode) {
         $mode = strToLower($mode);
@@ -225,8 +228,11 @@ class File_Passwd_Unix extends File_Passwd_Common {
     *    + des
     * </pre>
     * 
-    * @access public
-    * @return array
+    * @see      setMode()
+    * @see      getMode()
+    * 
+    * @access   public
+    * @return   array
     */
     function listModes() {
         return $this->_modes;
@@ -235,8 +241,11 @@ class File_Passwd_Unix extends File_Passwd_Common {
     /**
     * Get actual encryption mode
     *
-    * @access public
-    * @return string
+    * @see      listModes()
+    * @see      setMode()
+    * 
+    * @access   public
+    * @return   string
     */
     function getMode(){
         return $this->_mode;
@@ -247,7 +256,7 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * 
     * Default Unix passwd files look like:
     * <pre>
-    * user:password:user_id:group_id:home_dir:shell
+    * user:password:user_id:group_id:gecos:home_dir:shell
     * </pre>
     * 
     * The default 'name map' for properties except user and password looks like:
@@ -260,11 +269,14 @@ class File_Passwd_Unix extends File_Passwd_Common {
     * If you want to change the naming of the standard map use 
     * File_Passwd_Unix::setMap(array()).
     *
-    * @access public
-    * @return boolean   always true if you set a value (true/false) OR
+    * @see      setMap()
+    * @see      getMap()
+    * 
+    * @access   public
+    * @return   boolean always true if you set a value (true/false) OR
     *                   the actual value if called without param
     * 
-    * @param  boolean   $bool   whether to use the 'name map' or not
+    * @param    boolean $bool   whether to use the 'name map' or not
     */
     function useMap($bool = null){
         if (is_null($bool)) {
@@ -281,9 +293,12 @@ class File_Passwd_Unix extends File_Passwd_Common {
     *
     * Returns a PEAR_Error if <var>$map</var> was not of type array.
     * 
-    * @throws PEAR_Error
-    * @access public
-    * @return mixed true on success or PEAR_Error
+    * @see      getMap()
+    * @see      useMap()
+    * 
+    * @throws   PEAR_Error
+    * @access   public
+    * @return   mixed       true on success or PEAR_Error
     */
     function setMap($map = array()){
         if (!is_array($map)) {
@@ -299,6 +314,9 @@ class File_Passwd_Unix extends File_Passwd_Common {
     /**
     * Get the 'name map' which is used for the extra properties of the user
     *
+    * @see      setMap()
+    * @see      useMap()
+    * 
     * @access public
     * @return array
     */
@@ -422,11 +440,14 @@ class File_Passwd_Unix extends File_Passwd_Common {
     *   o user doesn't exist
     *   o any property contains a colon (':')
     * 
-    * @throws PEAR_Error
-    * @access public
-    * @return mixed true on success or PEAR_Error
-    * @param  string    $user       the user to modify
-    * @param  array     $properties an associative array of properties to modify
+    * @see      changePasswd()
+    * 
+    * @throws   PEAR_Error
+    * @access   public
+    * @return   mixed       true on success or PEAR_Error
+    * @param    string      $user           the user to modify
+    * @param    array       $properties     an associative array of 
+    *                                       properties to modify
     */
     function modUser($user, $properties = array()){
         if (!$this->userExists($user)) {
