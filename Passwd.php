@@ -242,7 +242,12 @@ class File_Passwd
         
         $length     = strlen($plain);
         $context    = $plain . '$apr1$' . $salt;
-        $binary     = pack('H32', md5($plain . $salt . $plain));
+        
+        if (PEAR_ZE2) {
+            $binary = md5($plain . $salt . $plain, true);
+        } else {
+            $binary = pack('H32', md5($plain . $salt . $plain));
+        }
         
         for ($i = $length; $i > 0; $i -= 16) {
             $context .= substr($binary, 0, min(16 , $i));
@@ -251,7 +256,11 @@ class File_Passwd
             $context .= ($i & 1) ? chr(0) : $plain[0];
         }
         
-        $binary = pack('H32', md5($context));
+        if (PEAR_ZE2) {
+            $binary = md5($plain . $salt . $plain, true);
+        } else {
+            $binary = pack('H32', md5($plain . $salt . $plain));
+        }
         
         for($i = 0; $i < 1000; $i++) {
             $new = ($i & 1) ? $plain : $binary;
