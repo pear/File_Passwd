@@ -359,7 +359,7 @@ class File_Passwd_Common
         if (!is_file($file)) {
             return PEAR::raiseError("File '$file' couldn't be found.", 0);
         }
-    	$fh = &File_Passwd_Common::_open('r', $file);
+        $fh = &File_Passwd_Common::_open('r', $file);
         if (PEAR::isError($fh)) {
             return $fh;
         }
@@ -369,7 +369,7 @@ class File_Passwd_Common
             if (!strncmp($line, $cmp, $len)) {
                 File_Passwd_Common::_close($fh);
                 return trim($line);
-       	    }
+            }
         }
         $e = File_Passwd_Common::_close($fh);
         if (PEAR::isError($e)) {
