@@ -120,7 +120,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
         $content = '';
         foreach ($this->_users as $user => $v){
             $content .= $user . ':' . $v['passwd'];
-            if (isset($v['system']) && !empty($v['passwd'])) {
+            if (isset($v['system']) && !empty($v['system'])) {
                 $content .= ':' . $v['system'];
             }
             $content .= "\n";
