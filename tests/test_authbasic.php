@@ -106,28 +106,9 @@ class File_Passwd_AuthbasicTest extends PHPUnit_TestCase{
         $this->assertFalse($this->pwd->verifyPasswd('sha', ''));
         // MD5
         $this->pwd->setMode('md5');
-        $this->pwd->addUSer('md5', 12345);
-        $this->assertTrue(PEAR::isError($this->pwd->verifyPasswd('md5', 12345)));
-    }
-    
-    /**
-     * Regression test for File_Passwd_Authbasic.getExePath method
-     * @access public
-     */
-    function testgetExePath(){
-        $this->pwd->setExePath($GLOBALS['p']);
-        $this->assertEquals($GLOBALS['p'], $this->pwd->getExePath());
-        $this->pwd->setExePath('htpasswd');
-    }
-    
-    /**
-     * Regression test for File_Passwd_Authbasic.setExePath method
-     * @access public
-     */
-    function testsetExePath(){
-        $this->pwd->setExePath($GLOBALS['p']);
-        $this->assertEquals($GLOBALS['p'], $this->pwd->getExePath());
-        $this->pwd->setExePath('htpasswd');
+        $this->pwd->addUser('md5', 12345);
+        $this->assertTrue($this->pwd->verifyPasswd('md5', 12345));
+        $this->assertFalse($this->pwd->verifyPasswd('md5', 2));
     }
     
     /**
@@ -175,9 +156,9 @@ class File_Passwd_AuthbasicTest extends PHPUnit_TestCase{
     }
     
     function teststaticAuth(){
-        $this->assertTrue(true === File_Passwd::staticAuth('authbasic', 'passwd.authbasic.txt', 'mike', 123));
-        $this->assertTrue(false === File_Passwd::staticAuth('authbasic', 'passwd.authbasic.txt', 'mike', 'abc'));
-        $this->assertFalse((File_Passwd::staticAuth('authbasic', 'passwd.authbasic.txt', 'nonexist', 'asd')));
+        $this->assertTrue(true === File_Passwd::staticAuth('authbasic', 'passwd.authbasic.txt', 'mike', 123, 'des'));
+        $this->assertTrue(false === File_Passwd::staticAuth('authbasic', 'passwd.authbasic.txt', 'mike', 'abc', 'des'));
+        $this->assertFalse((File_Passwd::staticAuth('authbasic', 'passwd.authbasic.txt', 'nonexist', 'asd', 'des')));
     }
 }
 ?>
