@@ -224,10 +224,10 @@ class File_Passwd_Smb extends File_Passwd_Common
             );
         }
         if ($isMachine) {
-            $flags = '[W           ]';
+            $flags = '[W          ]';
             $user .= '$';
         } else {
-            $flags = '[U           ]';
+            $flags = '[U          ]';
         }
         $this->_users[$user] = array(
             'flags'     => $flags,
