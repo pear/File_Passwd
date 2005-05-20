@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.42 $ -->
+<!-- $Revision: 1.43 $ -->
 <package version="1.0">
   <name>File_Passwd</name>
   <license>PHP</license>
@@ -18,12 +18,11 @@ and custom formatted password files.
     </maintainer>
   </maintainers>
   <release>
-    <version>1.1.4</version>
-    <date>2005-04-22</date>
+    <version>1.1.5</version>
+    <date>2005-05-20</date>
     <state>stable</state>
     <notes><![CDATA[
-* Fixed File_Passwd::crypt_apr_md5(), 
-  affecting MD5 encrypted passwords of File_Passwd_Authbasic
+* Fixed bug in File_Passwd_Smb: wrong length of account flags field
 ]]> </notes>
     <filelist>
       <dir name="/" baseinstalldir="File">
