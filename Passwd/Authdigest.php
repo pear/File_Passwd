@@ -241,7 +241,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     */
     function changePasswd($user, $realm, $pass)
     {
-        if (PEAR::isError($error = $this->delUser($user, $realm))) {
+        if (PEAR::isError($error = $this->delUserInRealm($user, $realm))) {
             return $error;
         } else {
             return $this->addUser($user, $realm, $pass);
