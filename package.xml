@@ -1,68 +1,109 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- $Revision: 1.44 $ -->
-<package version="1.0">
-  <name>File_Passwd</name>
-  <license>PHP</license>
-  <summary>Manipulate many kinds of password files</summary>
-  <description>
-Provides methods to manipulate and authenticate against standard Unix, 
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.7.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+ <name>File_Passwd</name>
+ <channel>pear.php.net</channel>
+ <summary>Manipulate many kinds of password files</summary>
+ <description>Provides methods to manipulate and authenticate against standard Unix, 
 SMB server, AuthUser (.htpasswd), AuthDigest (.htdigest), CVS pserver 
-and custom formatted password files.
-  </description>
-  <maintainers>
-    <maintainer>
-      <user>mike</user>
-      <name>Michael Wallner</name>
-      <email>mike@php.net</email>
-      <role>lead</role>
-    </maintainer>
-  </maintainers>
+and custom formatted password files.</description>
+ <lead>
+  <name>Michael Wallner</name>
+  <user>mike</user>
+  <email>mike@php.net</email>
+  <active>no</active>
+ </lead>
+ <date>2009-01-05</date>
+ <time>04:01:19</time>
+ <version>
+  <release>1.1.7</release>
+  <api>1.1.6</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.php.net/license">PHP</license>
+ <notes>* Fixed bug #5532 (Authdigest: changing a password of a user removes the user from all other realms)</notes>
+ <contents>
+  <dir baseinstalldir="File" name="/">
+   <file baseinstalldir="File" md5sum="9bb60d8ddf459b382c0231440289dcb9" name="Passwd/Authbasic.php" role="php" />
+   <file baseinstalldir="File" md5sum="90ed211bf003329611f07928ca070523" name="Passwd/Authdigest.php" role="php" />
+   <file baseinstalldir="File" md5sum="88df995653a0b317420fccf27961603d" name="Passwd/Common.php" role="php" />
+   <file baseinstalldir="File" md5sum="169b7d425f307bbae469fa1439b50e64" name="Passwd/Custom.php" role="php" />
+   <file baseinstalldir="File" md5sum="ebbcc4a167806d72a5ebfc8d12675c13" name="Passwd/Cvs.php" role="php" />
+   <file baseinstalldir="File" md5sum="bac1b16f963fa66abf10eb0ad9647bf6" name="Passwd/Smb.php" role="php" />
+   <file baseinstalldir="File" md5sum="142947217a1d80db0906cb3482c2ffdf" name="Passwd/Unix.php" role="php" />
+   <file baseinstalldir="File" md5sum="d459ec4b54d51ede8e80a1b23b8cad7d" name="tests/common.txt" role="test" />
+   <file baseinstalldir="File" md5sum="c0a6ae29c440dcff3dacb00c93d54117" name="tests/passwd.authbasic.txt" role="test" />
+   <file baseinstalldir="File" md5sum="c738a5224f46cfd80ed95080b9624e11" name="tests/passwd.authdigest.txt" role="test" />
+   <file baseinstalldir="File" md5sum="572d1572f6e89f934d1e626a8e70cbaf" name="tests/passwd.custom.txt" role="test" />
+   <file baseinstalldir="File" md5sum="aedc5da39fdaf9afee96f5a195ff6fa3" name="tests/passwd.cvs.txt" role="test" />
+   <file baseinstalldir="File" md5sum="6edb929abda117ea975aec221f34062c" name="tests/passwd.smb.txt" role="test" />
+   <file baseinstalldir="File" md5sum="e4353b15620be68a34cf62eaa5b9b4b1" name="tests/passwd.unix.txt" role="test" />
+   <file baseinstalldir="File" md5sum="04383934ec236d8c07eb7bd15befc513" name="tests/README.txt" role="test" />
+   <file baseinstalldir="File" md5sum="9e8c3441677e73c1d36424a7c992c660" name="tests/testsuite.php" role="test" />
+   <file baseinstalldir="File" md5sum="b8e499aac1c63dd3243905dbb96290d4" name="tests/test_authbasic.php" role="test" />
+   <file baseinstalldir="File" md5sum="0284aa2535f6be2c50e992ba000a5a13" name="tests/test_authdigest.php" role="test" />
+   <file baseinstalldir="File" md5sum="db4d14b3e9424be5cd70a207bd7873a5" name="tests/test_common.php" role="test" />
+   <file baseinstalldir="File" md5sum="6c0463f3395a96da41cc99822913f4ef" name="tests/test_custom.php" role="test" />
+   <file baseinstalldir="File" md5sum="e5d198f80894519bee0e5dc376386381" name="tests/test_cvs.php" role="test" />
+   <file baseinstalldir="File" md5sum="65b1509315923e226066149ce6bcc061" name="tests/test_file_passwd.php" role="test" />
+   <file baseinstalldir="File" md5sum="94976c8c33d8dd525bacd9987ec95de9" name="tests/test_smb.php" role="test" />
+   <file baseinstalldir="File" md5sum="754a6b711ec029b24e930c8c608c996d" name="tests/test_unix.php" role="test" />
+   <file baseinstalldir="File" md5sum="a69f236fc94b5cc7e32e8ee985190c99" name="Passwd.php" role="php" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>4.3.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0b1</min>
+   </pearinstaller>
+   <package>
+    <name>PEAR</name>
+    <channel>pear.php.net</channel>
+   </package>
+   <extension>
+    <name>pcre</name>
+   </extension>
+  </required>
+  <optional>
+   <package>
+    <name>Crypt_CHAP</name>
+    <channel>pear.php.net</channel>
+    <min>1.0.0</min>
+   </package>
+  </optional>
+ </dependencies>
+ <phprelease />
+ <changelog>
   <release>
-    <version>1.1.6</version>
-    <date>2005-09-27</date>
-    <state>stable</state>
-    <notes><![CDATA[
-* Fixed bug #5532 (Authdigest: changing a password of a user removes the user from all other realms)
-]]> </notes>
-    <filelist>
-      <dir name="/" baseinstalldir="File">
-        <file role="php">Passwd.php</file>
-        <dir name="Passwd">
-          <file role="php">Common.php</file>
-          <file role="php">Unix.php</file>
-          <file role="php">Cvs.php</file>
-          <file role="php">Smb.php</file>
-          <file role="php">Authbasic.php</file>
-          <file role="php">Authdigest.php</file>
-          <file role="php">Custom.php</file>
-        </dir>
-        <dir name="tests" role="test">
-          <file>testsuite.php</file>
-          <file>test_file_passwd.php</file>
-          <file>test_common.php</file>
-          <file>test_unix.php</file>
-          <file>test_smb.php</file>
-          <file>test_cvs.php</file>
-          <file>test_authbasic.php</file>
-          <file>test_authdigest.php</file>
-          <file>test_custom.php</file>
-          <file>README.txt</file>
-          <file>common.txt</file>
-          <file>passwd.unix.txt</file>
-          <file>passwd.cvs.txt</file>
-          <file>passwd.smb.txt</file>
-          <file>passwd.authbasic.txt</file>
-          <file>passwd.authdigest.txt</file>
-          <file>passwd.custom.txt</file>
-        </dir>
-      </dir>
-    </filelist>
+   <version>
+    <release>1.1.6</release>
+    <api>1.1.6</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2009-01-05</date>
+   <license uri="http://www.php.net/license">PHP</license>
+   <notes>* Fixed bug #5532 (Authdigest: changing a password of a user removes the user from all other realms)</notes>
   </release>
-  <deps>
-    <dep type="pkg" rel="has" optional="no">PEAR</dep>
-    <dep type="pkg" rel="ge" version="1.0.0" optional="yes">Crypt_CHAP</dep>
-    <dep type="php" rel="ge" version="4.3.0" optional="yes" />
-    <dep type="php" rel="ge" version="4.0.6" optional="no" />
-    <dep type="ext" rel="has" optional="no">pcre</dep>
-  </deps>
+  <release>
+   <version>
+    <release>1.1.7</release>
+    <api>1.1.6</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2009-01-05</date>
+   <license uri="http://www.php.net/license">PHP</license>
+   <notes>* Fixed bug #5532 (Authdigest: changing a password of a user removes the user from all other realms)</notes>
+  </release>
+ </changelog>
 </package>
