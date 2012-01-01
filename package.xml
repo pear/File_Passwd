@@ -25,14 +25,18 @@ and custom formatted password files.</description>
  <license uri="http://www.php.net/license">PHP</license>
  <notes>* Fixed bug #5532 (Authdigest: changing a password of a user removes the user from all other realms)</notes>
  <contents>
-  <dir baseinstalldir="File" name="/">
-   <file baseinstalldir="File" md5sum="9bb60d8ddf459b382c0231440289dcb9" name="Passwd/Authbasic.php" role="php" />
-   <file baseinstalldir="File" md5sum="90ed211bf003329611f07928ca070523" name="Passwd/Authdigest.php" role="php" />
-   <file baseinstalldir="File" md5sum="88df995653a0b317420fccf27961603d" name="Passwd/Common.php" role="php" />
-   <file baseinstalldir="File" md5sum="169b7d425f307bbae469fa1439b50e64" name="Passwd/Custom.php" role="php" />
-   <file baseinstalldir="File" md5sum="ebbcc4a167806d72a5ebfc8d12675c13" name="Passwd/Cvs.php" role="php" />
-   <file baseinstalldir="File" md5sum="bac1b16f963fa66abf10eb0ad9647bf6" name="Passwd/Smb.php" role="php" />
-   <file baseinstalldir="File" md5sum="142947217a1d80db0906cb3482c2ffdf" name="Passwd/Unix.php" role="php" />
+  <dir name="/">
+   <dir name="File">
+    <file baseinstalldir="File" md5sum="a69f236fc94b5cc7e32e8ee985190c99" name="Passwd.php" role="php" />
+    <file baseinstalldir="File" md5sum="9bb60d8ddf459b382c0231440289dcb9" name="Passwd/Authbasic.php" role="php" />
+    <file baseinstalldir="File" md5sum="90ed211bf003329611f07928ca070523" name="Passwd/Authdigest.php" role="php" />
+    <file baseinstalldir="File" md5sum="88df995653a0b317420fccf27961603d" name="Passwd/Common.php" role="php" />
+    <file baseinstalldir="File" md5sum="169b7d425f307bbae469fa1439b50e64" name="Passwd/Custom.php" role="php" />
+    <file baseinstalldir="File" md5sum="ebbcc4a167806d72a5ebfc8d12675c13" name="Passwd/Cvs.php" role="php" />
+    <file baseinstalldir="File" md5sum="bac1b16f963fa66abf10eb0ad9647bf6" name="Passwd/Smb.php" role="php" />
+    <file baseinstalldir="File" md5sum="142947217a1d80db0906cb3482c2ffdf" name="Passwd/Unix.php" role="php" />
+   </dir> <!-- /File -->
+
    <file baseinstalldir="File" md5sum="d459ec4b54d51ede8e80a1b23b8cad7d" name="tests/common.txt" role="test" />
    <file baseinstalldir="File" md5sum="c0a6ae29c440dcff3dacb00c93d54117" name="tests/passwd.authbasic.txt" role="test" />
    <file baseinstalldir="File" md5sum="c738a5224f46cfd80ed95080b9624e11" name="tests/passwd.authdigest.txt" role="test" />
@@ -49,8 +53,6 @@ and custom formatted password files.</description>
    <file baseinstalldir="File" name="tests/File_Passwd_CvsTest.php" role="test" />
    <file baseinstalldir="File" name="tests/File_Passwd_SmbTest.php" role="test" />
    <file baseinstalldir="File" name="tests/File_Passwd_UnixTest.php" role="test" />
-
-   <file baseinstalldir="File" md5sum="a69f236fc94b5cc7e32e8ee985190c99" name="Passwd.php" role="php" />
   </dir>
  </contents>
  <dependencies>
