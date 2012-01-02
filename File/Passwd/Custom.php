@@ -580,7 +580,11 @@ class File_Passwd_Custom extends File_Passwd_Common
                 FILE_PASSWD_E_INVALID_ENC_MODE
             );
         }
-        
+
+        if ($func === 'md5') {
+            $salt = null;
+        }
+
         $return = @call_user_func($func, $pass, $salt);
         
         if (is_null($return) || $return === false) {
