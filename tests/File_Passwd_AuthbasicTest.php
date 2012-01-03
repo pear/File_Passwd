@@ -18,11 +18,8 @@ class File_Passwd_AuthbasicTest extends PHPUnit_Framework_TestCase {
      * @access protected
      */
     function setUp(){
-        // Declaring GLOBALS isn't the right way to do this, but I'm just
-        // moving them from the top of the file to here as a quick means
-        // to get the tests running.
-        $GLOBALS['tmpfile'] = System::mktemp();
-        $GLOBALS['user']    = array(
+        $this->tmpfile = System::mktemp();
+        $this->user    = array(
             'mike' => 'q4M4mpfilkNnU',
             'pete' => 'dS80VTLQHZ6VM',
             'mary' => 'jHSiqFjaEiKPM'
@@ -53,14 +50,14 @@ class File_Passwd_AuthbasicTest extends PHPUnit_Framework_TestCase {
      * @access public
      */
     function testsave(){
-        $this->pwd->setFile($GLOBALS['tmpfile']);
-        $this->pwd->_users = $GLOBALS['user'];
+        $this->pwd->setFile($this->tmpfile);
+        $this->pwd->_users = $this->user;
         $r = $this->pwd->save();
         if (PEAR::isError($r)) {
             $this->fail($r->getMessage());
         }
         $this->assertTrue($r, 'save() should return TRUE.');
-        $this->assertFileEquals($this->exp_file, $GLOBALS['tmpfile']);
+        $this->assertFileEquals($this->exp_file, $this->tmpfile);
     }
     
     /**
@@ -207,7 +204,7 @@ class File_Passwd_AuthbasicTest extends PHPUnit_Framework_TestCase {
             $this->fail($r->getMessage());
         }
         $this->assertTrue($r);
-        $this->assertEquals($GLOBALS['user'], $this->pwd->_users);
+        $this->assertEquals($this->user, $this->pwd->_users);
     }
     
     function teststaticAuth(){
