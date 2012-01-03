@@ -258,7 +258,7 @@ class File_Passwd
         
         $binary = PEAR_ZE2 ? md5($context, true) : pack('H32', md5($context));
         
-        for($i = 0; $i < 1000; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             $new = ($i & 1) ? $plain : $binary;
             if ($i % 3) {
                 $new .= $salt;
@@ -320,7 +320,7 @@ class File_Passwd
     function _64($value, $count)
     {
         $result = '';
-        while(--$count) {
+        while($count > 0 && --$count) {
             $result .= $GLOBALS['_FILE_PASSWD_64'][$value & 0x3f];
             $value >>= 6;
         }
