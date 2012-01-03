@@ -58,7 +58,7 @@ class File_Passwd_UnixTest extends PHPUnit_Framework_TestCase {
                 );
 
         $this->exp_file = dirname(__FILE__) . '/passwd.unix.txt';
-        $this->pwd = &new File_Passwd_Unix();
+        $this->pwd = new File_Passwd_Unix();
     }
     
     /**

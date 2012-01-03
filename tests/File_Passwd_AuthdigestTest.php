@@ -29,7 +29,7 @@ class File_Passwd_AuthdigestTest extends PHPUnit_Framework_TestCase {
         );
 
         $this->exp_file = dirname(__FILE__) . '/passwd.authdigest.txt';
-        $this->pwd = &new File_Passwd_Authdigest();
+        $this->pwd = new File_Passwd_Authdigest();
     }
     
     /**

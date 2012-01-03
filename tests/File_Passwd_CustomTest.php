@@ -38,7 +38,7 @@ class File_Passwd_CustomTest extends PHPUnit_Framework_TestCase {
         );
 
         $this->exp_file = dirname(__FILE__) . '/passwd.custom.txt';
-        $this->pwd = &new File_Passwd_Custom();
+        $this->pwd = new File_Passwd_Custom();
     }
     
     /**

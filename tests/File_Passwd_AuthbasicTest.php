@@ -29,7 +29,7 @@ class File_Passwd_AuthbasicTest extends PHPUnit_Framework_TestCase {
         );
 
         $this->exp_file = dirname(__FILE__) . '/passwd.authbasic.txt';
-        $this->pwd = &new File_Passwd_Authbasic();
+        $this->pwd = new File_Passwd_Authbasic();
     }
     
     /**

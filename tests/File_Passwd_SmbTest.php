@@ -41,7 +41,7 @@ class File_Passwd_SmbTest extends PHPUnit_Framework_TestCase {
         // moving them from the top of the file to here as a quick means
         // to get the tests running.
         $GLOBALS['tmpfile'] = System::mktemp();
-        $GLOBALS['msc']     = &new Crypt_CHAP_MSv1();
+        $GLOBALS['msc']     = new Crypt_CHAP_MSv1();
         $GLOBALS['user']    = array(
             'mike' => array(
                 'userid' => 501,
@@ -54,7 +54,7 @@ class File_Passwd_SmbTest extends PHPUnit_Framework_TestCase {
         );
 
         $this->exp_file = dirname(__FILE__) . '/passwd.smb.txt';
-        $this->pwd = &new File_Passwd_Smb();
+        $this->pwd = new File_Passwd_Smb();
     }
     
     /**

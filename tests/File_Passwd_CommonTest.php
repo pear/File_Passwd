@@ -19,7 +19,7 @@ class File_Passwd_CommonTest extends PHPUnit_Framework_TestCase {
      */
     function setUp(){
         $this->exp_file = dirname(__FILE__) . '/common.txt';
-        $this->pwd = &new File_Passwd_Common();
+        $this->pwd = new File_Passwd_Common();
     }
     
     /**

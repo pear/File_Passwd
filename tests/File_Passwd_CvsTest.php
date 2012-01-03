@@ -29,7 +29,7 @@ class File_Passwd_CvsTest extends PHPUnit_Framework_TestCase {
         );
 
         $this->exp_file = dirname(__FILE__) . '/passwd.cvs.txt';
-        $this->pwd = &new File_Passwd_Cvs();
+        $this->pwd = new File_Passwd_Cvs();
     }
     
     /**
