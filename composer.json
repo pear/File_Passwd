@@ -8,7 +8,7 @@
     ],
     "autoload": {
         "psr-0": {
-            "File_Passwd": "./"
+            "File": "./"
         }
     },
     "description": "More info available on: http://pear.php.net/package/File_Passwd",
@@ -23,9 +23,13 @@
     },
     "type": "library",
     "require": {
-        "pear/pear_exception": "*"
+        "pear/pear_exception": "*",
+        "pear/pear": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "*"
+    },
+    "suggest": {
+        "pear/crypt_chap": "Install optionally via your project's composer.json"
     }
 }
