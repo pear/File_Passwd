@@ -1,0 +1,35 @@
+{
+    "authors": [
+        {
+            "email": "mike@php.net",
+            "name": "Michael Wallner",
+            "role": "Lead"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "File": "./"
+        }
+    },
+    "description": "More info available on: http://pear.php.net/package/File_Passwd",
+    "include-path": [
+        "./"
+    ],
+    "license": "PHP",
+    "name": "pear/file_passwd",
+    "support": {
+        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=File_Passwd",
+        "source": "https://github.com/pear/File_Passwd"
+    },
+    "type": "library",
+    "require": {
+        "pear/pear_exception": "*",
+        "pear/pear": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "suggest": {
+        "pear/crypt_chap": "Install optionally via your project's composer.json"
+    }
+}
