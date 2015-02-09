@@ -1,6 +1,5 @@
 <?php
 require_once 'System.php';
-require_once 'PHPUnit/Autoload.php';
 
 function hash_nt($txt)
 {

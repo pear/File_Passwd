@@ -1,6 +1,5 @@
 <?php
 require_once 'System.php';
-require_once 'PHPUnit/Autoload.php';
 require_once 'File/Passwd/Common.php';
 
 /**
