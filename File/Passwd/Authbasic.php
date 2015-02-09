@@ -4,7 +4,7 @@
 /**
  * File::Passwd::Authbasic
  * 
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * LICENSE: This source file is subject to version 3.0 of the PHP license
  * that is available through the world-wide-web at the following URI:
@@ -80,17 +80,6 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     * @access private
     */
     var $_modes = array('md5' => 'm', 'des' => 'd', 'sha' => 's');
-
-    /** 
-    * Constructor
-    * 
-    * @access public
-    * @param  string $file   path to AuthUserFile
-    */
-    function File_Passwd_Authbasic($file = '.htpasswd')
-    {
-        File_Passwd_Authbasic::__construct($file);
-    }
 
     /**
     * Constructor (ZE2)
