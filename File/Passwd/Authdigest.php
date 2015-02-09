@@ -230,7 +230,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     */
     function changePasswd($user, $realm, $pass)
     {
-        $this->delUserInRealm($user, $realm));
+        $this->delUserInRealm($user, $realm);
         
         return $this->addUser($user, $realm, $pass);
     }
