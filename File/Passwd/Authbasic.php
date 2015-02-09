@@ -101,7 +101,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     /**
     * Fast authentication of a certain user
     * 
-    * Returns a PEAR_Error if:
+    * Raises exception if:
     *   o file doesn't exist
     *   o file couldn't be opened in read mode
     *   o file couldn't be locked exclusively
@@ -110,9 +110,9 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     *
     * @static   call this method statically for a reasonable fast authentication
     * 
-    * @throws   PEAR_Error
+    * @throws   File_Passwd_Exception
     * @access   public
-    * @return   mixed   true if authenticated, false if not or PEAR_Error
+    * @return   bool
     * @param    string  $file   path to passwd file
     * @param    string  $user   user to authenticate
     * @param    string  $pass   plaintext password
@@ -121,14 +121,11 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     function staticAuth($file, $user, $pass, $mode)
     {
         $line = File_Passwd_Common::_auth($file, $user);
-        if (!$line || PEAR::isError($line)) {
+        if (!$line) {
             return $line;
         }
         list(,$real)    = explode(':', $line);
         $crypted        = File_Passwd_Authbasic::_genPass($pass, $real, $mode);
-        if (PEAR::isError($crypted)) {
-            return $crypted;
-        }
         return ($real === $crypted);
     }
     
@@ -174,13 +171,13 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     function addUser($user, $pass)
     {
         if ($this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_ALREADY_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_ALREADY
             );
         }
         if (!preg_match($this->_pcre, $user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
                 FILE_PASSWD_E_INVALID_CHARS
             );
@@ -203,7 +200,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     function changePasswd($user, $pass)
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
@@ -228,7 +225,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     function verifyPasswd($user, $pass)
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
@@ -286,7 +283,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     {
         $mode = strToLower($mode);
         if (!isset($this->_modes[$mode])) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
                 FILE_PASSWD_E_INVALID_ENC_MODE
             );
@@ -317,7 +314,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
             return File_Passwd::crypt_sha($pass, $salt);
         }
         
-        return PEAR::raiseError(
+        throw new File_Passwd_Exception(
             sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
             FILE_PASSWD_E_INVALID_ENC_MODE                
         );
@@ -338,7 +335,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
         foreach ($this->_contents as $line) {
             $user = explode(':', $line);
             if (count($user) != 2) {
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     FILE_PASSWD_E_INVALID_FORMAT_STR,
                     FILE_PASSWD_E_INVALID_FORMAT
                 );
@@ -365,7 +362,7 @@ class File_Passwd_Authbasic extends File_Passwd_Common
     function generatePasswd($pass, $mode = FILE_PASSWD_DES, $salt = null)
     {
         if (!in_array(strToLower($mode), array('des', 'md5', 'sha'))) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $mode),
                 FILE_PASSWD_E_INVALID_ENC_MODE                
             );
@@ -382,4 +379,3 @@ class File_Passwd_Authbasic extends File_Passwd_Common
         return File_Passwd_Authbasic::generatePasswd($pass, $mode, $salt);
     }
 }
-?>

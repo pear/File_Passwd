@@ -120,7 +120,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     {
         setType($opts, 'array');
         if (count($opts) != 2 || empty($opts[1])) {
-            return PEAR::raiseError('Insufficient options.', 0);
+            throw new File_Passwd_Exception('Insufficient options.', 0);
         }
         
         $line = File_Passwd_Common::_auth($file, $user, $opts[1]);
@@ -192,7 +192,7 @@ class File_Passwd_Custom extends File_Passwd_Common
             if (is_array($function)) {
                 $function = implode('::', $function);
             }
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $function),
                 FILE_PASSWD_E_INVALID_ENC_MODE
             );
@@ -259,7 +259,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     function setMap($map = array())
     {
         if (!is_array($map)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_PARAM_MUST_BE_ARRAY_STR, '$map'),
                 FILE_PASSWD_E_PARAM_MUST_BE_ARRAY
             );
@@ -331,7 +331,7 @@ class File_Passwd_Custom extends File_Passwd_Common
         foreach ($this->_contents as $line){
             $parts = explode($this->_delim, $line);
             if (count($parts) < 2) {
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     FILE_PASSWD_E_INVALID_FORMAT_STR,
                     FILE_PASSWD_E_INVALID_FORMAT
                 );
@@ -390,13 +390,13 @@ class File_Passwd_Custom extends File_Passwd_Common
     function addUser($user, $pass, $extra = array())
     {
         if ($this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_ALREADY_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_ALREADY
             );
         }
         if (!preg_match($this->_pcre, $user) || strstr($user, $this->_delim)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
                 FILE_PASSWD_E_INVALID_CHARS
             );
@@ -406,7 +406,7 @@ class File_Passwd_Custom extends File_Passwd_Common
         }
         foreach ($extra as $e){
             if (strstr($e, $this->_delim)) {
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'Property ', $e),
                     FILE_PASSWD_E_INVALID_CHARS
                 );
@@ -460,7 +460,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     function modUser($user, $properties = array())
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
@@ -472,7 +472,7 @@ class File_Passwd_Custom extends File_Passwd_Common
         
         foreach ($properties as $key => $value){
             if (strstr($value, $this->_delim)) {
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
                     FILE_PASSWD_E_INVALID_CHARS
                 );
@@ -501,7 +501,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     function changePasswd($user, $pass)
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
@@ -539,7 +539,7 @@ class File_Passwd_Custom extends File_Passwd_Common
     function verifyPasswd($user, $pass)
     {
         if (!$this->userExists($user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_EXISTS_NOT_STR, 'User ', $user),
                 FILE_PASSWD_E_EXISTS_NOT
             );
@@ -575,7 +575,7 @@ class File_Passwd_Custom extends File_Passwd_Common
             if (is_array($func)) {
                 $func = implode('::', $func);
             }
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_ENC_MODE_STR, $func),
                 FILE_PASSWD_E_INVALID_ENC_MODE
             );

@@ -4,7 +4,7 @@
 /**
  * File::Passwd::Authdigest
  * 
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * LICENSE: This source file is subject to version 3.0 of the PHP license
  * that is available through the world-wide-web at the following URI:
@@ -66,17 +66,6 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     * @access private
     */
     var $_file = '.htdigest';
-
-    /** 
-    * Constructor
-    * 
-    * @access public
-    * @param string $file       path to AuthDigestFile
-    */
-    function File_Passwd_Authdigest($file = '.htdigest')
-    {
-        parent::__construct($file);
-    }
 
     /**
     * Fast authentication of a certain user
@@ -155,18 +144,18 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     function addUser($user, $realm, $pass)
     {
         if ($this->userInRealm($user, $realm)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 "User '$user' already exists in realm '$realm'.", 0
             );
         }
         if (!preg_match($this->_pcre, $user)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'User ', $user),
                 FILE_PASSWD_E_INVALID_CHARS
             );
         }
         if (!preg_match($this->_pcre, $realm)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_INVALID_CHARS_STR, 'Realm ', $realm),
                 FILE_PASSWD_E_INVALID_CHARS
             );
@@ -263,7 +252,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     function verifyPasswd($user, $realm, $pass)
     {
         if (!$this->userInRealm($user, $realm)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_USER_NOT_IN_REALM_STR, $user, $realm),
                 FILE_PASSWD_E_USER_NOT_IN_REALM
             );
@@ -299,7 +288,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     function delUserInRealm($user, $inRealm)
     {
         if (!$this->userInRealm($user, $inRealm)) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 sprintf(FILE_PASSWD_E_USER_NOT_IN_REALM_STR, $user, $inRealm),
                 FILE_PASSWD_E_USER_NOT_IN_REALM
             );
@@ -323,7 +312,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common
         foreach ($this->_contents as $line) {
             $user = explode(':', $line);
             if (count($user) != 3) {
-                return PEAR::raiseError(
+                throw new File_Passwd_Exception(
                     FILE_PASSWD_E_INVALID_FORMAT_STR,
                     FILE_PASSWD_E_INVALID_FORMAT
                 );
@@ -359,4 +348,3 @@ class File_Passwd_Authdigest extends File_Passwd_Common
         return File_Passwd_Authdigest::generatePasswd($user, $realm, $pass);
     }
 }
-?>
