@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package packagerversion="1.7.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
  <name>File_Passwd</name>
  <channel>pear.php.net</channel>
  <summary>Manipulate many kinds of password files</summary>
@@ -12,53 +12,52 @@ and custom formatted password files.</description>
   <email>mike@php.net</email>
   <active>no</active>
  </lead>
- <date>2009-01-05</date>
- <time>04:01:19</time>
+ <date>2015-02-10</date>
+ <time>10:06:19</time>
  <version>
-  <release>1.1.7</release>
-  <api>1.1.6</api>
+  <release>1.2.0</release>
+  <api>1.2.0</api>
  </version>
  <stability>
   <release>stable</release>
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license">PHP</license>
- <notes>* Fixed bug #5532 (Authdigest: changing a password of a user removes the user from all other realms)</notes>
+ <notes>
+QA release
+PHP5+
+ </notes>
  <contents>
-  <dir name="/">
-   <dir name="File">
-    <file baseinstalldir="File" md5sum="a69f236fc94b5cc7e32e8ee985190c99" name="Passwd.php" role="php" />
-    <file baseinstalldir="File" md5sum="9bb60d8ddf459b382c0231440289dcb9" name="Passwd/Authbasic.php" role="php" />
-    <file baseinstalldir="File" md5sum="90ed211bf003329611f07928ca070523" name="Passwd/Authdigest.php" role="php" />
-    <file baseinstalldir="File" md5sum="88df995653a0b317420fccf27961603d" name="Passwd/Common.php" role="php" />
-    <file baseinstalldir="File" md5sum="169b7d425f307bbae469fa1439b50e64" name="Passwd/Custom.php" role="php" />
-    <file baseinstalldir="File" md5sum="ebbcc4a167806d72a5ebfc8d12675c13" name="Passwd/Cvs.php" role="php" />
-    <file baseinstalldir="File" md5sum="bac1b16f963fa66abf10eb0ad9647bf6" name="Passwd/Smb.php" role="php" />
-    <file baseinstalldir="File" md5sum="142947217a1d80db0906cb3482c2ffdf" name="Passwd/Unix.php" role="php" />
-   </dir> <!-- /File -->
-
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="File" md5sum="97a8dfd5d26bbce1c7b608330e3fe3de" name="File/Passwd.php" role="php" />
+   <file baseinstalldir="File" md5sum="1817684a4d1d8d5c3fb3010ba8b9caa9" name="File/Passwd/Authbasic.php" role="php" />
+   <file baseinstalldir="File" md5sum="76099469a6743b941d3c33b9bc52b528" name="File/Passwd/Authdigest.php" role="php" />
+   <file baseinstalldir="File" md5sum="d61065dd470aeca24c004cf8a76c9627" name="File/Passwd/Common.php" role="php" />
+   <file baseinstalldir="File" md5sum="def9c9c6d9492ac2cb784ab26b57317b" name="File/Passwd/Custom.php" role="php" />
+   <file baseinstalldir="File" md5sum="288c1d1a66f9888a2b153b4e33f110f7" name="File/Passwd/Cvs.php" role="php" />
+   <file baseinstalldir="File" md5sum="e6ea0d3359fc9a1d73ee323c86c0cca6" name="File/Passwd/Smb.php" role="php" />
+   <file baseinstalldir="File" md5sum="2bcf6c665b803ed0daf1f52a107f0e49" name="File/Passwd/Unix.php" role="php" />
    <file baseinstalldir="File" md5sum="d459ec4b54d51ede8e80a1b23b8cad7d" name="tests/common.txt" role="test" />
+   <file baseinstalldir="File" md5sum="fc6424286697e58e7090461807d41d83" name="tests/File_PasswdTest.php" role="test" />
+   <file baseinstalldir="File" md5sum="8e7835adec924f6e710a691e8eb1ebd7" name="tests/File_Passwd_AuthbasicTest.php" role="test" />
+   <file baseinstalldir="File" md5sum="61a44d4d7cfdcc4f838f08cbadddd227" name="tests/File_Passwd_AuthdigestTest.php" role="test" />
+   <file baseinstalldir="File" md5sum="6aa9fa76433ec88e1b49585e85525bab" name="tests/File_Passwd_CommonTest.php" role="test" />
+   <file baseinstalldir="File" md5sum="1797ebff078bda8f0efa6f0bdc0f09f4" name="tests/File_Passwd_CustomTest.php" role="test" />
+   <file baseinstalldir="File" md5sum="d5f534b953559e0f8a34b3b6ef3711cc" name="tests/File_Passwd_CvsTest.php" role="test" />
+   <file baseinstalldir="File" md5sum="c2cec3e448e394107e2188d9785619b2" name="tests/File_Passwd_SmbTest.php" role="test" />
+   <file baseinstalldir="File" md5sum="11b3b85110630fa45619a4729f04ac3b" name="tests/File_Passwd_UnixTest.php" role="test" />
    <file baseinstalldir="File" md5sum="c0a6ae29c440dcff3dacb00c93d54117" name="tests/passwd.authbasic.txt" role="test" />
    <file baseinstalldir="File" md5sum="c738a5224f46cfd80ed95080b9624e11" name="tests/passwd.authdigest.txt" role="test" />
    <file baseinstalldir="File" md5sum="572d1572f6e89f934d1e626a8e70cbaf" name="tests/passwd.custom.txt" role="test" />
    <file baseinstalldir="File" md5sum="aedc5da39fdaf9afee96f5a195ff6fa3" name="tests/passwd.cvs.txt" role="test" />
-   <file baseinstalldir="File" md5sum="6edb929abda117ea975aec221f34062c" name="tests/passwd.smb.txt" role="test" />
+   <file baseinstalldir="File" md5sum="d544b49ae5d7da4b49c1411175cfed57" name="tests/passwd.smb.txt" role="test" />
    <file baseinstalldir="File" md5sum="e4353b15620be68a34cf62eaa5b9b4b1" name="tests/passwd.unix.txt" role="test" />
-
-   <file baseinstalldir="File" name="tests/File_PasswdTest.php" role="test" />
-   <file baseinstalldir="File" name="tests/File_Passwd_AuthbasicTest.php" role="test" />
-   <file baseinstalldir="File" name="tests/File_Passwd_AuthdigestTest.php" role="test" />
-   <file baseinstalldir="File" name="tests/File_Passwd_CommonTest.php" role="test" />
-   <file baseinstalldir="File" name="tests/File_Passwd_CustomTest.php" role="test" />
-   <file baseinstalldir="File" name="tests/File_Passwd_CvsTest.php" role="test" />
-   <file baseinstalldir="File" name="tests/File_Passwd_SmbTest.php" role="test" />
-   <file baseinstalldir="File" name="tests/File_Passwd_UnixTest.php" role="test" />
   </dir>
  </contents>
  <dependencies>
   <required>
    <php>
-    <min>4.3.0</min>
+    <min>5.0.0</min>
    </php>
    <pearinstaller>
     <min>1.4.0b1</min>
@@ -92,7 +91,9 @@ and custom formatted password files.</description>
    </stability>
    <date>2009-01-05</date>
    <license uri="http://www.php.net/license">PHP</license>
-   <notes>* Fixed bug #5532 (Authdigest: changing a password of a user removes the user from all other realms)</notes>
+   <notes>
+* Fixed bug #5532 (Authdigest: changing a password of a user removes the user from all other realms)
+   </notes>
   </release>
   <release>
    <version>
@@ -105,7 +106,25 @@ and custom formatted password files.</description>
    </stability>
    <date>2009-01-05</date>
    <license uri="http://www.php.net/license">PHP</license>
-   <notes>* Fixed bug #5532 (Authdigest: changing a password of a user removes the user from all other realms)</notes>
+   <notes>
+* Fixed bug #5532 (Authdigest: changing a password of a user removes the user from all other realms)
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>1.2.0</release>
+    <api>1.2.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2015-02-10</date>
+   <license uri="http://www.php.net/license">PHP</license>
+   <notes>
+QA release
+PHP5+
+   </notes>
   </release>
  </changelog>
 </package>
