@@ -90,7 +90,7 @@ class File_Passwd_Cvs extends File_Passwd_Common
     function staticAuth($file, $user, $pass)
     {
         $line = File_Passwd_Common::_auth($file, $user);
-        if (!$line || PEAR::isError($line)) {
+        if (!$line) {
             return $line;
         }
         @list(,$real)   = explode(':', $line);

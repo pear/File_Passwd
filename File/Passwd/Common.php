@@ -182,7 +182,7 @@ class File_Passwd_Common
     * @return mixed true on success or PEAR_Error
     * @param  resource  $file_handle    the file handle to operate on
     */
-    function _close(&$file_handle)
+    function _close($file_handle)
     {
         if (!@flock($file_handle, LOCK_UN)) {
             throw new File_Passwd_Exception(
@@ -215,20 +215,16 @@ class File_Passwd_Common
     */
     function load()
     {
-        $fh = &$this->_open('r');
-        if (PEAR::isError($fh)) {
-            return $fh;
-        }
+        $fh = $this->_open('r');
+
         $this->_contents = array();
         while ($line = fgets($fh)) {
             if (!preg_match('/^\s*#/', $line) && $line = trim($line)) {
                 $this->_contents[] = $line;
             }
         }
-        $e = $this->_close($fh);
-        if (PEAR::isError($e)) {
-            return $e;
-        }
+        $this->_close($fh);
+
         return $this->parse();
     }
     
@@ -248,10 +244,8 @@ class File_Passwd_Common
     */
     function _save($content)
     {
-        $fh = &$this->_open('w');
-        if (PEAR::isError($fh)) {
-            return $fh;
-        }
+        $fh = $this->_open('w');
+
         fputs($fh, $content);
         return $this->_close($fh);
     }
@@ -360,10 +354,8 @@ class File_Passwd_Common
         if (!is_file($file)) {
             throw new File_Passwd_Exception("File '$file' couldn't be found.", 0);
         }
-        $fh = &File_Passwd_Common::_open('r', $file);
-        if (PEAR::isError($fh)) {
-            return $fh;
-        }
+        $fh = File_Passwd_Common::_open('r', $file);
+
         $cmp = $id . $sep;
         $len = strlen($cmp);
         while ($line = fgets($fh)) {
@@ -372,10 +364,7 @@ class File_Passwd_Common
                 return trim($line);
             }
         }
-        $e = File_Passwd_Common::_close($fh);
-        if (PEAR::isError($e)) {
-            return $e;
-        }
+        File_Passwd_Common::_close($fh);
         return false;
     }
 }

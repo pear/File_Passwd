@@ -140,14 +140,12 @@ class File_Passwd_Unix extends File_Passwd_Common
     function staticAuth($file, $user, $pass, $mode)
     {
         $line = File_Passwd_Common::_auth($file, $user);
-        if (!$line || PEAR::isError($line)) {
+        if (!$line) {
             return $line;
         }
         list(,$real)= explode(':', $line);
         $crypted    = File_Passwd_Unix::_genPass($pass, $real, $mode);
-        if (PEAR::isError($crypted)) {
-            return $crypted;
-        }
+
         return ($crypted === $real);
     }
     

@@ -90,7 +90,7 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     function staticAuth($file, $user, $pass, $realm)
     {
         $line = File_Passwd_Common::_auth($file, $user.':'.$realm);
-        if (!$line || PEAR::isError($line)) {
+        if (!$line) {
             return $line;
         }
         @list(,,$real)= explode(':', $line);
@@ -230,11 +230,9 @@ class File_Passwd_Authdigest extends File_Passwd_Common
     */
     function changePasswd($user, $realm, $pass)
     {
-        if (PEAR::isError($error = $this->delUserInRealm($user, $realm))) {
-            return $error;
-        } else {
-            return $this->addUser($user, $realm, $pass);
-        }
+        $this->delUserInRealm($user, $realm));
+        
+        return $this->addUser($user, $realm, $pass);
     }
 
     /** 

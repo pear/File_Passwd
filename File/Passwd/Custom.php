@@ -125,16 +125,12 @@ class File_Passwd_Custom extends File_Passwd_Common
         
         $line = File_Passwd_Common::_auth($file, $user, $opts[1]);
         
-        if (!$line || PEAR::isError($line)) {
+        if (!$line) {
             return $line;
         }
         
         list(,$real)= explode($opts[1], $line);
         $crypted    = File_Passwd_Custom::_genPass($pass, $real, $opts[0]);
-        
-        if (PEAR::isError($crypted)) {
-            return $crypted;
-        }
         
         return ($crypted === $real);
     }
@@ -414,9 +410,6 @@ class File_Passwd_Custom extends File_Passwd_Common
         }
         
         $pass = $this->_genPass($pass);
-        if (PEAR::isError($pass)) {
-            return $pass;
-        }
         
         /**
         * If you don't use the 'name map' the user array will be numeric.
@@ -508,9 +501,6 @@ class File_Passwd_Custom extends File_Passwd_Common
         }
         
         $pass = $this->_genPass($pass);
-        if (PEAR::isError($pass)) {
-            return $pass;
-        }
         
         if ($this->_usemap) {
             $this->_users[$user]['pass'] = $pass;

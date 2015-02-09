@@ -122,7 +122,7 @@ class File_Passwd_Smb extends File_Passwd_Common
     function staticAuth($file, $user, $pass, $nt_or_lm = 'nt')
     {
         $line = File_Passwd_Common::_auth($file, $user);
-        if (!$line || PEAR::isError($line)) {
+        if (!$line) {
             return $line;
         }
         @list(,,$lm,$nt) = explode(':', $line);
