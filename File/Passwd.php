@@ -21,10 +21,7 @@
  * @link       http://pear.php.net/package/File_Passwd
  */
 
-/**
-* Requires PEAR.
-*/
-require_once 'PEAR.php';
+require_once 'File/Passwd/Exception.php';
 
 /**
 * Encryption constants.
@@ -212,7 +209,7 @@ class File_Passwd
     function crypt_sha($plain)
     {
         if (!function_exists('sha1')) {
-            return PEAR::raiseError(
+            throw new File_Passwd_Exception(
                 'SHA1 encryption is not available (PHP < 4.3).',
                 FILE_PASSWD_E_INVALID_ENC_MODE
             );
@@ -346,18 +343,17 @@ class File_Passwd
     * @return   object    File_Passwd_$class - desired Passwd object
     * @param    string    $class the desired subclass of File_Passwd
     */
-    function &factory($class)
+    function factory($class)
     {
         $class = ucFirst(strToLower($class));
         if (!@include_once "File/Passwd/$class.php") {
-            return PEAR::raiseError("Couldn't load file Passwd/$class.php", 0);
+            throw new File_Passwd_Exception("Couldn't load file Passwd/$class.php", 0);
         }
         $class = 'File_Passwd_'.$class;
         if (!class_exists($class)) {
-            return PEAR::raiseError("Couldn't load class $class.", 0);
+            throw new File_Passwd_Exception("Couldn't load class $class.", 0);
         }
-        $instance = &new $class();
-        return $instance;
+        return new $class();
     }
     
     /**
@@ -407,10 +403,9 @@ class File_Passwd
     {
         $type = ucFirst(strToLower($type));
         if (!@include_once "File/Passwd/$type.php") {
-            return PEAR::raiseError("Couldn't load file Passwd/$type.php", 0);
+            throw new File_Passwd_Exception("Couldn't load file Passwd/$type.php", 0);
         }
         $func = array('File_Passwd_' . $type, 'staticAuth');
         return call_user_func($func, $file, $user, $pass, $opt);
     }
 }
-?>
