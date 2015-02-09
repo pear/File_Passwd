@@ -4,7 +4,7 @@
 /**
  * File::Passwd::Smb
  * 
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * LICENSE: This source file is subject to version 3.0 of the PHP license
  * that is available through the world-wide-web at the following URI:
@@ -85,17 +85,6 @@ class File_Passwd_Smb extends File_Passwd_Common
     * @var object
     */
     var $msc;
-
-    /**
-    * Constructor
-    *
-    * @access public
-    * @param  string $file  SMB passwd file
-    */
-    function File_Passwd_Smb($file = 'smbpasswd')
-    {
-        File_Passwd_Smb::__construct($file);
-    }
     
     /**
     * Constructor (ZE2)
@@ -108,7 +97,7 @@ class File_Passwd_Smb extends File_Passwd_Common
     function __construct($file = 'smbpasswd')
     {
         $this->setFile($file);
-        $this->msc = &new Crypt_CHAP_MSv1;
+        $this->msc = new Crypt_CHAP_MSv1;
     }     
     
     /**
@@ -137,7 +126,7 @@ class File_Passwd_Smb extends File_Passwd_Common
             return $line;
         }
         @list(,,$lm,$nt) = explode(':', $line);
-        $chap            = &new Crypt_CHAP_MSv1;
+        $chap            = new Crypt_CHAP_MSv1;
         
         switch(strToLower($nt_or_lm)){
         	case FILE_PASSWD_NT: 
