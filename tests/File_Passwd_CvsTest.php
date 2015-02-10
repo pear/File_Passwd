@@ -100,11 +100,13 @@ class File_Passwd_CvsTest extends PHPUnit_Framework_TestCase {
         $r = $this->pwd->verifyPasswd('verify', 0);
 
         $this->assertFalse($r, 'verifyPassword(wrong password)');
-        $r = $this->pwd->verifyPasswd('nobody', 0);
-        if (!PEAR::isError($r)) {
+        try {
+            $r = $this->pwd->verifyPasswd('nobody', 0);
+
             $this->fail('verifyPasswd() did not return error for nonexistent user.');
+        } catch (File_Passwd_Exception $r) {
+            $this->assertEquals("User 'nobody' doesn't exist.", $r->getMessage());
         }
-        $this->assertEquals("User 'nobody' doesn't exist.", $r->getMessage());
     }
     
     /**

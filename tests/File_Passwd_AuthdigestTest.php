@@ -100,11 +100,13 @@ class File_Passwd_AuthdigestTest extends PHPUnit_Framework_TestCase {
         $r = $this->pwd->verifyPasswd('verify', 'realm2', 0);
 
         $this->assertFalse($r, 'verifyPassword(wrong password)');
-        $r = $this->pwd->verifyPasswd('nobody', 'realm2', 0);
-        if (!PEAR::isError($r)) {
+        try {
+            $r = $this->pwd->verifyPasswd('nobody', 'realm2', 0);
+
             $this->fail('verifyPasswd() did not return error for nonexistent user.');
+        } catch (File_Passwd_Exception $r) {
+            $this->assertEquals("User 'nobody' doesn't exist in realm 'realm2'.", $r->getMessage());
         }
-        $this->assertEquals("User 'nobody' doesn't exist in realm 'realm2'.", $r->getMessage());
     }
     
     /**
@@ -141,7 +143,12 @@ class File_Passwd_AuthdigestTest extends PHPUnit_Framework_TestCase {
     function testdelUserInRealm(){
         $this->pwd->_users = $GLOBALS['user'];
         $this->assertTrue($this->pwd->delUserInRealm('mike', 'realm1'));
-        $this->assertTrue(PEAR::isError($this->pwd->delUserInRealm('sam', 'realm2')));
+        try {
+            $this->pwd->delUserInRealm('sam', 'realm2');
+            $this->fail("Should have raised File_Passwd_Exception");
+        } catch (File_Passwd_Exception $e) {
+
+        }
     }
     
     /**

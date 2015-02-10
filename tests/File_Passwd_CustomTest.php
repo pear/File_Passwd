@@ -69,10 +69,13 @@ class File_Passwd_CustomTest extends PHPUnit_Framework_TestCase {
     /**
      * Regression test for File_Passwd_Custom.setEncFunc method
      * @access public
+     * @expectedException File_Passwd_Exception
      */
     function testsetEncFunc(){
-        $this->assertTrue(PEAR::isError($this->pwd->setEncFunc('nonexistant')));
-        $this->assertFalse(PEAR::isError($this->pwd->setEncFunc('md5')));
+        $this->pwd->setEncFunc('nonexistant');
+    }
+    function testsetEncFuncValid() {
+        $this->pwd->setEncFunc('md5');
     }
     
     /**
@@ -192,11 +195,13 @@ class File_Passwd_CustomTest extends PHPUnit_Framework_TestCase {
         $r = $this->pwd->verifyPasswd('verify', 0);
 
         $this->assertFalse($r, 'verifyPassword(wrong password)');
-        $r = $this->pwd->verifyPasswd('nobody', 0);
-        if (!PEAR::isError($r)) {
+        try {
+            $r = $this->pwd->verifyPasswd('nobody', 0);
+
             $this->fail('verifyPasswd() did not return error for nonexistent user.');
+        } catch (File_Passwd_Exception $r) {
+            $this->assertEquals("User 'nobody' doesn't exist.", $r->getMessage());
         }
-        $this->assertEquals("User 'nobody' doesn't exist.", $r->getMessage());
     }
 
     /**
@@ -226,13 +231,12 @@ class File_Passwd_CustomTest extends PHPUnit_Framework_TestCase {
 
         $this->assertFalse($r, 'nonexistent user');
 
-        $r = File_Passwd::staticAuth($type, $this->exp_file, 'mike', 'mikespass');
-        if (!PEAR::isError($r)) {
+        try {
+            $r = File_Passwd::staticAuth($type, $this->exp_file, 'mike', 'mikespass');
             $this->fail('staticAuth() did not return error for bad parameters.');
+        } catch (File_Passwd_Exception $r) {
+            $this->assertEquals("Insufficient options.", $r->getMessage());
         }
-        $this->assertEquals("Insufficient options.", $r->getMessage());
     }
     
 }
-
-?>
