@@ -195,11 +195,14 @@ class File_Passwd_UnixTest extends PHPUnit_Framework_TestCase {
         $r = $this->pwd->verifyPasswd('verify', 0);
 
         $this->assertFalse($r, 'verifyPassword(wrong password)');
-        $r = $this->pwd->verifyPasswd('nobody', 0);
-        if (!PEAR::isError($r)) {
+
+        try {
+            $r = $this->pwd->verifyPasswd('nobody', 0);
+            
             $this->fail('verifyPasswd() did not return error for nonexistent user.');
+        } catch (File_Passwd_Exception $r) {
+            $this->assertEquals("User 'nobody' doesn't exist.", $r->getMessage());
         }
-        $this->assertEquals("User 'nobody' doesn't exist.", $r->getMessage());
     }
     
     /**
@@ -240,11 +243,13 @@ class File_Passwd_UnixTest extends PHPUnit_Framework_TestCase {
     function testsetMode(){
         $this->pwd->setMode('md5');
         $this->assertEquals('md5', $this->pwd->getMode());
-        $r = $this->pwd->setMode('no');
-        if (!PEAR::isError($r)) {
+        try {
+            $r = $this->pwd->setMode('no');
+
             $this->fail('setMode() did not return error for nonexistent mode.');
+        } catch (File_Passwd_Exception $r) {
+            $this->assertEquals("Encryption mode 'no' not supported.", $r->getMessage());
         }
-        $this->assertEquals("Encryption mode 'no' not supported.", $r->getMessage());
     }
     
     /**
