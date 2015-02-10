@@ -52,9 +52,7 @@ class File_Passwd_AuthbasicTest extends PHPUnit_Framework_TestCase {
         $this->pwd->setFile($this->tmpfile);
         $this->pwd->_users = $this->user;
         $r = $this->pwd->save();
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'save() should return TRUE.');
         $this->assertFileEquals($this->exp_file, $this->tmpfile);
     }
@@ -65,15 +63,11 @@ class File_Passwd_AuthbasicTest extends PHPUnit_Framework_TestCase {
      */
     function testaddUser(){
         $r = $this->pwd->addUser('add', 123);
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'addUser() should return TRUE.');
 
         $r = $this->pwd->userExists('add');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'Could not find user that was just added.');
     }
     
@@ -84,14 +78,10 @@ class File_Passwd_AuthbasicTest extends PHPUnit_Framework_TestCase {
     function testchangePasswd(){
         $this->pwd->addUser('change', 123);
         $r = $this->pwd->changePasswd('change', 'abc');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'changePasswd() success did not return TRUE.');
         $r = $this->pwd->verifyPasswd('change', 'abc');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'It seems password was not really changed.');
     }
     
@@ -105,50 +95,34 @@ class File_Passwd_AuthbasicTest extends PHPUnit_Framework_TestCase {
         if (strToUpper(substr(PHP_OS, 0,3)) == 'WIN') {
             $this->assertInstanceOf('PEAR_Error', $e);
         } else {
-            if (PEAR::isError($e)) {
-                $this->fail($e->getMessage());
-            }
+
             $this->assertTrue($e);
             $r = $this->pwd->addUser('desuser', 12345);
-            if (PEAR::isError($r)) {
-                $this->fail($r->getMessage());
-            }
+
             $r = $this->pwd->verifyPasswd('desuser', 12345);
-            if (PEAR::isError($r)) {
-                $this->fail($r->getMessage());
-            }
+
             $this->assertTrue($r, 'verifyPassword(desuser, right password)');
             $r = $this->pwd->verifyPasswd('desuser', '');
-            if (PEAR::isError($r)) {
-                $this->fail($r->getMessage());
-            }
+
             $this->assertFalse($r, 'verifyPassword(desuser, wrong password)');
         }
         // SHA
         $this->pwd->setMode('sha');
         $this->pwd->addUser('shauser', 12345);
         $r = $this->pwd->verifyPasswd('shauser', 12345);
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'verifyPassword(shauser, right password)');
         $r = $this->pwd->verifyPasswd('shauser', '');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'verifyPassword(shauser, wrong password)');
         // MD5
         $this->pwd->setMode('md5');
         $this->pwd->addUser('md5user', 12345);
         $r = $this->pwd->verifyPasswd('md5user', 12345);
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'verifyPassword(md5user, right password)');
         $r = $this->pwd->verifyPasswd('md5user', 2);
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'verifyPassword(md5user, wrong password)');
         $r = $this->pwd->verifyPasswd('nobody', 0);
         if (!PEAR::isError($r)) {
@@ -199,9 +173,7 @@ class File_Passwd_AuthbasicTest extends PHPUnit_Framework_TestCase {
     function testparse(){
         $this->pwd->setFile($this->exp_file);
         $r = $this->pwd->load();
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r);
         $this->assertEquals($this->user, $this->pwd->_users);
     }
@@ -209,20 +181,14 @@ class File_Passwd_AuthbasicTest extends PHPUnit_Framework_TestCase {
     function teststaticAuth(){
         $type = 'authbasic';
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'mike', 123, 'des');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'right user, right password');
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'mike', 'abc', 'des');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'right user, wrong password');
 
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'nonexist', 'asd', 'des');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'nonexistent user');
     }
 }

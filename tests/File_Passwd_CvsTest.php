@@ -55,9 +55,7 @@ class File_Passwd_CvsTest extends PHPUnit_Framework_TestCase {
         $this->pwd->_users = $GLOBALS['user'];
         $this->pwd->setFile($GLOBALS['tmpfile']);
         $r = $this->pwd->save();
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r);
         $this->assertFileEquals($this->exp_file, $GLOBALS['tmpfile']);
     }
@@ -68,15 +66,11 @@ class File_Passwd_CvsTest extends PHPUnit_Framework_TestCase {
      */
     function testaddUser(){
         $r = $this->pwd->addUser('add', 123);
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'addUser() should return TRUE.');
 
         $r = $this->pwd->userExists('add');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'Could not find user that was just added.');
     }
     
@@ -87,14 +81,10 @@ class File_Passwd_CvsTest extends PHPUnit_Framework_TestCase {
     function testchangePasswd(){
         $this->pwd->addUser('change', 123);
         $r = $this->pwd->changePasswd('change', 'abc');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'changePasswd() success did not return TRUE.');
         $r = $this->pwd->verifyPasswd('change', 'abc');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'It seems password was not really changed.');
     }
     
@@ -105,14 +95,10 @@ class File_Passwd_CvsTest extends PHPUnit_Framework_TestCase {
     function testverifyPasswd(){
         $this->pwd->addUser('verify', 12345);
         $r = $this->pwd->verifyPasswd('verify', 12345);
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'verifyPassword(right password)');
         $r = $this->pwd->verifyPasswd('verify', 0);
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'verifyPassword(wrong password)');
         $r = $this->pwd->verifyPasswd('nobody', 0);
         if (!PEAR::isError($r)) {
@@ -147,9 +133,7 @@ class File_Passwd_CvsTest extends PHPUnit_Framework_TestCase {
         //$this->pwd->_users = array();
         $this->pwd->setFile($this->exp_file);
         $r = $this->pwd->load();
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r);
         $this->assertEquals($GLOBALS['user'], $this->pwd->_users);
     }
@@ -157,21 +141,15 @@ class File_Passwd_CvsTest extends PHPUnit_Framework_TestCase {
     function teststaticAuth(){
         $type = 'cvs';
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'mike', 123, 'des');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'right user, right password');
 
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'mike', 'abc', 'des');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'right user, wrong password');
 
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'nonexist', 'asd', 'des');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'nonexistent user');
     }
 }
