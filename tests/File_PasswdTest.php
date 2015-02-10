@@ -112,14 +112,9 @@ class File_PasswdTest extends PHPUnit_Framework_TestCase {
 
             $pwfile = dirname(__FILE__) . '/passwd.' . strToLower($ext) . '.txt';
             $option = (($ext == 'Authdigest') ? 'realm1' : (($ext == 'Smb') ? 'nt' : 'des'));
-            $error = File_Passwd::staticAuth($ext, $pwfile, 'mike', 123, $option);
-            if (PEAR::isError($error)) {
-                $this->fail("File_Passwd_$ext::staticAuth() ". $error->getMessage());
-            }
+            File_Passwd::staticAuth($ext, $pwfile, 'mike', 123, $option);
         }
         
     }
     
 }
-
-?>

@@ -81,9 +81,7 @@ class File_Passwd_SmbTest extends PHPUnit_Framework_TestCase {
         $this->pwd->setFile($GLOBALS['tmpfile']);
         $this->pwd->addUser('mike', 123, array('userid' => 501, 'comment' => 'Michael Wallner'));
         $r = $this->pwd->save();
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'save() should return TRUE.');
 
         $exp = explode(':', file_get_contents($this->exp_file));
@@ -98,15 +96,11 @@ class File_Passwd_SmbTest extends PHPUnit_Framework_TestCase {
      */
     function testaddUser(){
         $r = $this->pwd->addUser('add', 123, array('userid' => 502));
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'addUser() should return TRUE.');
 
         $r = $this->pwd->userExists('add');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'Could not find user that was just added.');
     }
     
@@ -117,9 +111,7 @@ class File_Passwd_SmbTest extends PHPUnit_Framework_TestCase {
     function testmodUser(){
         $this->pwd->addUser('mod', 123, array('userid' => 555));
         $r = $this->pwd->modUser('mod', array('userid' => 600));
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'modUser() should return TRUE.');
 
         $user = $this->pwd->listUser('mod');
@@ -133,14 +125,10 @@ class File_Passwd_SmbTest extends PHPUnit_Framework_TestCase {
     function testchangePasswd(){
         $this->pwd->addUser('change', 123, array('userid' => 504));
         $r = $this->pwd->changePasswd('change', 'abc');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'changePasswd() success did not return TRUE.');
         $r = $this->pwd->verifyPasswd('change', 'abc');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'It seems password was not really changed.');
     }
     
@@ -152,14 +140,10 @@ class File_Passwd_SmbTest extends PHPUnit_Framework_TestCase {
         $this->pwd->addUser('encrypted', 'abc', array('userid' => 505));
         $pass = hash_nt('abc');
         $r = $this->pwd->verifyEncryptedPasswd('encrypted', $pass);
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'verifyEncryptedPassword(right password)');
         $r = $this->pwd->verifyEncryptedPasswd('encrypted', 'bogus');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'verifyEncryptedPassword(wrong password)');
         $r = $this->pwd->verifyEncryptedPasswd('nobody', 0);
         if (!PEAR::isError($r)) {
@@ -175,14 +159,10 @@ class File_Passwd_SmbTest extends PHPUnit_Framework_TestCase {
     function testverifyPasswd(){
         $this->pwd->addUser('verify', 'abc', array('userid' => 506));
         $r = $this->pwd->verifyPasswd('verify', 'abc');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'verifyPassword(right password)');
         $r = $this->pwd->verifyPasswd('verify', 'bogus');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'verifyPassword(wrong password)');
         $r = $this->pwd->verifyPasswd('nobody', 0);
         if (!PEAR::isError($r)) {
@@ -198,9 +178,7 @@ class File_Passwd_SmbTest extends PHPUnit_Framework_TestCase {
     function testparse(){
         $this->pwd->setFile($this->exp_file);
         $r = $this->pwd->load();
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r);
         $this->assertEquals($GLOBALS['user'], $this->pwd->_users);
     }
@@ -212,21 +190,15 @@ class File_Passwd_SmbTest extends PHPUnit_Framework_TestCase {
     function teststaticAuth(){
         $type = 'smb';
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'mike', 123, 'nt');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'right user, right password');
 
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'mike', 'abc', 'nt');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'right user, wrong password');
 
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'nonexist', 'asd', 'nt');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'nonexistent user');
     }
     

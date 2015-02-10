@@ -127,9 +127,7 @@ class File_Passwd_CustomTest extends PHPUnit_Framework_TestCase {
         }
 
         $r = $this->pwd->save();
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r);
         $this->assertFileEquals($this->exp_file, $GLOBALS['tmpfile']);
     }
@@ -143,15 +141,11 @@ class File_Passwd_CustomTest extends PHPUnit_Framework_TestCase {
         $this->pwd->setEncFunc('md5');
 
         $r = $this->pwd->addUser('testadd', 'pass');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'addUser() should return TRUE.');
 
         $r = $this->pwd->userExists('testadd');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'Could not find user that was just added.');
     }
     
@@ -164,9 +158,7 @@ class File_Passwd_CustomTest extends PHPUnit_Framework_TestCase {
         $this->pwd->setEncFunc('md5');
         $this->pwd->addUser('testmod', 'pass');
         $r = $this->pwd->modUser('testmod', array('pass' => 'newpass'));
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'modUser() should return TRUE.');
 
         $this->assertEquals('newpass', $this->pwd->_users['testmod']['pass']);
@@ -181,14 +173,10 @@ class File_Passwd_CustomTest extends PHPUnit_Framework_TestCase {
         $this->pwd->setEncFunc('md5');
         $this->pwd->addUser('change', 123);
         $r = $this->pwd->changePasswd('change', 'abc');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'changePasswd() success did not return TRUE.');
         $r = $this->pwd->verifyPasswd('change', 'abc');
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'It seems password was not really changed.');
     }
     
@@ -199,14 +187,10 @@ class File_Passwd_CustomTest extends PHPUnit_Framework_TestCase {
     function testverifyPasswd(){
         $this->pwd->addUser('verify', 12345);
         $r = $this->pwd->verifyPasswd('verify', 12345);
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'verifyPassword(right password)');
         $r = $this->pwd->verifyPasswd('verify', 0);
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'verifyPassword(wrong password)');
         $r = $this->pwd->verifyPasswd('nobody', 0);
         if (!PEAR::isError($r)) {
@@ -224,9 +208,7 @@ class File_Passwd_CustomTest extends PHPUnit_Framework_TestCase {
         $this->pwd->setFile($this->exp_file);
         $this->pwd->setDelim('|');
         $r = $this->pwd->load();
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r);
         $this->assertEquals($GLOBALS['user'], $this->pwd->_users);
     }
@@ -234,20 +216,14 @@ class File_Passwd_CustomTest extends PHPUnit_Framework_TestCase {
     function teststaticAuth(){
         $type = 'Custom';
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'mike', 'mikespass', array(array('File_Passwd', 'crypt_plain'), '|'));
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertTrue($r, 'right user, right password');
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'mike', 'notpass', array(array('File_Passwd', 'crypt_plain'), '|'));
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'right user, wrong password');
 
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'nonexist', 'mikespass', array(array('File_Passwd', 'crypt_plain'), '|'));
-        if (PEAR::isError($r)) {
-            $this->fail($r->getMessage());
-        }
+
         $this->assertFalse($r, 'nonexistent user');
 
         $r = File_Passwd::staticAuth($type, $this->exp_file, 'mike', 'mikespass');
