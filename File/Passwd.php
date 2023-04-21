@@ -300,7 +300,7 @@ class File_Passwd
         $rs = '';
         $ln = strlen($hex);
         for($i = 0; $i < $ln; $i += 2) {
-            $rs .= chr(hexdec($hex{$i} . $hex{$i+1}));
+            $rs .= chr(hexdec(substr($hex, $i, 2)));
         }
         return $rs;
     }
